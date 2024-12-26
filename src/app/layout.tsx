@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
+import type { ReactNode } from 'react'
 import localFont from 'next/font/local'
 import QueryProvider from '#contexts/QueryProvider'
+import ThemeProvider from '#contexts/ThemeProvider'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -20,13 +22,15 @@ const pretendard = localFont({
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: ReactNode
 }>) {
   return (
     <html lang="ko">
       <body>
         <QueryProvider>
-          <main className={pretendard.className}>{children}</main>
+          <ThemeProvider>
+            <main className={pretendard.className}>{children}</main>
+          </ThemeProvider>
         </QueryProvider>
       </body>
     </html>
