@@ -4,5 +4,5 @@ export const PATH = {
   group: '',
   notification: '',
   myPage: '',
-  login: '',
+  login: '/login',
 }
