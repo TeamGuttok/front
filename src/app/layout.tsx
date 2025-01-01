@@ -3,6 +3,8 @@ import type { ReactNode } from 'react'
 import localFont from 'next/font/local'
 import QueryProvider from '#contexts/QueryProvider'
 import ThemeProvider from '#contexts/ThemeProvider'
+import Layout from '#components/Layout'
+import { cn } from '#components/lib/utils'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -29,7 +31,9 @@ export default function RootLayout({
       <body>
         <QueryProvider>
           <ThemeProvider>
-            <main className={pretendard.className}>{children}</main>
+            <Layout>
+              <main className={cn(pretendard.className)}>{children}</main>
+            </Layout>
           </ThemeProvider>
         </QueryProvider>
       </body>
