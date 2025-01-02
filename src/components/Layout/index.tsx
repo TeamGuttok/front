@@ -21,7 +21,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   if (!isMount) return null
 
   return (
-    <div className="flex">
+    <div className="flex h-[calc(100vh-72px)]">
       {isMobile ? (
         <NavigationBar pathname={pathname} />
       ) : (
