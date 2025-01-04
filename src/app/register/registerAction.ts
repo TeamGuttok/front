@@ -1,9 +1,14 @@
 'use server'
 
+interface State {
+  success: boolean
+  nickname: string
+}
+
 export async function registerAction(
-  prevState: void | null,
+  prevState: State | null,
   formData: FormData,
-) {
+): Promise<State> {
   const nickname = formData.get('nickname')
   const email = formData.get('email')
   const password = formData.get('password')
@@ -12,4 +17,6 @@ export async function registerAction(
   console.log(nickname)
   console.log(email)
   console.log(password)
+
+  return { success: true, nickname: '구똑' }
 }
