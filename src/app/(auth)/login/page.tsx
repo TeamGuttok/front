@@ -24,7 +24,7 @@ export default function Login() {
       >
         <div className="flex items-center">
           <Label htmlFor="email" className="w-20">
-            <span className="text-lg font-medium">이메일</span>
+            <span className="text-base font-medium">이메일</span>
           </Label>
           <Input
             name="email"
@@ -36,7 +36,7 @@ export default function Login() {
 
         <div className="flex items-center">
           <Label htmlFor="password" className="w-20">
-            <span className="text-lg font-medium">비밀번호</span>
+            <span className="text-base font-medium">비밀번호</span>
           </Label>
           <Input
             name="password"
@@ -59,6 +59,7 @@ export default function Login() {
       <div className="flex justify-center items-center sm:mt-2">
         <Link href={PATH.forgotEmail}>
           <Button
+            type="button"
             variant="ghost"
             className="text-sub hover:bg-transparent hover:text-sub-foreground"
           >
@@ -68,6 +69,7 @@ export default function Login() {
         <span className="text-xs">|</span>
         <Link href={PATH.forgotPassword}>
           <Button
+            type="button"
             variant="ghost"
             className="text-sub hover:bg-transparent hover:text-sub-foreground"
           >
@@ -79,7 +81,7 @@ export default function Login() {
       <div className="mt-6">
         <Link href={PATH.register}>
           <Button
-            type="submit"
+            type="button"
             className="flex justify-self-center w-32 h-14 text-lg rounded-2xl"
           >
             회원 가입
