@@ -6,4 +6,6 @@ export const PATH = {
   myPage: '',
   login: '/login',
   register: '/register',
+  forgotEmail: '/forgot/email',
+  forgotPassword: '/forgot/password',
 }

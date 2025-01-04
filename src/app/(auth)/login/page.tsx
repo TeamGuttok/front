@@ -1,10 +1,12 @@
 'use client'
 
+import Link from 'next/link'
 import { useActionState } from 'react'
 import { Label } from '#components/_common/Label'
 import { Input } from '#components/_common/Input'
 import { Button } from '#components/_common/Button'
 import { loginAction } from './loginAction'
+import { PATH } from '#app/routes'
 
 export default function Login() {
   const [, handleSubmit, isPending] = useActionState(loginAction, null)
@@ -55,28 +57,34 @@ export default function Login() {
       <div className="sm:w-full h-[1px] bg-border mt-5"></div>
 
       <div className="flex justify-center items-center sm:mt-2">
-        <Button
-          variant="ghost"
-          className="text-sub hover:bg-transparent hover:text-sub-foreground"
-        >
-          이메일 찾기
-        </Button>
+        <Link href={PATH.forgotEmail}>
+          <Button
+            variant="ghost"
+            className="text-sub hover:bg-transparent hover:text-sub-foreground"
+          >
+            이메일 찾기
+          </Button>
+        </Link>
         <span className="text-xs">|</span>
-        <Button
-          variant="ghost"
-          className="text-sub hover:bg-transparent hover:text-sub-foreground"
-        >
-          비밀번호 찾기
-        </Button>
+        <Link href={PATH.forgotPassword}>
+          <Button
+            variant="ghost"
+            className="text-sub hover:bg-transparent hover:text-sub-foreground"
+          >
+            비밀번호 찾기
+          </Button>
+        </Link>
       </div>
 
       <div className="mt-6">
-        <Button
-          type="submit"
-          className="flex justify-self-center w-32 h-14 text-lg rounded-2xl"
-        >
-          회원 가입
-        </Button>
+        <Link href={PATH.register}>
+          <Button
+            type="submit"
+            className="flex justify-self-center w-32 h-14 text-lg rounded-2xl"
+          >
+            회원 가입
+          </Button>
+        </Link>
       </div>
     </div>
   )
