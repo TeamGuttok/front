@@ -1,22 +1,54 @@
-'use server'
+import { z } from 'zod'
+
+const registerSchema = z.object({
+  nickname: z.string().min(3, '닉네임은 최소 3자 이상이어야 합니다.'),
+  email: z.string().email('유효한 이메일 주소를 입력하세요.'),
+  password: z
+    .string()
+    .min(
+      12,
+      '비밀번호는 특수문자(@$!%*?&#), 영어 소문자를 포함한 12자 이상이어야 합니다.',
+    )
+    .regex(
+      /^(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{12,}$/,
+      '비밀번호는 특수문자, 영어 소문자, 숫자를 포함해야 합니다.',
+    ),
+})
 
 interface State {
-  success: boolean
-  nickname: string
+  data?: {
+    email: string
+    password: string
+    nickname: string
+    alarm: boolean
+  }
+  errors?: Record<string, string[]>
 }
 
 export async function registerAction(
   prevState: State | null,
   formData: FormData,
 ): Promise<State> {
-  const nickname = formData.get('nickname')
-  const email = formData.get('email')
-  const password = formData.get('password')
+  const input = {
+    email: formData.get('email'),
+    password: formData.get('password'),
+    nickname: formData.get('nickname'),
+  }
 
-  // Todo: 입력값 검증 및 제출
-  console.log(nickname)
-  console.log(email)
-  console.log(password)
+  const parseResult = registerSchema.safeParse(input)
+  if (!parseResult.success) {
+    const errors = parseResult.error.flatten().fieldErrors
+    return {
+      errors,
+    }
+  }
 
-  return { success: true, nickname: '구똑' }
+  return {
+    data: {
+      email: 'you@dsfs',
+      password: '1233dsdsff',
+      nickname: 'gwjun',
+      alarm: true,
+    },
+  }
 }

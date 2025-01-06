@@ -12,7 +12,8 @@ const RegisterSuccess = dynamic(() => import('./RegisterSuccess'))
 export default function Register() {
   const [state, handleSubmit, isPending] = useActionState(registerAction, null)
 
-  if (state?.success) return <RegisterSuccess nickname={state.nickname} />
+  if (state?.data) return <RegisterSuccess nickname={state.data.nickname} />
+  const errors = state?.errors
 
   return (
     <div className="flex flex-col items-center sm:m-auto sm:-translate-y-12">

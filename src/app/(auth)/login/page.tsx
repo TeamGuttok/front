@@ -9,7 +9,9 @@ import { loginAction } from './loginAction'
 import { PATH } from '#app/routes'
 
 export default function Login() {
-  const [, handleSubmit, isPending] = useActionState(loginAction, null)
+  const [state, handleSubmit, isPending] = useActionState(loginAction, null)
+
+  const errors = state?.errors
 
   return (
     <div className="flex flex-col justify-center items-center">
