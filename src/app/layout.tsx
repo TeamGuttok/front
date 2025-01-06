@@ -32,7 +32,12 @@ export default function RootLayout({
         <QueryProvider>
           <ThemeProvider>
             <Layout>
-              <main className={cn(pretendard.className, 'flex flex-col grow')}>
+              <main
+                className={cn(
+                  pretendard.className,
+                  'flex flex-col w-full sm:w-[calc(100vw-224px)] sm:float-right h-[calc(100vh-72px)] sm:h-full overflow-y-auto',
+                )}
+              >
                 {children}
               </main>
             </Layout>
