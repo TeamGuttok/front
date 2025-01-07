@@ -5,12 +5,14 @@ import { useActionState } from 'react'
 import { Label } from '#components/_common/Label'
 import { Input } from '#components/_common/Input'
 import { Button } from '#components/_common/Button'
+import { ErrorMessage } from '#components/_common/ErrorMessage'
 import { loginAction } from './loginAction'
 import { PATH } from '#app/routes'
 
 export default function Login() {
   const [state, handleSubmit, isPending] = useActionState(loginAction, null)
 
+  const formData = state?.formData
   const errors = state?.errors
 
   return (
@@ -20,37 +22,42 @@ export default function Login() {
       </div>
       <div className="w-full h-[1px] bg-border mt-5"></div>
 
-      <form
-        action={handleSubmit}
-        className="w-full space-y-6 max-w-lg mt-10 px-10"
-      >
-        <div className="flex items-center">
-          <Label htmlFor="email" className="w-20">
-            <span className="text-base font-medium">이메일</span>
-          </Label>
-          <Input
-            name="email"
-            type="email"
-            placeholder="이메일을 입력하세요"
-            className="w-0 grow"
-          />
+      <form action={handleSubmit} className="w-full max-w-lg mt-10 px-10">
+        <div className="flex flex-col gap-1 min-h-16">
+          <div className="flex items-center">
+            <Label htmlFor="email" className="w-20">
+              <span className="text-base font-medium">이메일</span>
+            </Label>
+            <Input
+              name="email"
+              type="email"
+              placeholder="이메일을 입력하세요"
+              className="w-0 grow"
+              defaultValue={formData?.get('email') as string}
+            />
+          </div>
+          <ErrorMessage errors={errors?.email} className="ml-20" />
         </div>
 
-        <div className="flex items-center">
-          <Label htmlFor="password" className="w-20">
-            <span className="text-base font-medium">비밀번호</span>
-          </Label>
-          <Input
-            name="password"
-            type="password"
-            placeholder="비밀번호를 입력하세요"
-            className="w-0 grow"
-          />
+        <div className="flex flex-col gap-1 min-h-16">
+          <div className="flex items-center">
+            <Label htmlFor="password" className="w-20">
+              <span className="text-base font-medium">비밀번호</span>
+            </Label>
+            <Input
+              name="password"
+              type="password"
+              placeholder="비밀번호를 입력하세요"
+              className="w-0 grow"
+              defaultValue={formData?.get('password') as string}
+            />
+          </div>
+          <ErrorMessage errors={errors?.password} className="ml-20" />
         </div>
 
         <Button
           type="submit"
-          className="flex justify-self-center w-32 h-14 text-lg rounded-2xl"
+          className="flex justify-self-center mt-6 w-32 h-14 text-lg rounded-2xl"
           disabled={isPending}
         >
           로그인

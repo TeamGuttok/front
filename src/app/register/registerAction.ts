@@ -7,11 +7,11 @@ const registerSchema = z.object({
     .string()
     .min(
       12,
-      '비밀번호는 특수문자(@$!%*?&#), 영어 소문자를 포함한 12자 이상이어야 합니다.',
+      '특수문자(@$!%*?&#), 영어 소문자, 숫자를 포함한 12자 이상이어야 합니다.',
     )
     .regex(
       /^(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{12,}$/,
-      '비밀번호는 특수문자, 영어 소문자, 숫자를 포함해야 합니다.',
+      '특수문자(@$!%*?&#), 영어 소문자, 숫자를 포함해야 합니다.',
     ),
 })
 
@@ -23,6 +23,7 @@ interface State {
     alarm: boolean
   }
   errors?: Record<string, string[]>
+  formData?: FormData
 }
 
 export async function registerAction(
@@ -40,8 +41,21 @@ export async function registerAction(
     const errors = parseResult.error.flatten().fieldErrors
     return {
       errors,
+      formData,
     }
   }
+
+  const passwordConfirm = formData.get('password-confirm')
+  if (input.password !== passwordConfirm) {
+    return {
+      errors: {
+        passwordConfirm: ['비밀번호가 일치하지 않습니다.'],
+      },
+      formData,
+    }
+  }
+
+  // Todo: api 호출 및 return
 
   return {
     data: {

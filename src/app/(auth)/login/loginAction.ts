@@ -10,6 +10,7 @@ const loginSchema = z.object({
 
 interface State {
   errors?: Record<string, string[]>
+  formData?: FormData
 }
 
 export async function loginAction(
@@ -26,8 +27,11 @@ export async function loginAction(
     const errors = parseResult.error.flatten().fieldErrors
     return {
       errors,
+      formData,
     }
   }
+
+  // Todo: api 호출 및 error return
 
   redirect('/')
 }
