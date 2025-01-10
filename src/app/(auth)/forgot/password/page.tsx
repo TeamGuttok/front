@@ -6,13 +6,13 @@ import { Label } from '#components/_common/Label'
 import { Input } from '#components/_common/Input'
 import { ErrorMessage } from '#components/_common/ErrorMessage'
 import { Button } from '#components/_common/Button'
-import { forgotEmailAction } from './forgotEmailAction'
+import { forgotPasswordAction } from './forgotPasswordAction'
 
-const ForgotEmailSuccess = dynamic(() => import('./ForgotEmailSuccess'))
+const ForgotPasswordSuccess = dynamic(() => import('./ForgotPasswordSuccess'))
 
-export default function ForgotEmail() {
+export default function ForgotPassword() {
   const [state, handleSubmit, isPending] = useActionState(
-    forgotEmailAction,
+    forgotPasswordAction,
     null,
   )
 
@@ -22,15 +22,12 @@ export default function ForgotEmail() {
   return (
     <div className="flex flex-col justify-center items-center">
       <div className="flex flex-col items-center w-full mt-5">
-        <span className="text-3xl font-bold ">이메일 찾기</span>
+        <span className="text-3xl font-bold ">비밀번호 찾기</span>
       </div>
       <div className="w-full h-[1px] bg-border mt-5"></div>
 
-      {state?.data ? (
-        <ForgotEmailSuccess
-          nickname={state.data.nickname}
-          email={state.data.email}
-        />
+      {state?.isSuccess ? (
+        <ForgotPasswordSuccess nickname={formData?.get('nickname') as string} />
       ) : (
         <form action={handleSubmit} className="w-full max-w-lg mt-10 px-10">
           <div className="flex flex-col gap-1 min-h-16">
@@ -46,6 +43,21 @@ export default function ForgotEmail() {
               />
             </div>
             <ErrorMessage errors={errors?.nickname} className="ml-20" />
+          </div>
+
+          <div className="flex flex-col gap-1 min-h-16">
+            <div className="flex items-center">
+              <Label htmlFor="password" className="w-20">
+                <span className="text-base font-medium">비밀번호</span>
+              </Label>
+              <Input
+                name="password"
+                placeholder="비밀번호를 입력하세요"
+                className="w-0 grow"
+                defaultValue={formData?.get('password') as string}
+              />
+            </div>
+            <ErrorMessage errors={errors?.password} className="ml-20" />
           </div>
 
           <Button
