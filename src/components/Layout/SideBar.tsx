@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link'
 import { Menu, Calendar, Users, Bell, User, LogIn } from 'lucide-react'
 import { PATH } from '#app/routes'
