@@ -117,7 +117,7 @@ export default function Register() {
 
             <Button
               type="submit"
-              className="flex justify-self-center w-full h-10 text-lg rounded-lg mt-10"
+              className="flex justify-self-center w-full h-10 text-md rounded-lg mt-10"
               disabled={isPending}
             >
               회원가입
