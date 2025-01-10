@@ -5,4 +5,7 @@ export const PATH = {
   notification: '',
   myPage: '',
   login: '/login',
+  register: '/register',
+  forgotEmail: '/forgot/email',
+  forgotPassword: '/forgot/password',
 }
