@@ -25,7 +25,7 @@ export default function RootLayout({
         <QueryProvider>
           <ThemeProvider>
             <Layout>
-              <main className="flex flex-col w-full sm:w-[calc(100%-224px)] sm:float-right h-[calc(100vh-72px)] sm:h-full overflow-y-auto">
+              <main className="flex flex-col w-full sm:w-[calc(100%-224px)] sm:float-right h-[calc(100vh-72px)] sm:h-[100vh] overflow-y-auto">
                 {children}
               </main>
             </Layout>
