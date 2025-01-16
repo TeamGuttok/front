@@ -40,21 +40,16 @@ export default function Register() {
             className="flex flex-col w-full max-w-lg mt-10 px-10"
           >
             <div className="flex flex-col gap-1 min-h-16">
-              <div className="flex justify-between gap-3">
-                <div className="flex items-center grow">
-                  <Label htmlFor="nickname" className="w-14 mr-6">
-                    <span className="text-base font-medium">닉네임</span>
-                  </Label>
-                  <Input
-                    name="nickname"
-                    placeholder="닉네임을 입력하세요"
-                    className="w-0 grow"
-                    defaultValue={formData?.get('nickname') as string}
-                  />
-                </div>
-                <Button type="button" className="rounded-lg">
-                  중복확인
-                </Button>
+              <div className="flex items-center">
+                <Label htmlFor="nickname" className="w-14 mr-6">
+                  <span className="text-base font-medium">닉네임</span>
+                </Label>
+                <Input
+                  name="nickname"
+                  placeholder="닉네임을 입력하세요"
+                  className="w-0 grow"
+                  defaultValue={formData?.get('nickname') as string}
+                />
               </div>
               <ErrorMessage errors={errors?.nickname} className="ml-20" />
             </div>
