@@ -1,20 +1,16 @@
 'use client'
 
-import dynamic from 'next/dynamic'
 import { useActionState } from 'react'
 import { Label } from '#components/_common/Label'
 import { Input } from '#components/_common/Input'
 import { ErrorMessage } from '#components/_common/ErrorMessage'
 import { Button } from '#components/_common/Button'
-import { forgotPasswordAction } from './forgotPasswordAction'
 
-const ForgotPasswordSuccess = dynamic(() => import('./ForgotPasswordSuccess'))
+import { emailAction } from './emailAction'
+import OTPForm from './(OTPForm)/OTPForm'
 
 export default function ForgotPassword() {
-  const [state, handleSubmit, isPending] = useActionState(
-    forgotPasswordAction,
-    null,
-  )
+  const [state, handleSubmit, isPending] = useActionState(emailAction, null)
 
   const formData = state?.formData
   const errors = state?.errors
@@ -27,37 +23,22 @@ export default function ForgotPassword() {
       <div className="w-full h-[1px] bg-border mt-5"></div>
 
       {state?.isSuccess ? (
-        <ForgotPasswordSuccess nickname={formData?.get('nickname') as string} />
+        <OTPForm />
       ) : (
         <form action={handleSubmit} className="w-full max-w-lg mt-10 px-10">
           <div className="flex flex-col gap-1 min-h-16">
             <div className="flex items-center">
-              <Label htmlFor="nickname" className="w-20">
-                <span className="text-base font-medium">닉네임</span>
+              <Label htmlFor="email" className="w-20">
+                <span className="text-base font-medium">이메일</span>
               </Label>
               <Input
-                name="nickname"
-                placeholder="닉네임을 입력하세요"
+                name="email"
+                placeholder="이메일을 입력하세요"
                 className="w-0 grow"
-                defaultValue={formData?.get('nickname') as string}
+                defaultValue={formData?.get('email') as string}
               />
             </div>
-            <ErrorMessage errors={errors?.nickname} className="ml-20" />
-          </div>
-
-          <div className="flex flex-col gap-1 min-h-16">
-            <div className="flex items-center">
-              <Label htmlFor="password" className="w-20">
-                <span className="text-base font-medium">비밀번호</span>
-              </Label>
-              <Input
-                name="password"
-                placeholder="비밀번호를 입력하세요"
-                className="w-0 grow"
-                defaultValue={formData?.get('password') as string}
-              />
-            </div>
-            <ErrorMessage errors={errors?.password} className="ml-20" />
+            <ErrorMessage errors={errors?.email} className="ml-20" />
           </div>
 
           <Button
