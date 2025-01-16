@@ -9,7 +9,7 @@ export default function Home() {
     <div className="">
       <div className="bg-gray-50 min-h-screen">
         <div className="overflow-hidden bg-gray-100">
-          <div className="flex animate-marquee space-x-4">
+          {/* <div className="flex animate-marquee space-x-4">
             {Array.from({ length: 10 }).map((_, idx) => (
               <div
                 key={idx}
@@ -18,7 +18,7 @@ export default function Home() {
                 Item {idx + 1}
               </div>
             ))}
-          </div>
+          </div> */}
         </div>
 
         <div className="px-4 py-12">
@@ -75,7 +75,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-
 
 
       <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
