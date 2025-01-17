@@ -12,7 +12,7 @@ export interface EmailActionState {
   formData?: FormData
 }
 
-export async function emailAction(
+export async function forgotPasswordAction(
   prevState: EmailActionState | null,
   formData: FormData,
 ): Promise<EmailActionState> {

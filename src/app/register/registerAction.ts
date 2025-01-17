@@ -1,3 +1,5 @@
+'use server'
+
 import { z } from 'zod'
 
 const registerSchema = z.object({
@@ -35,6 +37,8 @@ export async function registerAction(
     password: formData.get('password'),
     nickname: formData.get('nickname'),
   }
+
+  console.log(input)
 
   const parseResult = registerSchema.safeParse(input)
   if (!parseResult.success) {

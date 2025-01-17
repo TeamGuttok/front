@@ -6,11 +6,14 @@ import { Input } from '#components/_common/Input'
 import { ErrorMessage } from '#components/_common/ErrorMessage'
 import { Button } from '#components/_common/Button'
 
-import { emailAction } from './emailAction'
+import { forgotPasswordAction } from './forgotPasswordAction'
 import OTPForm from './OTPForm'
 
 export default function ForgotPassword() {
-  const [state, handleSubmit, isPending] = useActionState(emailAction, null)
+  const [state, handleSubmit, isPending] = useActionState(
+    forgotPasswordAction,
+    null,
+  )
 
   const formData = state?.formData
   const errors = state?.errors
