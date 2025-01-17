@@ -14,12 +14,17 @@ const RegisterSuccess = dynamic(() => import('./RegisterSuccess'))
 
 export default function Register() {
   const [session, setSession] = useState<string>('')
-  const [state, handleSubmit, isPending] = useActionState(registerAction, null)
+  const [state, onSubmit, isPending] = useActionState(registerAction, null)
 
   if (state?.data) return <RegisterSuccess nickname={state.data.nickname} />
 
   const formData = state?.formData
   const errors = state?.errors
+
+  function handleSubmit(payload: FormData) {
+    payload.append('session', session)
+    onSubmit(payload)
+  }
 
   return (
     <div className="flex flex-col items-center sm:m-auto sm:-translate-y-12">
@@ -102,6 +107,7 @@ export default function Register() {
               />
             </div>
 
+            <ErrorMessage errors={errors?.session} />
             <Button
               type="submit"
               className="flex justify-self-center w-full h-10 text-md rounded-lg mt-10"

@@ -15,6 +15,7 @@ const registerSchema = z.object({
       /^(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{12,}$/,
       '특수문자(@$!%*?&#), 영어 소문자, 숫자를 포함해야 합니다.',
     ),
+  session: z.string().min(1, '새로고침하여 다시 이메일을 인증해 주세요'),
 })
 
 interface State {
@@ -36,6 +37,7 @@ export async function registerAction(
     email: formData.get('email'),
     password: formData.get('password'),
     nickname: formData.get('nickname'),
+    session: formData.get('session'),
   }
 
   console.log(input)

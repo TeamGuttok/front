@@ -1,22 +1,30 @@
 'use client'
 
 import { useState } from 'react'
-// import { useMutation } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
 } from '#components/_common/InputOtp'
+import { cn } from '#components/lib/utils'
 
 interface OTPFormProps {
   email: string
+  onSuccess?:
+    | ((
+        data: unknown,
+        variables: void,
+        context: unknown,
+      ) => Promise<unknown> | unknown)
+    | undefined
+  className?: string
 }
 
-export default function OTPForm({ email }: OTPFormProps) {
+// Todo: API 연동
+export default function OTPForm({ email, onSuccess, className }: OTPFormProps) {
   const [otp, setOtp] = useState('')
-
-  // Todo: API 연동
-  // const { mutate, isPending } = useMutation({})
+  const { mutate, isPending } = useMutation({ onSuccess })
 
   function handleComplete(value: string) {
     setOtp(value)
@@ -24,7 +32,7 @@ export default function OTPForm({ email }: OTPFormProps) {
   }
 
   return (
-    <div className="space-y-8 mt-10">
+    <div className={cn('space-y-8 mt-10', className)}>
       <div className="text-center">
         <p className="text-md text-sub">
           <span className="font-semibold">{email}</span> 로 전송된 코드를
