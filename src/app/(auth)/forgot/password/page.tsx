@@ -7,7 +7,7 @@ import { ErrorMessage } from '#components/_common/ErrorMessage'
 import { Button } from '#components/_common/Button'
 
 import { emailAction } from './emailAction'
-import OTPForm from './(OTPForm)/OTPForm'
+import OTPForm from './OTPForm'
 
 export default function ForgotPassword() {
   const [state, handleSubmit, isPending] = useActionState(emailAction, null)
@@ -23,7 +23,7 @@ export default function ForgotPassword() {
       <div className="w-full h-[1px] bg-border mt-5"></div>
 
       {state?.isSuccess ? (
-        <OTPForm />
+        <OTPForm email={formData?.get('email') as string} />
       ) : (
         <form action={handleSubmit} className="w-full max-w-lg mt-10 px-10">
           <div className="flex flex-col gap-1 min-h-16">
