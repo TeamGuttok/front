@@ -25,7 +25,7 @@ export default function Page() {
 
   return (
     <CardTitle className="flex">
-      <h1>구독 서비스 세부설정</h1>
+      <h1 className="text-3xl font-bold justify-center flex">구독 서비스 세부설정</h1>
       <div className="flex flex-col justify-center items-center my-12">
         <form className="space-y-4 ">
           <div className="grid grid-cols-1 gap-4">
