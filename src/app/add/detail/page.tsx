@@ -1,24 +1,25 @@
 'use client'
 
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
-import { KNOWN_SERVICES } from '#constants/knownServices';
 import { Label } from '#components/_common/Label';
 import { Input } from '#components/_common/Input';
 import { Button } from '#components/_common/Button';
 import CardTitle from '#components/_common/CardTitle';
+import { useServiceStore } from '#stores/useServiceStore';
 
 export default function Page() {
+  const { selectedService, setSelectedService } = useServiceStore();
+  const isCustom = selectedService?.id === 'custom';
+  const serviceName = isCustom ? selectedService?.name || '' : selectedService?.name || '';
 
-  const params = useParams();
-  const detail = params?.detail || [];
-  const serviceId = detail[0] || null;
-  //const serviceId = params?.detail?.[0];
-  const service = serviceId ? KNOWN_SERVICES.find((s) => s.id === serviceId) : null;
-
-  const isDirectAdd = !serviceId;
-  const isCustom = serviceId === 'custom';
-  const serviceName = isCustom ? '' : service ? service.name : '';
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (isCustom) {
+      setSelectedService({
+        ...selectedService,
+        name: e.target.value,
+      });
+    }
+  };
 
   return (
     <CardTitle className="flex" content={
@@ -29,7 +30,8 @@ export default function Page() {
               <Label className="block mr-8 tracking-wide text-lg font-medium text-nowrap">구독 서비스 *</Label>
               <Input
                 type="text"
-                value={isDirectAdd ? '' : serviceName} readOnly={!isCustom}
+                value={serviceName}
+                onChange={handleInputChange}
                 placeholder="넷플릭스, 통신비, etc"
                 className="block max-w-60 min-w-60 pl-2 text-sm sm:text-base"
               />
@@ -66,7 +68,7 @@ export default function Page() {
               <Label className="mr-8 tracking-wide block text-lg font-medium text-nowrap">메모</Label>
               <textarea
                 placeholder="메모를 입력하세요"
-                className="p-2 max-w-60 min-w-60 text-sm sm:text-base block rounded-md border border-gray-300 shadow-sm"
+                className="p-2 max-w-60 min-w-60 text-sm sm:text-base block dark:text-black rounded-md border border-gray-300 shadow-sm"
                 rows={2}
               />
             </div>
@@ -84,7 +86,3 @@ export default function Page() {
     </CardTitle>
   );
 };
-
-// PUSH 할 때까지 TODO
-// [ ] ID 넘겨받기
-// [ ] label, placeholder, date icon color 변경
