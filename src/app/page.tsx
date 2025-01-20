@@ -41,33 +41,37 @@ export default function Home() {
 
           <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="text-center">
-              <div className="w-16 h-16 mx-auto bg-gray-200 rounded-full flex items-center justify-center">
-              </div>
-              <h3 className="mt-4 text-lg font-medium text-gray-800">구독비 절약</h3>
+              <div className="w-16 h-16 mx-auto bg-gray-200 rounded-full flex items-center justify-center"></div>
+              <h3 className="mt-4 text-lg font-medium text-gray-800">
+                구독비 절약
+              </h3>
               <p className="text-sm text-gray-600 mt-2">
                 불필요한 구독을 찾아 절약하세요
               </p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 mx-auto bg-gray-200 rounded-full flex items-center justify-center">
-              </div>
-              <h3 className="mt-4 text-lg font-medium text-gray-800">알림 서비스</h3>
+              <div className="w-16 h-16 mx-auto bg-gray-200 rounded-full flex items-center justify-center"></div>
+              <h3 className="mt-4 text-lg font-medium text-gray-800">
+                알림 서비스
+              </h3>
               <p className="text-sm text-gray-600 mt-2">
                 갱신일에 맞춰 알림을 받아보세요
               </p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 mx-auto bg-gray-200 rounded-full flex items-center justify-center">
-              </div>
-              <h3 className="mt-4 text-lg font-medium text-gray-800">캘린더 제공</h3>
+              <div className="w-16 h-16 mx-auto bg-gray-200 rounded-full flex items-center justify-center"></div>
+              <h3 className="mt-4 text-lg font-medium text-gray-800">
+                캘린더 제공
+              </h3>
               <p className="text-sm text-gray-600 mt-2">
                 결제 일정에 맞춘 캘린더를 제공합니다
               </p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 mx-auto bg-gray-200 rounded-full flex items-center justify-center">
-              </div>
-              <h3 className="mt-4 text-lg font-medium text-gray-800">그룹 공유</h3>
+              <div className="w-16 h-16 mx-auto bg-gray-200 rounded-full flex items-center justify-center"></div>
+              <h3 className="mt-4 text-lg font-medium text-gray-800">
+                그룹 공유
+              </h3>
               <p className="text-sm text-gray-600 mt-2">
                 다양한 사람들과 구독 서비스를 공유하세요
               </p>
@@ -75,7 +79,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-
 
       <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
         테마

@@ -71,11 +71,12 @@ export default function SideBar({ pathname }: { pathname: string }) {
         </ul>
       </nav>
 
-
       <nav className="justify-self-end">
         <ul>
           <li>
-            <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+            <button
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            >
               테마
             </button>
           </li>

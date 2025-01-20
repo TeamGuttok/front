@@ -1,15 +1,22 @@
-import * as React from 'react';
-import { cn } from '#components/lib/utils';
+import * as React from 'react'
+import { cn } from '#components/lib/utils'
 
 interface TitleProps {
-  className?: string;
-  children: React.ReactNode;
-  content?: React.ReactNode;
+  className?: string
+  children: React.ReactNode
 }
 
-export default function CardTitle({ className, children, content }: TitleProps) {
+export default function CardTitle({
+  className,
+  children,
+}: TitleProps) {
   return (
-    <div className={cn("flex flex-col items-center sm:m-auto sm:-translate-y-12", className)}>
+    <div
+      className={cn(
+        'flex flex-col items-center sm:m-auto sm:-translate-y-12',
+        className,
+      )}
+    >
       <p className="hidden sm:block text-4xl mb-2">
         <span className="font-bold">구</span>독을{' '}
         <span className="font-bold">똑</span>똑하게
@@ -24,12 +31,10 @@ export default function CardTitle({ className, children, content }: TitleProps) 
             <span className="text-3xl font-bold ">{children}</span>
           </div>
           <div className="w-full h-[1px] bg-border mt-5"></div>
-          <div className="w-full mt-5">
-            {content}
-          </div>
+          <div className="w-full mt-5">{children}</div>
         </div>
       </div>
     </div>
-  );
-};
-CardTitle.displayName = 'CardTitle';
+  )
+}
+CardTitle.displayName = 'CardTitle'
