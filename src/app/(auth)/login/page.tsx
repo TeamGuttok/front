@@ -55,13 +55,15 @@ export default function Login() {
           <ErrorMessage errors={errors?.password} className="ml-20" />
         </div>
 
-        <Button
-          type="submit"
-          className="flex justify-self-center mt-6 w-32 h-14 text-lg rounded-2xl"
-          disabled={isPending}
-        >
-          로그인
-        </Button>
+        <div className="flex justify-center items-center">
+          <Button
+            type="submit"
+            className="mt-6 w-32 h-14 text-lg rounded-2xl"
+            disabled={isPending}
+          >
+            로그인
+          </Button>
+        </div>
       </form>
       <div className="sm:w-full h-[1px] bg-border mt-5"></div>
 
