@@ -5,7 +5,7 @@ import { PATH } from '#app/routes'
 export default function Group() {
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 m-4 sm:m-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 sm:w-[calc(100vw-16rem)] sm:max-w-[60rem] m-4 sm:mx-auto sm:mt-8">
         <div className="p-6 bg-secondary rounded-xl shadow-sm">
           <div className="flex flex-col lg:flex-row justify-between items-center gap-2 lg:gap-0">
             <p className="text-lg font-semibold">넷플릭스 프리이엄 4인</p>

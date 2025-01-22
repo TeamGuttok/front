@@ -9,13 +9,13 @@ export default async function GroupDetail({
   params: Promise<{ id: number }>
 }) {
   const groupId = (await params).id
-  const leaderBgColor = 'bg-secondary-foreground/80'
-  const leaderIconColor = 'text-secondary'
+  const leaderBgColor = 'bg-primary/80'
+  const leaderIconColor = 'text-primary-foreground'
 
   const isLeader = true
 
   return (
-    <div className="sm:max-w-lg sm:w-full m-4 sm:m-auto space-y-4">
+    <>
       <div className="relative space-y-3 px-5 py-4 bg-secondary rounded-2xl shadow-sm">
         <h3 className="font-semibold">구독 정보</h3>
 
@@ -77,6 +77,6 @@ export default async function GroupDetail({
           </Link>
         )}
       </div>
-    </div>
+    </>
   )
 }

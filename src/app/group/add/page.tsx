@@ -23,7 +23,7 @@ export default function GroupAdd() {
   const errors = state?.errors
 
   return (
-    <div className="sm:max-w-lg sm:w-full m-4 sm:m-auto px-5 py-6 bg-secondary rounded-2xl shadow-sm">
+    <div className="sm:w-[calc(100vw-16rem)] sm:max-w-2xl m-4 sm:mx-auto sm:mt-8 px-5 py-6 bg-secondary rounded-2xl shadow-sm">
       <form action={handleSubmit} className="flex flex-col">
         <div className="flex flex-col gap-2">
           <Label htmlFor="name" className="text-gray-600">
