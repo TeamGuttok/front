@@ -3,7 +3,7 @@ import { create } from 'zustand';
 export type SubscriptionStore = {
   title: string;
   price: number;
-  subscription: '';
+  subscription: string;
   paymentAmount: number;
   paymentMethod?: string;
   paymentCycle: string;
@@ -17,11 +17,13 @@ export type UserSubscriptionTypeInfo = SubscriptionStore & {
 
 type SubscriptionState = {
   subscriptionData: SubscriptionStore;
-  paymentCycleOptions: string[];
-  paymentDayOptions: number[];
-  paymentMethodOptions: string[];
   setSubscriptionData: (data: Partial<SubscriptionStore>) => void;
+  updateSubscription: (isCustom: boolean, subscriptionId?: string, title?: string) => void;
+  paymentMethodOptions: string[];
+  updatePaymentMethod: (paymentMethod: string) => void;
+  paymentCycleOptions: string[];
   updatePaymentCycle: (paymentCycle: string) => void;
+  paymentDayOptions: number[];
   updatePaymentDay: (paymentDay: number) => void;
   resetSubscriptionData: () => void;
 };
@@ -45,7 +47,20 @@ export const useSubscriptionStore = create<SubscriptionState>((set) => ({
     set((state) => ({
       subscriptionData: { ...state.subscriptionData, ...data },
     })),
-
+  updateSubscription: (isCustom, subscriptionId) =>
+    set((state) => ({
+      subscriptionData: {
+        ...state.subscriptionData,
+        subscription: isCustom ? '' : subscriptionId || '',
+        title: isCustom ? '' : '',
+        //title: isCustom ? title || state.subscriptionData.title : title || '',
+        // title: isCustom ? '' : title || '',
+      },
+    })),
+  updatePaymentMethod: (paymentMethod) =>
+    set((state) => ({
+      subscriptionData: { ...state.subscriptionData, paymentMethod },
+    })),
   updatePaymentCycle: (paymentCycle) =>
     set((state) => ({
       subscriptionData: { ...state.subscriptionData, paymentCycle },
