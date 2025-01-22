@@ -7,13 +7,13 @@ import { Input } from '#components/_common/Input'
 import { KNOWN_SERVICES } from '#constants/knownServices'
 import { Button } from '#components/_common/Button'
 import { Plus, Search } from 'lucide-react'
-import { useServiceStore } from '#stores/useServiceStore'
+import { useServiceStore, ServiceStore } from '#stores/useServiceStore'
 import { useRouter } from 'next/navigation'
 
 export const allServices = [
   {
     id: 'custom',
-    name: '직접 입력하기',
+    name: '',
     iconUrl: (
       <Plus
         className="mb-2"
@@ -52,20 +52,10 @@ export default function Page() {
     }
   }, [router])
 
-  const handleCardClick = (service: {
-    id: string
-    name: string
-    href: string
-    iconUrl: JSX.Element
-    isCustom: boolean
-  }) => {
-    setSelectedService({
-      id: service.id,
-      name: service.isCustom ? '' : service.name,
-      iconUrl: service.iconUrl,
-    })
-    router.push(service.href)
-  }
+  const handleCardClick = (service: ServiceStore) => {
+    setSelectedService(service);
+    router.push(service.href);
+  };
 
   return (
     <div className="flex flex-col h-full m-4">

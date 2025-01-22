@@ -1,6 +1,6 @@
-import { SubscriptionType } from "#stores/useSubscriptionStore";
+import { SubscriptionStore } from "#stores/useSubscriptionStore";
 
-export async function saveItemApi(data: SubscriptionType): Promise<void> {
+export async function CreateSubscriptionAPI(data: SubscriptionStore): Promise<void> {
   const response = await fetch('/api/subscriptions', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

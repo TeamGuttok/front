@@ -1,17 +1,25 @@
 import { create } from 'zustand'
+import { useSubscriptionStore } from '#stores/useSubscriptionStore'
 
-type Service = {
+export type ServiceStore = {
   id: string
   name: string
+  href: string
   iconUrl: JSX.Element
+  isCustom: boolean
 }
 
-type ServiceState = {
-  selectedService: Service | null
-  setSelectedService: (service: Service) => void
+export type ServiceState = {
+  selectedService: ServiceStore | null
+  setSelectedService: (service: ServiceStore) => void
 }
 
 export const useServiceStore = create<ServiceState>((set) => ({
   selectedService: null,
-  setSelectedService: (service) => set({ selectedService: service }),
+  setSelectedService: (service) => {
+    set({ selectedService: service });
+
+    const { setSubscriptionData } = useSubscriptionStore.getState();
+    setSubscriptionData({ title: service.isCustom ? '' : service.name });
+  },
 }))
