@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { CalendarRange, Plus, ReceiptText } from 'lucide-react'
-import { Button } from '#components/_common/Button'
 import { PATH } from '#app/routes'
 
 export default function Group() {
@@ -32,7 +31,12 @@ export default function Group() {
             </div>
           </div>
 
-          <Button className="w-full mt-4 rounded-lg">그룹으로 이동</Button>
+          <Link
+            href={PATH.groupDetail(1)}
+            className="flex w-full justify-center mt-4 p-2 text-sm bg-primary text-primary-foreground rounded-lg"
+          >
+            그룹으로 이동
+          </Link>
         </div>
       </div>
 
