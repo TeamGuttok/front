@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation'
 export const allServices = [
   {
     id: 'custom',
-    name: '직접 입력하기',
+    name: '',
     iconUrl: (
       <Plus
         className="mb-2"
@@ -43,9 +43,15 @@ export default function Page() {
   const { setSelectedService } = useServiceStore()
   const router = useRouter()
 
-  const handleCardClick = (service: Omit<ServiceStore, 'href'>) => {
+  useEffect(() => {
+    if (!router) {
+      console.error('Router is not available')
+    }
+  }, [router])
+
+  const handleCardClick = (service: ServiceStore) => {
     setSelectedService(service);
-    router.push('add/detail');
+    router.push(service.href);
   };
 
   return (
