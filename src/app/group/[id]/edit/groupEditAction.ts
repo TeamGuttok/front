@@ -16,7 +16,7 @@ interface State {
   formData?: FormData
 }
 
-export async function groupAddAction(
+export async function groupEditAction(
   prevState: State | null,
   formData: FormData,
 ): Promise<State> {
