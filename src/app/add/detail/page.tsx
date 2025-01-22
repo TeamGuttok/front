@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Label } from '#components/_common/Label'
 import { Input } from '#components/_common/Input'
 import { Button } from '#components/_common/Button'
+import { Select, SelectTrigger, SelectContent, SelectItem } from "#components/_common/select";
 import CardTitle from '#components/_common/CardTitle'
 import { useServiceStore } from '#stores/useServiceStore'
 import { useSubscriptionStore } from '#stores/useSubscriptionStore';
@@ -11,25 +12,33 @@ import { useCreateSubscription } from './CreateSubscriptionHook';
 
 export default function Page() {
   const { selectedService, setSelectedService } = useServiceStore()
+  const createSubscription = useCreateSubscription();
   const {
     subscriptionData,
+    updateSubscription,
     setSubscriptionData,
     updatePaymentCycle,
     updatePaymentDay,
+    //updatePaymentMethod,
+    paymentMethodOptions,
     paymentCycleOptions,
     paymentDayOptions,
     resetSubscriptionData,
   } = useSubscriptionStore();
 
-  const createSubscription = useCreateSubscription();
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+
     if (selectedService?.isCustom) {
       setSelectedService({
         ...selectedService,
-        name: e.target.value,
+        name: newValue,
       });
+      updateSubscription(true, undefined, newValue);
     }
+    console.log('selectedService:', selectedService);
+    console.log('subscriptionData:', subscriptionData);
+
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -39,8 +48,6 @@ export default function Page() {
 
     if (!title || !price || !paymentAmount || !paymentCycle || !paymentDay) {
       alert('필수 값을 모두 입력해주세요.');
-      // TODO
-      // [ ] input 아래 경고문구 추가로 변경 
       return;
     }
 
@@ -60,8 +67,7 @@ export default function Page() {
               </Label>
               <Input
                 type="text"
-                value={selectedService?.name || ''}
-                //value={serviceName}
+                value={selectedService?.isCustom ? selectedService?.name : selectedService?.name}
                 onChange={handleInputChange}
                 placeholder="넷플릭스, 통신비, etc"
                 className="block max-w-60 min-w-60 pl-2 text-sm sm:text-base"
@@ -90,7 +96,7 @@ export default function Page() {
                   id="paymentCycle"
                   value={subscriptionData.paymentCycle}
                   onChange={(e) => updatePaymentCycle(e.target.value)}
-                  className="border rounded-md px-2 py-1 dark:text-black"
+                  className="border rounded-md px-2 py-1 dark: dark:text-black block  text-sm sm:text-base"
                 >
                   {paymentCycleOptions.map((cycle) => (
                     <option key={cycle} value={cycle}>
@@ -116,26 +122,38 @@ export default function Page() {
               </div>
             </div>
             <div className="flex items-center justify-between">
-              <Label className="block mr-8 tracking-wide text-lg font-medium text-nowrap">
+              <Select>
+                <SelectTrigger className="w-[200px] block mr-8 tracking-wide text-lg font-medium text-nowrap">
+                  <span>결제 수단 선택</span>
+                </SelectTrigger>
+                <SelectContent
+                  id="paymentMethod"
+                  //value={subscriptionData.paymentMethod}
+                  //onChange={(e) => updatePaymentMethod(e.target.value)}
+                  className="border rounded-md px-2 py-1 dark:text-black block  text-sm sm:text-base"
+                >
+                  {paymentMethodOptions.map((method) => (
+                    <SelectItem key={method} value={method}>
+                      {method}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {/* <Label className="block mr-8 tracking-wide text-lg font-medium text-nowrap">
                 결제 수단
               </Label>
               <select
                 id="paymentMethod"
                 value={subscriptionData.paymentMethod}
-                onChange={(e) => updatePaymentCycle(e.target.value)}
-                className="border rounded-md px-2 py-1 dark:text-black"
+                onChange={(e) => updatePaymentMethod(e.target.value)}
+                className="border rounded-md px-2 py-1 dark:text-black pl-2 max-w-60 min-w-60 text-sm sm:text-base"
               >
-                {paymentCycleOptions.map((cycle) => (
+                {paymentMethodOptions.map((cycle) => (
                   <option key={cycle} value={cycle}>
                     {cycle}
                   </option>
                 ))}
-              </select>
-              <Input
-                type="text"
-                placeholder="결제수단을 입력하세요"
-                className="pl-2 max-w-60 min-w-60 text-sm sm:text-base"
-              />
+              </select> */}
             </div>
             <div className="flex justify-end">
               <Link href="item/add/detail/custom">
@@ -171,7 +189,11 @@ export default function Page() {
 
 
 // TODO
-// [x] 결제 주기 추가
-// [ ] savaitemapi 불러오는 tanstack query (post) 추가
+// [ ] 직접 입력하기 value 삭제해야함.. 
+// [x] 결제 주기 삭제제
+// [x] CreateSubscriptionAPI tanstack query (post) 추가
+// [ ] select, option 컴포넌트 다운받기 
+// [ ] 결제 수단 input 수정 
 // [ ] 저장하고 나면 / 페이지에 보이도록 
 // [ ] 다크테마 스타일 (input, placeholder, color, 사이드바 다크테마)
+// [ ] input 아래 경고문구 추가로 변경

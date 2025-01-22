@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { useEffect } from 'react'
 import { Input } from '#components/_common/Input'
 import { KNOWN_SERVICES } from '#constants/knownServices'
 import { Button } from '#components/_common/Button'
@@ -13,7 +12,7 @@ import { useRouter } from 'next/navigation'
 export const allServices = [
   {
     id: 'custom',
-    name: '',
+    name: '직접 입력하기',
     iconUrl: (
       <Plus
         className="mb-2"
@@ -22,7 +21,6 @@ export const allServices = [
         strokeWidth={3}
       />
     ),
-    href: 'add/detail',
     isCustom: true,
   },
   ...KNOWN_SERVICES.map((service) => ({
@@ -37,7 +35,6 @@ export const allServices = [
         height={20}
       />
     ),
-    href: `add/detail`,
     isCustom: false,
   })),
 ]
@@ -46,15 +43,9 @@ export default function Page() {
   const { setSelectedService } = useServiceStore()
   const router = useRouter()
 
-  useEffect(() => {
-    if (!router) {
-      console.error('Router is not available')
-    }
-  }, [router])
-
-  const handleCardClick = (service: ServiceStore) => {
+  const handleCardClick = (service: Omit<ServiceStore, 'href'>) => {
     setSelectedService(service);
-    router.push(service.href);
+    router.push('add/detail');
   };
 
   return (
@@ -86,7 +77,7 @@ export default function Page() {
             className="dark:bg-gray-800 bg-white hover:bg-slate-200 hover:dark:bg-gray-700 min-h-[5.5rem]
         flex content-center justify-evenly items-center rounded-lg flex-col px-16 py-4 sm:py-3 border border-[rgba(0,0,0,0.2)] cursor-pointer"
           >
-            <Link href={service.href}>
+            <Link href="add/detail">
               <div className="flex flex-col items-center">
                 {service.iconUrl}
                 <h2 className="text-center text-sm dark:text-white items-center font-medium whitespace-nowrap">
