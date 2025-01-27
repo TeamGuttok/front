@@ -13,6 +13,19 @@ export default function Home({ pathname }: { pathname: string }) {
   return (
     <div>
       <div className="background-color-[hsl(var(--background))] flex flex-col h-screen">
+        {/* bg-gray-50 min-h-screen"> */}
+        {/* <div className="overflow-hidden bg-gray-100">
+          <div className="flex animate-marquee space-x-4">
+            {Array.from({ length: 10 }).map((_, idx) => (
+              <div
+                key={idx}
+                className="w-40 h-20 bg-primary text-white flex items-center justify-center rounded-md shadow-md"
+              >
+                Item {idx + 1}
+              </div>
+            ))}
+          </div>
+        </div> */}
         <div className="flex-1">
           <Carousel />
         </div>

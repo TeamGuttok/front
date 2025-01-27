@@ -1,11 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import { KNOWN_SERVICES } from '#constants/knownServices';
-import { Card } from './card';
+import { KNOWN_SERVICES } from '#constants/knownServices'; // 서비스 데이터 import
 
 export default function Carousel() {
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const [isAnimating, setIsAnimating] = useState(false);
+  const carouselRef = useRef<HTMLDivElement>(null); // 캐러셀의 DOM 참조
+  const [isAnimating, setIsAnimating] = useState(false); // 애니메이션 상태
   const duplicatedServices = [...KNOWN_SERVICES, ...KNOWN_SERVICES];
 
   useEffect(() => {
@@ -16,12 +15,14 @@ export default function Carousel() {
 
         if (firstChild) {
           setTimeout(() => {
+            // 첫 번째 아이템을 맨 뒤로 이동
             carouselRef.current?.appendChild(firstChild);
             setIsAnimating(false);
           }, 300);
         }
       }, 3000);
-      return () => clearInterval(interval);
+
+      return () => clearInterval(interval); // 컴포넌트 언마운트 시 클리어
     }
   }, []);
 
@@ -33,13 +34,13 @@ export default function Carousel() {
         style={{ transform: isAnimating ? 'translateX(-100%)' : 'translateX(0)' }}
       >
         {duplicatedServices.map((service, index) => (
-          <Card
+          <div
             key={`${service.id}-${index}`}
-            className="flex-shrink-0 w-64 h-40 background-color-[hsl(var(--muted-foreground))] shadow-lg rounded-lg flex flex-col justify-center items-center mx-2"
+            className="flex-shrink-0 w-64 h-40 bg-white shadow-lg rounded-lg flex flex-col justify-center items-center mx-4"
           >
             <Image src={service.iconUrl} alt={service.name} width={64} height={64} className="w-16 h-16 mb-2" />
-            <span className="text-lg font-semibold ">{service.name}</span>
-          </Card>
+            <span className="text-lg font-semibold text-gray-700">{service.name}</span>
+          </div>
         ))}
       </div>
     </div>
