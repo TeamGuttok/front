@@ -1,4 +1,6 @@
 import type { Config } from 'tailwindcss'
+//import tailwindcssAnimate from 'tailwindcss-animate'
+import type { PluginAPI } from 'tailwindcss/types/config'
 
 export default {
   darkMode: ['class'],
@@ -71,5 +73,22 @@ export default {
       },
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [
+    function ({ addUtilities }: PluginAPI) {
+      addUtilities({
+        '.break-keep-all': {
+          'word-break': 'keep-all',
+        },
+      });
+    }
+  ],
+  // plugins: [require('tailwindcss-animate'),
+  // function ({ addUtilities }) {
+  //   addUtilities({
+  //     '.break-keep-all': {
+  //       'word-break': 'keep-all',
+  //     },
+  //   });
+  // },
+  // ],
 } satisfies Config
