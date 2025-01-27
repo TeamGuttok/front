@@ -1,8 +1,8 @@
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
 body {
   font-family: 'Pretendard', sans-serif;
@@ -17,6 +17,7 @@ body {
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
     --primary: 211 35% 51%;
+    --primary-hover: 211 35% 41%;
     --primary-foreground: 0 0% 98%;
     --secondary: 0 0% 100%;
     --secondary-foreground: 0 0% 9%;
@@ -76,5 +77,20 @@ body {
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  @keyframes scroll {
+    0% {
+      transform: translateX(0); 
+    }
+    100% {
+      transform: translateX(-50%); 
+    }
+  }
+
+  .animate-scroll {
+    animation: scroll 15s linear infinite; 
   }
 }

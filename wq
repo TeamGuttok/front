@@ -1,0 +1,33 @@
+[33mc79436a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{0}: rebase (finish): returning to refs/heads/main
+[33mc79436a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{1}: rebase (start): checkout HEAD~7
+[33m296da9e[m[33m ([m[1;31morigin/GUTTOK-48[m[33m, [m[1;32mGUTTOK-48[m[33m)[m HEAD@{2}: rebase (finish): returning to refs/heads/main
+[33m296da9e[m[33m ([m[1;31morigin/GUTTOK-48[m[33m, [m[1;32mGUTTOK-48[m[33m)[m HEAD@{3}: rebase (finish): refs/heads/main onto 441a3c03c5f143717694168ad5f88bebe1548ba9
+[33m296da9e[m[33m ([m[1;31morigin/GUTTOK-48[m[33m, [m[1;32mGUTTOK-48[m[33m)[m HEAD@{4}: reset: moving to 296da9e5fe3e7f4f2f07f4fdb68918aae2d11431
+[33m296da9e[m[33m ([m[1;31morigin/GUTTOK-48[m[33m, [m[1;32mGUTTOK-48[m[33m)[m HEAD@{5}: rebase (abort): returning to refs/heads/main
+[33m296da9e[m[33m ([m[1;31morigin/GUTTOK-48[m[33m, [m[1;32mGUTTOK-48[m[33m)[m HEAD@{6}: rebase (abort): returning to refs/heads/main
+[33m441a3c0[m HEAD@{7}: reset: moving to HEAD^
+[33m296da9e[m[33m ([m[1;31morigin/GUTTOK-48[m[33m, [m[1;32mGUTTOK-48[m[33m)[m HEAD@{8}: checkout: moving from main to main
+[33m296da9e[m[33m ([m[1;31morigin/GUTTOK-48[m[33m, [m[1;32mGUTTOK-48[m[33m)[m HEAD@{9}: rebase (finish): returning to refs/heads/main
+[33m296da9e[m[33m ([m[1;31morigin/GUTTOK-48[m[33m, [m[1;32mGUTTOK-48[m[33m)[m HEAD@{10}: rebase (finish): refs/heads/main onto 296da9e5fe3e7f4f2f07f4fdb68918aae2d11431
+[33m296da9e[m[33m ([m[1;31morigin/GUTTOK-48[m[33m, [m[1;32mGUTTOK-48[m[33m)[m HEAD@{11}: checkout: moving from main to main
+[33m296da9e[m[33m ([m[1;31morigin/GUTTOK-48[m[33m, [m[1;32mGUTTOK-48[m[33m)[m HEAD@{12}: checkout: moving from GUTTOK-48 to main
+[33m296da9e[m[33m ([m[1;31morigin/GUTTOK-48[m[33m, [m[1;32mGUTTOK-48[m[33m)[m HEAD@{13}: checkout: moving from main to GUTTOK-48
+[33m296da9e[m[33m ([m[1;31morigin/GUTTOK-48[m[33m, [m[1;32mGUTTOK-48[m[33m)[m HEAD@{14}: commit: refactor: 컴포넌트 개선
+[33m441a3c0[m HEAD@{15}: commit: feat: 메인 페이지 / wip: 캐러셀 작성 중
+[33m850798d[m HEAD@{16}: commit: feat: useItemStore 및 useSubscriptionStore에 아이템 관리 기능 추가, select 컴포넌트 스타일 개선
+[33m098b800[m HEAD@{17}: commit: refactor: subscription/title을 염두에 둔 useSubscriptionStore 수정, userServiceStore 중복 코드 href 제거, select 컴포넌트 적용 중
+[33m6f73e76[m HEAD@{18}: commit: wip: zustand store 업데이트 중
+[33md1897ee[m HEAD@{19}: checkout: moving from main to main
+[33md1897ee[m HEAD@{20}: commit: feat: 구독 서비스 저장 api 및 훅 추가, 결제 주기 추가
+[33m20ec545[m HEAD@{21}: commit: refactor: CardTitle 컴포넌트 수정
+[33mc79436a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{22}: commit: refactor: CardTitle 컴포넌트 수정 #37
+[33m6a7cef1[m HEAD@{23}: commit: GUTTOK-37: /add 경로 수정 및 zustand store 작성'
+[33m839b63c[m HEAD@{24}: pull: Fast-forward
+[33m057c519[m HEAD@{25}: commit: feat: /add, /add/detail, knownServices id 받아오기, CardTitle 컴포넌트 작성, 메인 페이지 작성 중
+[33m3be3325[m HEAD@{26}: commit (merge): 머지
+[33m053507a[m HEAD@{27}: commit: 사이드바 다크테마 삭제
+[33mdfc4aaf[m HEAD@{28}: commit: feat: 구독 추가 경로 변경
+[33m196070a[m HEAD@{29}: commit: 구독 추가 생성
+[33me0e868e[m HEAD@{30}: reset: moving to HEAD^
+[33m7328422[m HEAD@{31}: commit: feat: 메인 페이지, 구독 생성
+[33me0e868e[m HEAD@{32}: clone: from https://github.com/stillcorners/front.git
