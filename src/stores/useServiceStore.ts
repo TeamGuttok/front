@@ -11,7 +11,7 @@ export type ServiceStore = {
 
 export type ServiceState = {
   selectedService: ServiceStore | null
-  setSelectedService: (service: Omit<ServiceStore, 'href'>) => void;
+  setSelectedService: (service: Omit<ServiceStore, 'href'>) => void
 }
 
 export const useServiceStore = create<ServiceState>((set) => ({
@@ -22,10 +22,11 @@ export const useServiceStore = create<ServiceState>((set) => ({
         ...service,
         href: 'add/detail',
       },
-    });
+    })
 
-    const { updateSubscription, setSubscriptionData } = useSubscriptionStore.getState();
-    updateSubscription(service.isCustom, service.id);
-    setSubscriptionData({ title: service.isCustom ? '' : service.name });
+    const { updateSubscription, setSubscriptionData } =
+      useSubscriptionStore.getState()
+    updateSubscription(service.isCustom, service.id)
+    setSubscriptionData({ title: service.isCustom ? '' : service.name })
   },
-}));
+}))
