@@ -1,17 +1,17 @@
-import { create } from 'zustand';
-import { SubscriptionStore } from './useSubscriptionStore';
+import { create } from 'zustand'
+import { SubscriptionStore } from './useSubscriptionStore'
 
 export type Item = SubscriptionStore & {
-  useId: string;
-};
+  useId: string
+}
 
 export type ItemState = {
-  items: Item[]; // 아이템 리스트
-  addItem: (item: Item) => void;  // 추가(post)
-  getItemById: (id: string) => Item | undefined; // 조회(get)
-  updateItem: (id: string, updatedItem: Partial<Item>) => void; // 수정(put)
-  removeItem: (id: string) => void; // 삭제(delete)
-};
+  items: Item[] // 아이템 리스트
+  addItem: (item: Item) => void // 추가(post)
+  getItemById: (id: string) => Item | undefined // 조회(get)
+  updateItem: (id: string, updatedItem: Partial<Item>) => void // 수정(put)
+  removeItem: (id: string) => void // 삭제(delete)
+}
 
 export const useItemStore = create<ItemState>((set) => ({
   items: [],
@@ -28,7 +28,7 @@ export const useItemStore = create<ItemState>((set) => ({
   updateItem: (id, updatedItem) =>
     set((state) => ({
       items: state.items.map((item) =>
-        item.id === id ? { ...item, ...updatedItem } : item
+        item.id === id ? { ...item, ...updatedItem } : item,
       ),
     })),
-}));
+}))

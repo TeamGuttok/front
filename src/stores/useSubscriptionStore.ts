@@ -1,38 +1,42 @@
-import { create } from 'zustand';
+import { create } from 'zustand'
 
 export type SubscriptionStore = {
-  title: string;
-  subscription: string;
-  paymentAmount: number;
-  paymentMethod?: string;
-  paymentCycle: string;
-  paymentDay: number;
-  memo?: string;
-};
+  title: string
+  subscription: string
+  paymentAmount: number
+  paymentMethod?: string
+  paymentCycle: string
+  paymentDay: number
+  memo?: string
+}
 
 export type UserSubscriptionTypeInfo = SubscriptionStore & {
-  userId: number;
-};
+  userId: number
+}
 
 type SubscriptionState = {
-  subscriptionData: SubscriptionStore;
-  setSubscriptionData: (data: Partial<SubscriptionStore>) => void;
-  updateSubscription: (isCustom: boolean, subscriptionId?: string, title?: string) => void;
-  resetSubscriptionData: () => void;
+  subscriptionData: SubscriptionStore
+  setSubscriptionData: (data: Partial<SubscriptionStore>) => void
+  updateSubscription: (
+    isCustom: boolean,
+    subscriptionId?: string,
+    title?: string,
+  ) => void
+  resetSubscriptionData: () => void
 
-  updatePaymentAmount: (paymentAmount: number) => void;
+  updatePaymentAmount: (paymentAmount: number) => void
 
-  paymentMethodOptions: string[];
-  updatePaymentMethod: (paymentMethod: string) => void;
+  paymentMethodOptions: string[]
+  updatePaymentMethod: (paymentMethod: string) => void
 
-  paymentCycleOptions: string[];
-  updatePaymentCycle: (paymentCycle: string) => void;
+  paymentCycleOptions: string[]
+  updatePaymentCycle: (paymentCycle: string) => void
 
-  paymentDayOptions: number[];
-  updatePaymentDay: (paymentDay: number) => void;
+  paymentDayOptions: number[]
+  updatePaymentDay: (paymentDay: number) => void
 
-  updateMemo: (memo: string) => void;
-};
+  updateMemo: (memo: string) => void
+}
 
 export const useSubscriptionStore = create<SubscriptionState>((set) => ({
   subscriptionData: {
@@ -74,7 +78,14 @@ export const useSubscriptionStore = create<SubscriptionState>((set) => ({
       subscriptionData: { ...state.subscriptionData, paymentAmount },
     })),
 
-  paymentMethodOptions: ['카드', '계좌 이체', '네이버페이', '카카오페이', '휴대폰 결제', '기타'],
+  paymentMethodOptions: [
+    '카드',
+    '계좌 이체',
+    '네이버페이',
+    '카카오페이',
+    '휴대폰 결제',
+    '기타',
+  ],
   updatePaymentMethod: (paymentMethod) =>
     set((state) => ({
       subscriptionData: { ...state.subscriptionData, paymentMethod },
@@ -92,8 +103,8 @@ export const useSubscriptionStore = create<SubscriptionState>((set) => ({
       subscriptionData: { ...state.subscriptionData, paymentDay },
     })),
 
-  updateMemo: (memo) => set((state) => ({
-    subscriptionData: { ...state.subscriptionData, memo }
-  })),
-
-}));
+  updateMemo: (memo) =>
+    set((state) => ({
+      subscriptionData: { ...state.subscriptionData, memo },
+    })),
+}))

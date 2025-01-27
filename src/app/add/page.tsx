@@ -44,9 +44,9 @@ export default function Page() {
   const router = useRouter()
 
   const handleCardClick = (service: Omit<ServiceStore, 'href'>) => {
-    setSelectedService(service);
-    router.push('add/detail');
-  };
+    setSelectedService(service)
+    router.push('add/detail')
+  }
 
   return (
     <div className="flex flex-col h-full m-4">

@@ -3,15 +3,22 @@
 import Link from 'next/link'
 import { Input } from '#components/_common/Input'
 import { Button } from '#components/_common/Button'
-import { Select, SelectTrigger, SelectContent, SelectItem, SelectLabel, SelectGroup } from "#components/_common/select";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectLabel,
+  SelectGroup,
+} from '#components/_common/select'
 import CardTitle from '#components/_common/CardTitle'
 import { useServiceStore } from '#stores/useServiceStore'
-import { useSubscriptionStore } from '#stores/useSubscriptionStore';
-import { useCreateSubscription } from './CreateSubscriptionHook';
+import { useSubscriptionStore } from '#stores/useSubscriptionStore'
+import { useCreateSubscription } from './CreateSubscriptionHook'
 
 export default function Page() {
   const { selectedService } = useServiceStore()
-  const createSubscription = useCreateSubscription();
+  const createSubscription = useCreateSubscription()
   const {
     subscriptionData,
     //updateSubscription,
@@ -24,11 +31,14 @@ export default function Page() {
     paymentDayOptions,
     updateMemo,
     resetSubscriptionData,
-  } = useSubscriptionStore();
+  } = useSubscriptionStore()
 
-  const defaultPaymentCycle = useSubscriptionStore.getState().subscriptionData.paymentCycle
-  const defaultPaymentDay = useSubscriptionStore.getState().subscriptionData.paymentDay
-  const defaultPaymentMethod = useSubscriptionStore.getState().subscriptionData.paymentMethod
+  const defaultPaymentCycle =
+    useSubscriptionStore.getState().subscriptionData.paymentCycle
+  const defaultPaymentDay =
+    useSubscriptionStore.getState().subscriptionData.paymentDay
+  const defaultPaymentMethod =
+    useSubscriptionStore.getState().subscriptionData.paymentMethod
 
   // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   const newValue = e.target.value;
@@ -46,13 +56,15 @@ export default function Page() {
   // };
 
   const handleSubmit = (): boolean => {
-    const { title, paymentAmount, paymentCycle, paymentDay } = subscriptionData;
-    return !!(title && paymentAmount && paymentCycle && paymentDay);
-  };
+    const { title, paymentAmount, paymentCycle, paymentDay } = subscriptionData
+    return !!(title && paymentAmount && paymentCycle && paymentDay)
+  }
 
   return (
     <CardTitle className="flex">
-      <h1 className="text-3xl font-bold justify-center flex">구독 서비스 세부설정</h1>
+      <h1 className="text-3xl font-bold justify-center flex">
+        구독 서비스 세부설정
+      </h1>
       <div className="flex flex-col justify-center items-center my-12">
         <form className="space-y-4 ">
           <div className="grid grid-cols-1 gap-4">
@@ -76,7 +88,9 @@ export default function Page() {
               <Input
                 type="number"
                 value={subscriptionData.paymentAmount}
-                onChange={(e) => setSubscriptionData({ paymentAmount: Number(e.target.value) })}
+                onChange={(e) =>
+                  setSubscriptionData({ paymentAmount: Number(e.target.value) })
+                }
                 placeholder="금액을 입력하세요"
                 className="block max-w-60 min-w-60 pl-2 text-sm sm:text-base"
               />
@@ -89,8 +103,7 @@ export default function Page() {
                 <label htmlFor="paymentCycle" className="text-sm font-medium">
                   매
                 </label>
-                <Select onValueChange={(value) => updatePaymentCycle(value)}
-                >
+                <Select onValueChange={(value) => updatePaymentCycle(value)}>
                   <SelectTrigger className="flex border rounded-md px-4">
                     {subscriptionData.paymentCycle || defaultPaymentCycle}
                     <SelectContent
@@ -105,7 +118,8 @@ export default function Page() {
                     </SelectContent>
                   </SelectTrigger>
                 </Select>
-                <Select onValueChange={(value) => updatePaymentDay(Number((value)))}
+                <Select
+                  onValueChange={(value) => updatePaymentDay(Number(value))}
                 >
                   <SelectTrigger className="flex border rounded-md px-4">
                     {subscriptionData.paymentDay || defaultPaymentDay}
@@ -114,8 +128,7 @@ export default function Page() {
                       className="border px-2 py-1 mr-10 rounded-md dark:text-black block"
                     >
                       {paymentDayOptions.map((day) => (
-                        <SelectItem key={day} value={String(day)}
-                        >
+                        <SelectItem key={day} value={String(day)}>
                           {day}
                         </SelectItem>
                       ))}
@@ -171,13 +184,14 @@ export default function Page() {
             <Button
               type="submit"
               onClick={(e) => {
-                e.preventDefault();
-                createSubscription.mutate(subscriptionData);
-                resetSubscriptionData();
+                e.preventDefault()
+                createSubscription.mutate(subscriptionData)
+                resetSubscriptionData()
               }}
               disabled={!handleSubmit()}
-              className={`w-full py-2 mt-4 text-base text-white shadow ${!handleSubmit() ? "bg-gray-400 cursor-not-allowed" : "primary"
-                }`}
+              className={`w-full py-2 mt-4 text-base text-white shadow ${
+                !handleSubmit() ? 'bg-gray-400 cursor-not-allowed' : 'primary'
+              }`}
             >
               저장하기
             </Button>
@@ -188,14 +202,13 @@ export default function Page() {
   )
 }
 
-
 // TODO
 
-// [x] 직접 입력하기 value 삭제해야함.. 
+// [x] 직접 입력하기 value 삭제해야함..
 // [x] 결제 주기 삭제제
 // [x] CreateSubscriptionAPI tanstack query (post) 추가
-// [x] select, option 컴포넌트 다운받기 
-// [x] 결제 수단 input 수정 
-// [ ] 저장하고 나면 / 페이지에 보이도록 
+// [x] select, option 컴포넌트 다운받기
+// [x] 결제 수단 input 수정
+// [ ] 저장하고 나면 / 페이지에 보이도록
 // [x] 다크테마 스타일 (input, placeholder, color, 사이드바 다크테마)
 // [x] input 아래 경고문구 추가로 변경

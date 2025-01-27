@@ -78,8 +78,7 @@ export default {
         '.break-keep-all': {
           'word-break': 'keep-all',
         },
-      });
+      })
     },
-
   ],
 } satisfies Config

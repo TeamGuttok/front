@@ -3,7 +3,16 @@
 import useTheme from '#contexts/ThemeProvider/hook'
 
 import Link from 'next/link'
-import { Menu, Calendar, Users, Bell, User, LogIn, Moon, Sun } from 'lucide-react'
+import {
+  Menu,
+  Calendar,
+  Users,
+  Bell,
+  User,
+  LogIn,
+  Moon,
+  Sun,
+} from 'lucide-react'
 import { PATH } from '#app/routes'
 import { cn } from '#components/lib/utils'
 
