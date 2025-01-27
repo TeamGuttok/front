@@ -1,88 +1,91 @@
 'use client'
 
-import useTheme from '#contexts/ThemeProvider/hook'
+import Link from 'next/link'
+import { PATH } from "#app/routes"
+import { cn } from '#components/lib/utils'
+import { Bell, CalendarCheck, Users, HandCoins } from 'lucide-react'
+import Carousel from '#components/_common/Carousel'
 
-export default function Home() {
-  const { theme, setTheme } = useTheme()
+export default function Home({ pathname }: { pathname: string }) {
+  const buttonClassName = 'px-6 py-2 bg-primary text-white rounded-md shadow hover:bg-[hsl(var(--primary-hover))]'
+  const iconClassName = 'w-16 h-16 stroke-[hsl(var(--primary))] mx-auto flex items-center justify-center'
 
   return (
-    <div className="">
-      <div className="bg-gray-50 min-h-screen">
-        <div className="overflow-hidden bg-gray-100">
-          {/* <div className="flex animate-marquee space-x-4">
-            {Array.from({ length: 10 }).map((_, idx) => (
-              <div
-                key={idx}
-                className="w-40 h-20 bg-primary text-white flex items-center justify-center rounded-md shadow-md"
-              >
-                Item {idx + 1}
-              </div>
-            ))}
-          </div> */}
+    <div>
+      <div className="background-color-[hsl(var(--background))] flex flex-col h-screen">
+        <div className="flex-1">
+          <Carousel />
         </div>
 
-        <div className="px-4 py-12">
-          <div className="text-center">
-            <h1 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-2">
-              구독을 똑똑하게
-            </h1>
-            <p className="text-gray-600 mb-6">
-              스마트한 구독 관리를 위한 최고의 선택
-            </p>
-            <div className="space-x-4">
-              <button className="px-6 py-2 bg-primary text-white rounded-md shadow hover:bg-blue-700">
-                회원가입
-              </button>
-              <button className="px-6 py-2 bg-gray-200 text-gray-800 rounded-md shadow hover:bg-gray-300">
-                로그인
-              </button>
-            </div>
+        <div className="px-4 py-12 text-center h-">
+          <h1 className="block text-4xl mb-2">
+            <span className="font-bold">구</span>독을{' '}
+            <span className="font-bold">똑</span>똑하게
+          </h1>
+          <p className="block text-lg text-sub mb-8">
+            스마트한 구독 생활을 위한 최고의 선택
+          </p>
+          <div className="space-x-4 mb-12">
+            <Link href={PATH.register}
+              className={cn(buttonClassName, pathname === PATH.register && 'bg-accent')}
+              aria-label="회원가입 페이지로 이동">
+              <span>회원가입</span>
+            </Link>
+            <Link href={PATH.login} className={cn(buttonClassName, pathname === PATH.register && 'bg-accent')}
+              aria-label='로그인 페이지로 이동'>
+              로그인
+            </Link>
+          </div>
+          <div>
+            <h2 className='block text-lg text-center'>
+              <span className='font-semibold'>관리의 새로운 시작,</span>{' '}
+              <span className='font-medium whitespace-nowrap'>구똑과 함께 스마트한 구독 생활을 시작해보세요</span>
+            </h2>
           </div>
 
-          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="text-center">
-              <div className="w-16 h-16 mx-auto bg-gray-200 rounded-full flex items-center justify-center"></div>
-              <h3 className="mt-4 text-lg font-medium text-gray-800">
+          <div className="m-10 grid lg:grid-cols-4 md:grid-cols-2 grid-cols-2 gap-x-11 gap-y-16 auto-rows-[8rem] auto-cols-auto-[8rem] justify-items">
+            <div className="text-center aspect-w-1 aspect-h-1">
+              {/* <PiggyBank aria-label="구독비 절약 아이콘" className={iconClassName} size={60} fill='hsl(var(--primary))' stroke='hsl(var(--background))' strokeWidth={1} />  */}
+              <HandCoins aria-label="구독비 절약 아이콘" className={iconClassName} strokeWidth={2.2} />
+              <h3 className="my-2 text-lg font-medium">
                 구독비 절약
               </h3>
-              <p className="text-sm text-gray-600 mt-2">
-                불필요한 구독을 찾아 절약하세요
+              <p className="text-sm lg:px-9 break-keep-all">
+                불필요한 구독을 찾아 비용을 절감해보세요
               </p>
             </div>
-            <div className="text-center">
-              <div className="w-16 h-16 mx-auto bg-gray-200 rounded-full flex items-center justify-center"></div>
-              <h3 className="mt-4 text-lg font-medium text-gray-800">
+            <div className="text-center aspect-w-1 aspect-h-1">
+              <Bell aria-label='알림 서비스 아이콘' className={iconClassName} strokeWidth={2.2} />
+              <h3 className="my-2 text-lg font-medium">
                 알림 서비스
               </h3>
-              <p className="text-sm text-gray-600 mt-2">
-                갱신일에 맞춰 알림을 받아보세요
+              <p className="text-sm lg:px-7 break-keep-all">
+                까먹기 쉬운 결제일, 놓치지 않도록 알려드려요
               </p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 mx-auto bg-gray-200 rounded-full flex items-center justify-center"></div>
-              <h3 className="mt-4 text-lg font-medium text-gray-800">
+              <CalendarCheck aria-label='캘린더 아이콘' className={iconClassName}
+
+                strokeWidth={2.2} />
+              <h3 className="my-2 text-lg font-medium">
                 캘린더 제공
               </h3>
-              <p className="text-sm text-gray-600 mt-2">
-                결제 일정에 맞춘 캘린더를 제공합니다
+              <p className="text-sm lg:px-8 break-keep-all">
+                결제 일정을 캘린더를 확인하세요
               </p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 mx-auto bg-gray-200 rounded-full flex items-center justify-center"></div>
-              <h3 className="mt-4 text-lg font-medium text-gray-800">
+              <Users aria-label='그룹 아이콘' className={iconClassName} strokeWidth={2.2} />
+              <h3 className="my-2 text-lg font-medium">
                 그룹 공유
               </h3>
-              <p className="text-sm text-gray-600 mt-2">
+              <p className="text-sm lg:px-8 break-keep-all">
                 다양한 사람들과 구독 서비스를 공유하세요
               </p>
             </div>
           </div>
         </div>
       </div>
-
-      <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
-        테마
-      </button>
     </div>
   )
 }
