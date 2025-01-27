@@ -1,5 +1,4 @@
 import type { Config } from 'tailwindcss'
-//import tailwindcssAnimate from 'tailwindcss-animate'
 import type { PluginAPI } from 'tailwindcss/types/config'
 
 export default {
@@ -80,15 +79,7 @@ export default {
           'word-break': 'keep-all',
         },
       });
-    }
+    },
+
   ],
-  // plugins: [require('tailwindcss-animate'),
-  // function ({ addUtilities }) {
-  //   addUtilities({
-  //     '.break-keep-all': {
-  //       'word-break': 'keep-all',
-  //     },
-  //   });
-  // },
-  // ],
 } satisfies Config
