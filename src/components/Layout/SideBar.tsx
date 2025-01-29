@@ -1,9 +1,14 @@
+'use client'
+
+import useTheme from '#contexts/ThemeProvider/hook'
+
 import Link from 'next/link'
 import { Menu, Calendar, Users, Bell, User, LogIn } from 'lucide-react'
 import { PATH } from '#app/routes'
 import { cn } from '#components/lib/utils'
 
 export default function SideBar({ pathname }: { pathname: string }) {
+  const { theme, setTheme } = useTheme()
   const itemClassName =
     'flex items-center gap-2 p-3 text-sub hover:text-primary rounded-md'
 
@@ -68,6 +73,13 @@ export default function SideBar({ pathname }: { pathname: string }) {
 
       <nav className="justify-self-end">
         <ul>
+          <li>
+            <button
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            >
+              테마
+            </button>
+          </li>
           <li>
             <Link
               href={PATH.myPage}

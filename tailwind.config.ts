@@ -61,12 +61,12 @@ export default {
         sm: 'calc(var(--radius) - 4px)',
       },
       animation: {
-        marquee: "marquee 40s linear infinite",
+        marquee: 'marquee 40s linear infinite',
       },
       keyframes: {
         marquee: {
-          "0%": { transform: "translateX(100%)" },
-          "100%": { transform: "translateX(-100%)" },
+          '0%': { transform: 'translateX(100%)' },
+          '100%': { transform: 'translateX(-100%)' },
         },
       },
     },
