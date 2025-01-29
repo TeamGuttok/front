@@ -10,7 +10,7 @@ import {
   SelectItem,
   SelectLabel,
   SelectGroup,
-} from '#components/_common/select'
+} from '#components/_common/Select'
 import CardTitle from '#components/_common/CardTitle'
 import { useServiceStore } from '#stores/useServiceStore'
 import { useSubscriptionStore } from '#stores/useSubscriptionStore'
@@ -40,21 +40,6 @@ export default function Page() {
   const defaultPaymentMethod =
     useSubscriptionStore.getState().subscriptionData.paymentMethod
 
-  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const newValue = e.target.value;
-
-  //   if (selectedService?.isCustom) {
-  //     setSelectedService({
-  //       ...selectedService,
-  //       name: newValue,
-  //     });
-  //     updateSubscription(true, undefined, newValue);
-  //   }
-  //   console.log('selectedService:', selectedService);
-  //   console.log('subscriptionData:', subscriptionData);
-
-  // };
-
   const handleSubmit = (): boolean => {
     const { title, paymentAmount, paymentCycle, paymentDay } = subscriptionData
     return !!(title && paymentAmount && paymentCycle && paymentDay)
@@ -69,7 +54,11 @@ export default function Page() {
         <form className="space-y-4 ">
           <div className="grid grid-cols-1 gap-4">
             <SelectGroup className="flex items-center justify-between">
-              <SelectLabel className="block mr-8 tracking-wide text-lg font-medium text-nowrap">
+              <SelectLabel
+                id="subscriptionTitle"
+                aria-labelledby="subscriptionTitle"
+                className="block mr-8 tracking-wide text-lg font-medium text-nowrap"
+              >
                 구독 서비스 *
               </SelectLabel>
               <Input
@@ -201,14 +190,3 @@ export default function Page() {
     </CardTitle>
   )
 }
-
-// TODO
-
-// [x] 직접 입력하기 value 삭제해야함..
-// [x] 결제 주기 삭제제
-// [x] CreateSubscriptionAPI tanstack query (post) 추가
-// [x] select, option 컴포넌트 다운받기
-// [x] 결제 수단 input 수정
-// [ ] 저장하고 나면 / 페이지에 보이도록
-// [x] 다크테마 스타일 (input, placeholder, color, 사이드바 다크테마)
-// [x] input 아래 경고문구 추가로 변경

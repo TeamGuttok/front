@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { KNOWN_SERVICES } from '#constants/knownServices'
-import { Card } from './card'
+import { Card } from './Card'
 
 export default function Carousel() {
   const carouselRef = useRef<HTMLDivElement>(null)
@@ -37,7 +37,8 @@ export default function Carousel() {
         {duplicatedServices.map((service, index) => (
           <Card
             key={`${service.id}-${index}`}
-            className="flex-shrink-0 w-64 h-40 background-color-[hsl(var(--muted-foreground))] shadow-lg rounded-lg flex flex-col justify-center items-center mx-2"
+            className="flex-shrink-0 w-64
+            h-40 background-color-[hsl(var(--muted-foreground))] shadow-lg rounded-lg flex flex-col justify-center items-center mx-2"
           >
             <Image
               src={service.iconUrl}

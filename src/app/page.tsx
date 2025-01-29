@@ -5,10 +5,11 @@ import { PATH } from '#app/routes'
 import { cn } from '#components/lib/utils'
 import { Bell, CalendarCheck, Users, HandCoins } from 'lucide-react'
 import Carousel from '#components/_common/Carousel'
+import { Button } from '#components/_common/Button'
 
 export default function Home({ pathname }: { pathname: string }) {
   const buttonClassName =
-    'px-6 py-2 bg-primary text-white rounded-md shadow hover:bg-[hsl(var(--primary-hover))]'
+    'w-20 bg-primary text-white rounded-md shadow hover:bg-[hsl(var(--primary-hover))]'
   const iconClassName =
     'w-16 h-16 stroke-[hsl(var(--primary))] mx-auto flex items-center justify-center'
 
@@ -19,7 +20,7 @@ export default function Home({ pathname }: { pathname: string }) {
           <Carousel />
         </div>
 
-        <div className="px-4 py-12 text-center h-">
+        <div className="px-4 py-12 text-center">
           <h1 className="block text-4xl mb-2">
             <span className="font-bold">구</span>독을{' '}
             <span className="font-bold">똑</span>똑하게
@@ -28,25 +29,26 @@ export default function Home({ pathname }: { pathname: string }) {
             스마트한 구독 생활을 위한 최고의 선택
           </p>
           <div className="space-x-4 mb-12">
-            <Link
-              href={PATH.register}
-              className={cn(
-                buttonClassName,
-                pathname === PATH.register && 'bg-accent',
-              )}
-              aria-label="회원가입 페이지로 이동"
-            >
-              <span>회원가입</span>
+            <Link href={PATH.register} aria-label="회원가입 페이지로 이동">
+              <Button
+                type="button"
+                className={cn(
+                  buttonClassName,
+                  pathname === PATH.register && 'bg-accent',
+                )}
+              >
+                회원가입
+              </Button>
             </Link>
-            <Link
-              href={PATH.login}
-              className={cn(
-                buttonClassName,
-                pathname === PATH.register && 'bg-accent',
-              )}
-              aria-label="로그인 페이지로 이동"
-            >
-              로그인
+            <Link href={PATH.login} aria-label="로그인 페이지로 이동">
+              <Button
+                className={cn(
+                  buttonClassName,
+                  pathname === PATH.register && 'bg-accent',
+                )}
+              >
+                로그인
+              </Button>
             </Link>
           </div>
           <div>
@@ -90,7 +92,7 @@ export default function Home({ pathname }: { pathname: string }) {
               />
               <h3 className="my-2 text-lg font-medium">캘린더 제공</h3>
               <p className="text-sm lg:px-8 break-keep-all">
-                결제 일정을 캘린더를 확인하세요
+                결제 일정을 캘린더에서 확인하세요
               </p>
             </div>
             <div className="text-center">

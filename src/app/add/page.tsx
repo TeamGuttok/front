@@ -1,40 +1,26 @@
 'use client'
 
 import Link from 'next/link'
-import Image from 'next/image'
+//import Image from 'next/image'
 import { Input } from '#components/_common/Input'
 import { KNOWN_SERVICES } from '#constants/knownServices'
 import { Button } from '#components/_common/Button'
 import { Plus, Search } from 'lucide-react'
 import { useServiceStore, ServiceStore } from '#stores/useServiceStore'
 import { useRouter } from 'next/navigation'
+import clsx from 'clsx'
 
 export const allServices = [
   {
     id: 'custom',
     name: '직접 입력하기',
-    iconUrl: (
-      <Plus
-        className="mb-2"
-        aria-label="구독 내용 직접 입력하기"
-        size={20}
-        strokeWidth={3}
-      />
-    ),
+    iconUrl: '',
     isCustom: true,
   },
   ...KNOWN_SERVICES.map((service) => ({
     id: service.id,
     name: service.name,
-    iconUrl: (
-      <Image
-        src={service.iconUrl}
-        className="mb-2"
-        alt={service.name}
-        width={20}
-        height={20}
-      />
-    ),
+    iconUrl: service.iconUrl,
     isCustom: false,
   })),
 ]
@@ -79,7 +65,32 @@ export default function Page() {
           >
             <Link href="add/detail">
               <div className="flex flex-col items-center">
-                {service.iconUrl}
+                {service.iconUrl ? (
+                  <div
+                    className={clsx(
+                      'mb-2 flex items-center justify-center w-[2rem] h-[3rem]',
+                      {
+                        'bg-gray-300': !service.iconUrl,
+                      },
+                    )}
+                    style={{
+                      backgroundImage: service.iconUrl
+                        ? `url(${service.iconUrl})`
+                        : 'none',
+                      backgroundSize: 'contain',
+                      backgroundRepeat: 'no-repeat',
+                      backgroundPosition: 'center',
+                    }}
+                  />
+                ) : (
+                  <Plus
+                    className="mb-2"
+                    aria-label="구독 내용 직접 입력하기"
+                    size={20}
+                    strokeWidth={3}
+                  />
+                )}
+                {/* {service.iconUrl} */}
                 <h2 className="text-center text-sm dark:text-white items-center font-medium whitespace-nowrap">
                   {service.name}
                 </h2>
