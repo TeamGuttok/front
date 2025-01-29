@@ -5,7 +5,7 @@ export type ServiceStore = {
   id: string
   name: string
   href: string
-  iconUrl: JSX.Element
+  iconUrl: React.ReactNode | string
   isCustom: boolean
 }
 
