@@ -16,10 +16,9 @@ export default function Home({ pathname }: { pathname: string }) {
   return (
     <div>
       <div className="background-color-[hsl(var(--background))] flex flex-col h-screen">
-        <div className="flex-1">
+        <div>
           <Carousel />
         </div>
-
         <div className="px-4 py-12 text-center">
           <h1 className="block text-4xl mb-2">
             <span className="font-bold">구</span>독을{' '}

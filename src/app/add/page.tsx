@@ -90,7 +90,6 @@ export default function Page() {
                     strokeWidth={3}
                   />
                 )}
-                {/* {service.iconUrl} */}
                 <h2 className="text-center text-sm dark:text-white items-center font-medium whitespace-nowrap">
                   {service.name}
                 </h2>
