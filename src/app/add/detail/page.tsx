@@ -18,9 +18,25 @@ import { useCreateSubscription } from './CreateSubscriptionHook'
 
 export default function Page() {
   const { selectedService } = useServiceStore()
+  const { subscriptionData } = useSubscriptionStore()
+
+  const paymentAmount = useSubscriptionStore(
+    (state) => state.subscriptionData.paymentAmount,
+  )
+  const paymentCycle = useSubscriptionStore(
+    (state) => state.subscriptionData.paymentCycle,
+  )
+  const paymentDay = useSubscriptionStore(
+    (state) => state.subscriptionData.paymentDay,
+  )
+  const paymentMethod = useSubscriptionStore(
+    (state) => state.subscriptionData.paymentMethod,
+  )
+  const memo = useSubscriptionStore((state) => state.subscriptionData.memo)
+
   const createSubscription = useCreateSubscription()
   const {
-    subscriptionData,
+    //subscriptionData,
     //updateSubscription,
     setSubscriptionData,
     updatePaymentCycle,
@@ -63,6 +79,7 @@ export default function Page() {
               </SelectLabel>
               <Input
                 type="text"
+                aria-labelledby="subscriptionTitle"
                 value={subscriptionData.title}
                 onChange={(e) => setSubscriptionData({ title: e.target.value })}
                 readOnly={!selectedService?.isCustom}
@@ -71,12 +88,17 @@ export default function Page() {
               />
             </SelectGroup>
             <SelectGroup className="flex items-center justify-between">
-              <SelectLabel className="block mr-8 tracking-wide text-lg font-medium text-nowrap">
+              <SelectLabel
+                id="subscriptionAmount"
+                className="block mr-8 tracking-wide text-lg font-medium text-nowrap"
+              >
                 결제 금액 *
               </SelectLabel>
               <Input
                 type="number"
-                value={subscriptionData.paymentAmount}
+                aria-labelledby="subscriptionAmount"
+                value={paymentAmount}
+                //value={subscriptionData.paymentAmount}
                 onChange={(e) =>
                   setSubscriptionData({ paymentAmount: Number(e.target.value) })
                 }
@@ -85,16 +107,27 @@ export default function Page() {
               />
             </SelectGroup>
             <SelectGroup className="flex items-center justify-between">
-              <SelectLabel className="block mr-8 tracking-wide text-lg font-medium text-nowrap">
+              <SelectLabel
+                id="paymentCycleLabel"
+                className="block mr-8 tracking-wide text-lg font-medium text-nowrap"
+              >
                 결제 주기 *
               </SelectLabel>
               <SelectGroup className="flex items-center space-x-2">
-                <label htmlFor="paymentCycle" className="text-sm font-medium">
+                <label
+                  id="cyclePrefixLabel"
+                  htmlFor="paymentCycle"
+                  className="text-sm font-medium"
+                >
                   매
                 </label>
                 <Select onValueChange={(value) => updatePaymentCycle(value)}>
-                  <SelectTrigger className="flex border rounded-md px-4">
-                    {subscriptionData.paymentCycle || defaultPaymentCycle}
+                  <SelectTrigger
+                    id="paymentCycle"
+                    aria-labelledby="paymentCycleLabel cyclePrefixLabel"
+                    className="flex border rounded-md px-4"
+                  >
+                    {paymentCycle || defaultPaymentCycle}
                     <SelectContent
                       id="paymentCycle"
                       className="border px-2 py-1 mr-10 rounded-md dark:text-black block"
@@ -110,8 +143,12 @@ export default function Page() {
                 <Select
                   onValueChange={(value) => updatePaymentDay(Number(value))}
                 >
-                  <SelectTrigger className="flex border rounded-md px-4">
-                    {subscriptionData.paymentDay || defaultPaymentDay}
+                  <SelectTrigger
+                    id="paymentDay"
+                    aria-labelledby="paymentCycleLabel cycleSuffixLabel"
+                    className="flex border rounded-md px-4"
+                  >
+                    {paymentDay || defaultPaymentDay}
                     <SelectContent
                       id="paymentDay"
                       className="border px-2 py-1 mr-10 rounded-md dark:text-black block"
@@ -124,7 +161,11 @@ export default function Page() {
                     </SelectContent>
                   </SelectTrigger>
                 </Select>
-                <label htmlFor="paymentDay" className="text-sm font-medium">
+                <label
+                  id="cycleSuffixLabel"
+                  htmlFor="paymentDay"
+                  className="text-sm font-medium"
+                >
                   일
                 </label>
               </SelectGroup>
@@ -135,7 +176,7 @@ export default function Page() {
               </SelectLabel>
               <Select onValueChange={(value) => updatePaymentMethod(value)}>
                 <SelectTrigger className="max-w-60 min-w-60 pl-2 flex tracking-wide text-lg font-medium text-nowrap">
-                  {subscriptionData.paymentMethod || defaultPaymentMethod}
+                  {paymentMethod || defaultPaymentMethod}
                   <SelectContent
                     id="paymentMethod"
                     className="border rounded-md px-2 py-1 dark:text-black block"
@@ -163,7 +204,7 @@ export default function Page() {
               <textarea
                 placeholder="메모를 입력하세요"
                 onChange={(e) => updateMemo(e.target.value)}
-                value={subscriptionData.memo}
+                value={memo}
                 className="p-2 max-w-60 min-w-60 text-sm sm:text-base block 
                 bg-white text-black dark:bg-zinc-800 
                 dark:text-white dark:border-white rounded-md border border-gray-300 shadow-sm"
