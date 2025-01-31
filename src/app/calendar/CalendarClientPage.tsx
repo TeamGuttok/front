@@ -8,6 +8,7 @@ import {
   CalendarEvent,
   CalendarViewType,
 } from '#components/Calendar/calendarTypes'
+import CalendarSideBar from '#components/Calendar/CalendarSideBar'
 
 interface CalendarClientPageProps {
   initialData: {
@@ -52,19 +53,23 @@ export default function CalendarClientPage({
   const fetchNextData = () => {}
 
   return (
-    <>
-      <CalendarHeader
-        currentDate={currentDate}
-        viewType={viewType}
-        onDateChange={handleDateChange}
-        onViewChange={handleViewChange}
-        fetchNextData={fetchNextData}
-      />
-      <CalendarGrid
-        currentDate={currentDate}
-        viewType={viewType}
-        events={allEvents}
-      />
-    </>
+    <div className="flex flex-col lg:flex-row h-full">
+      <div className="flex flex-col grow 2xl:max-w-[1200px] w-full h-full 2xl:max-h-[800px] m-auto">
+        <CalendarHeader
+          currentDate={currentDate}
+          viewType={viewType}
+          onDateChange={handleDateChange}
+          onViewChange={handleViewChange}
+          fetchNextData={fetchNextData}
+        />
+        <CalendarGrid
+          currentDate={currentDate}
+          viewType={viewType}
+          events={allEvents}
+        />
+      </div>
+
+      <CalendarSideBar allEvents={allEvents} />
+    </div>
   )
 }
