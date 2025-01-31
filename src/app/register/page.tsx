@@ -1,22 +1,30 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { useActionState } from 'react'
+import { useActionState, useState } from 'react'
 import { Label } from '#components/_common/Label'
 import { Input } from '#components/_common/Input'
 import { Button } from '#components/_common/Button'
-import { ErrorMessage } from '#components/_common/ErrorMessage' // 수정된 에러 컴포넌트 임포트
+import { ErrorMessage } from '#components/_common/ErrorMessage'
+
+import RegisterInputField from './RegisterInputField'
 import { registerAction } from './registerAction'
 
 const RegisterSuccess = dynamic(() => import('./RegisterSuccess'))
 
 export default function Register() {
-  const [state, handleSubmit, isPending] = useActionState(registerAction, null)
+  const [session, setSession] = useState<string>('')
+  const [state, onSubmit, isPending] = useActionState(registerAction, null)
 
   if (state?.data) return <RegisterSuccess nickname={state.data.nickname} />
 
   const formData = state?.formData
   const errors = state?.errors
+
+  function handleSubmit(payload: FormData) {
+    payload.append('session', session)
+    onSubmit(payload)
+  }
 
   return (
     <div className="flex flex-col items-center sm:m-auto sm:-translate-y-12">
@@ -40,40 +48,24 @@ export default function Register() {
             className="flex flex-col w-full max-w-lg mt-10 px-10"
           >
             <div className="flex flex-col gap-1 min-h-16">
-              <div className="flex justify-between gap-3">
-                <div className="flex items-center grow">
-                  <Label htmlFor="nickname" className="w-14 mr-6">
-                    <span className="text-base font-medium">닉네임</span>
-                  </Label>
-                  <Input
-                    name="nickname"
-                    placeholder="닉네임을 입력하세요"
-                    className="w-0 grow"
-                    defaultValue={formData?.get('nickname') as string}
-                  />
-                </div>
-                <Button type="button" className="rounded-lg">
-                  중복확인
-                </Button>
+              <div className="flex items-center">
+                <Label htmlFor="nickname" className="w-14 mr-6">
+                  <span className="text-base font-medium">닉네임</span>
+                </Label>
+                <Input
+                  name="nickname"
+                  placeholder="닉네임을 입력하세요"
+                  className="w-0 grow"
+                  defaultValue={formData?.get('nickname') as string}
+                />
               </div>
               <ErrorMessage errors={errors?.nickname} className="ml-20" />
             </div>
 
-            <div className="flex flex-col gap-1 min-h-16">
-              <div className="flex items-center">
-                <Label htmlFor="email" className="w-[3.46rem] mr-6">
-                  <span className="text-base font-medium">이메일</span>
-                </Label>
-                <Input
-                  name="email"
-                  type="email"
-                  placeholder="이메일을 입력하세요"
-                  className="w-0 grow"
-                  defaultValue={formData?.get('email') as string}
-                />
-              </div>
-              <ErrorMessage errors={errors?.email} className="ml-20" />
-            </div>
+            <RegisterInputField
+              defaultValue={formData?.get('email') as string}
+              setSession={setSession}
+            />
 
             <div className="flex flex-col gap-1 min-h-16">
               <div className="flex items-center">
@@ -115,10 +107,11 @@ export default function Register() {
               />
             </div>
 
+            <ErrorMessage errors={errors?.session} />
             <Button
               type="submit"
               className="flex justify-self-center w-full h-10 text-md rounded-lg mt-10"
-              disabled={isPending}
+              disabled={isPending || session.length <= 0}
             >
               회원가입
             </Button>
