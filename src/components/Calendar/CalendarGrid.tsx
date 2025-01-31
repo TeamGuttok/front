@@ -1,7 +1,9 @@
-import { format, getDaysInMonth, startOfMonth } from 'date-fns'
+import { format } from 'date-fns'
 import { cn } from '#components/lib/utils'
 
 import { CalendarEvent, CalendarViewType } from './calendarTypes'
+import type { CalendarGrid } from './calendarUtils'
+import { generateCalendarGrid } from './calendarUtils'
 import { DayCell } from './DayCell'
 
 interface CalendarGridProps {
@@ -15,98 +17,91 @@ export function CalendarGrid({
   viewType,
   events,
 }: CalendarGridProps) {
-  const monthStart = startOfMonth(currentDate)
-  const daysInMonth = getDaysInMonth(monthStart)
-
-  const weeks = []
-  let currentWeek = []
-
-  // Calculate first day offset
-  const firstDayOfWeek = monthStart.getDay() // 0=Sunday, 1=Monday, ..., 6=Saturday
-
-  // Add empty days for first week
-  for (let i = 0; i < firstDayOfWeek; i++) {
-    currentWeek.push({
-      date: null,
-      formattedDate: '',
-      isCurrentMonth: false,
-    })
-  }
-
-  // Generate calendar grid
-  for (let day = 1; day <= daysInMonth; day++) {
-    const date = new Date(monthStart)
-    date.setDate(day)
-
-    currentWeek.push({
-      date,
-      formattedDate: format(date, 'd'),
-      isCurrentMonth: true,
+  // Yearly View
+  if (viewType === CalendarViewType.YEARLY) {
+    const monthsArray = Array.from({ length: 12 }, (_, i) => {
+      const dateCopy = new Date(currentDate)
+      dateCopy.setMonth(i)
+      return dateCopy
     })
 
-    if (currentWeek.length === 7) {
-      weeks.push(currentWeek)
-      currentWeek = []
-    }
-  }
-
-  // Add remaining empty days for last week
-  if (currentWeek.length > 0) {
-    while (currentWeek.length < 7) {
-      currentWeek.push({
-        date: null,
-        formattedDate: '',
-        isCurrentMonth: false,
-      })
-    }
-    weeks.push(currentWeek)
-  }
-
-  if (viewType == CalendarViewType.YEARLY) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <p className="text-gray-500">연간 뷰</p>
+      <div className="grid lg:grid-cols-3 gap-4 p-4 overflow-auto">
+        {monthsArray.map((monthDate, idx) => {
+          const weeks = generateCalendarGrid(monthDate)
+          return (
+            <div key={idx} className="flex flex-col p-2 border rounded-sm">
+              <h3 className="text-center font-semibold">
+                {format(monthDate, 'M월')}
+              </h3>
+              <DayHeaders />
+              <MonthGrid weeks={weeks} events={events} forceMobile />
+            </div>
+          )
+        })}
       </div>
     )
   }
 
+  // Monthly View
+  const weeks = generateCalendarGrid(currentDate)
   return (
     <div className="flex flex-col h-full p-4">
-      <div className="flex gap-1 pb-2">
-        {['일', '월', '화', '수', '목', '금', '토'].map((day, index) => (
-          <div
-            key={day}
-            className={cn(
-              'flex-1 text-center border py-1 bg-primary/10 font-medium text-sm rounded',
-              {
-                'text-red-500': index === 0,
-                'text-blue-500': index === 6,
-                'text-gray-600': index > 0 && index < 6,
-              },
-            )}
-          >
-            {day}
-          </div>
-        ))}
-      </div>
-      <div className="grid grid-cols-7 gap-1 flex-1">
-        {weeks.map((week, weekIndex) => (
-          <div key={weekIndex} className="contents">
-            {week.map((day, dayIndex) => (
-              <DayCell
-                key={
-                  day.date
-                    ? day.date.toISOString()
-                    : `empty-${weekIndex}-${dayIndex}`
-                }
-                date={day.date}
-                formattedDate={day.formattedDate}
-                events={events}
-              />
-            ))}
-          </div>
-        ))}
-      </div>
+      <DayHeaders />
+      <MonthGrid weeks={weeks} events={events} />
     </div>
   )
 }
+
+/**
+ * ----------------
+ * Sub Module Start
+ */
+
+interface MonthGridProps {
+  weeks: CalendarGrid
+  events: CalendarEvent[]
+  forceMobile?: boolean
+}
+
+const MonthGrid = ({ weeks, events, forceMobile = false }: MonthGridProps) => (
+  <div className="grid grid-cols-7 gap-1 flex-1">
+    {weeks.map((week, weekIndex) => (
+      <div key={weekIndex} className="contents">
+        {week.map((day, dayIndex) => (
+          <DayCell
+            key={
+              day.date
+                ? day.date.toISOString()
+                : `empty-${weekIndex}-${dayIndex}`
+            }
+            date={day.date}
+            formattedDate={day.formattedDate}
+            events={events}
+            forceMobile={forceMobile}
+          />
+        ))}
+      </div>
+    ))}
+  </div>
+)
+
+const DayHeaders = () => (
+  <div className="flex gap-1 pb-2">
+    {['일', '월', '화', '수', '목', '금', '토'].map((day, index) => (
+      <div
+        key={day}
+        className={cn(
+          'flex-1 text-center border py-1 bg-primary/10 font-medium text-sm rounded',
+          {
+            'text-red-500': index === 0,
+            'text-blue-500': index === 6,
+            'text-gray-600': index > 0 && index < 6,
+          },
+        )}
+      >
+        {day}
+      </div>
+    ))}
+  </div>
+)

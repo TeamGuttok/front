@@ -1,3 +1,4 @@
+import { format, getDaysInMonth, startOfMonth } from 'date-fns'
 import { CalendarViewType, CalendarEvent } from './calendarTypes'
 
 export function calculateNewDate(
@@ -47,4 +48,59 @@ export function filterEventsByDate(events: CalendarEvent[], date: Date) {
       eventDate.getDate() === date.getDate()
     )
   })
+}
+
+interface GridDay {
+  date: Date | null
+  formattedDate: string
+  isCurrentMonth: boolean
+}
+
+export type CalendarGrid = GridDay[][]
+
+export function generateCalendarGrid(monthDate: Date): CalendarGrid {
+  const monthStart = startOfMonth(monthDate)
+  const daysInMonth = getDaysInMonth(monthStart)
+  const weeks: CalendarGrid = []
+  let currentWeek: GridDay[] = []
+  const firstDayOfWeek = monthStart.getDay()
+
+  // Add empty days for first week
+  for (let i = 0; i < firstDayOfWeek; i++) {
+    currentWeek.push({
+      date: null,
+      formattedDate: '',
+      isCurrentMonth: false,
+    })
+  }
+
+  // Fill with month days
+  for (let day = 1; day <= daysInMonth; day++) {
+    const date = new Date(monthStart)
+    date.setDate(day)
+    currentWeek.push({
+      date,
+      formattedDate: format(date, 'd'),
+      isCurrentMonth: true,
+    })
+
+    if (currentWeek.length === 7) {
+      weeks.push(currentWeek)
+      currentWeek = []
+    }
+  }
+
+  // Fill remaining days in last week
+  if (currentWeek.length > 0) {
+    while (currentWeek.length < 7) {
+      currentWeek.push({
+        date: null,
+        formattedDate: '',
+        isCurrentMonth: false,
+      })
+    }
+    weeks.push(currentWeek)
+  }
+
+  return weeks
 }

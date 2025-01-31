@@ -1,32 +1,52 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
+import { useMediaQuery } from '#hooks/useMediaQuery'
+import { BREAKPOINTS } from '#constants/breakpoints'
+import { cn } from '#components/lib/utils'
+
 import { CalendarEvent } from './calendarTypes'
 import { filterEventsByDate } from './calendarUtils'
-import { cn } from '#components/lib/utils'
 
 interface DayCellProps {
   date: Date | null
   formattedDate: string
   events: CalendarEvent[]
+  forceMobile?: boolean
 }
 
-export function DayCell({ date, formattedDate, events }: DayCellProps) {
+export function DayCell({
+  date,
+  formattedDate,
+  events,
+  forceMobile,
+}: DayCellProps) {
+  const isDesktop = useMediaQuery(`(min-width: ${BREAKPOINTS.lg})`)
+  const effectiveDesktop = isDesktop && !forceMobile
+
   const isToday = date && new Date().toDateString() === date.toDateString()
 
   return (
     <div
       className={cn(
-        'border rounded-lg p-1 sm:p-2 aspect-square sm:aspect-auto sm:min-h-[100px]',
+        'border rounded-lg p-1 aspect-square',
+        effectiveDesktop && 'p-2 aspect-auto min-h-[100px]',
         isToday ? 'bg-primary/20' : 'bg-secondary',
       )}
     >
       <div
-        className={cn('text-left text-sm sm:text-base', isToday && 'font-bold')}
+        className={cn(
+          'text-left text-sm text-sub/70',
+          effectiveDesktop && 'text-base text-secondary-foreground',
+          isToday && 'font-bold',
+        )}
       >
         {formattedDate}
       </div>
-
-      <div className="flex gap-[1px] lg:gap-1 lg:flex-col">
+      <div
+        className={cn('flex gap-[1px]', effectiveDesktop && 'flex-col gap-1')}
+      >
         {date &&
           filterEventsByDate(events, date).map((event) => (
             <Link
@@ -36,21 +56,26 @@ export function DayCell({ date, formattedDate, events }: DayCellProps) {
             >
               <div
                 className={cn(
-                  'lg:flex lg:items-center lg:gap-1 lg:text-xs lg:p-1 lg:rounded',
-                  event.paymentStatus === 'COMPLETED'
-                    ? 'lg:bg-primary/5'
-                    : 'lg:bg-destructive/5',
+                  !effectiveDesktop &&
+                    'block hover:scale-[1.02] transition-transform',
+                  effectiveDesktop && [
+                    'flex items-center gap-1 text-xs p-1 rounded transition-transform hover:scale-[1.02]',
+                    event.paymentStatus === 'COMPLETED'
+                      ? 'bg-primary/5'
+                      : 'bg-destructive/5',
+                  ],
                 )}
               >
                 <div
                   className={cn(
-                    'w-2 h-2 rounded-full lg:hidden',
+                    'w-2 h-2 rounded-full',
                     event.paymentStatus === 'COMPLETED'
                       ? 'bg-primary'
                       : 'bg-destructive',
+                    effectiveDesktop && 'hidden',
                   )}
                 />
-                <div className="hidden lg:block">
+                <div className={cn('hidden', effectiveDesktop && 'block')}>
                   {event.subscription !== 'CUSTOM_INPUT' && (
                     <Image
                       src={`/images/logo/${event.subscription.toLowerCase()}-icon.svg`}
@@ -60,7 +85,7 @@ export function DayCell({ date, formattedDate, events }: DayCellProps) {
                     />
                   )}
                 </div>
-                <span className="hidden lg:inline">
+                <span className={cn('hidden', effectiveDesktop && 'inline')}>
                   {event.title} - {event.paymentAmount.toLocaleString()}원
                 </span>
               </div>

@@ -54,7 +54,7 @@ export default function CalendarClientPage({
 
   return (
     <div className="flex flex-col lg:flex-row h-full">
-      <div className="flex flex-col grow 2xl:max-w-[1200px] w-full h-full 2xl:max-h-[800px] m-auto">
+      <div className="flex flex-col 2xl:max-w-[1200px] w-full 2xl:max-h-[800px] m-auto">
         <CalendarHeader
           currentDate={currentDate}
           viewType={viewType}
