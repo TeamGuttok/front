@@ -1,75 +1,195 @@
 'use client'
 
 import Link from 'next/link'
-import { Label } from '#components/_common/Label'
 import { Input } from '#components/_common/Input'
 import { Button } from '#components/_common/Button'
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectLabel,
+  SelectGroup,
+} from '#components/_common/Select'
 import CardTitle from '#components/_common/CardTitle'
 import { useServiceStore } from '#stores/useServiceStore'
+import { useSubscriptionStore } from '#stores/useSubscriptionStore'
+import { useCreateSubscription } from './CreateSubscriptionHook'
 
 export default function Page() {
-  const { selectedService, setSelectedService } = useServiceStore()
-  const isCustom = selectedService?.id === 'custom'
-  const serviceName = isCustom
-    ? selectedService?.name || ''
-    : selectedService?.name || ''
+  const { selectedService } = useServiceStore()
+  const { subscriptionData } = useSubscriptionStore()
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (isCustom) {
-      setSelectedService({
-        ...selectedService,
-        name: e.target.value,
-      })
-    }
+  const paymentAmount = useSubscriptionStore(
+    (state) => state.subscriptionData.paymentAmount,
+  )
+  const paymentCycle = useSubscriptionStore(
+    (state) => state.subscriptionData.paymentCycle,
+  )
+  const paymentDay = useSubscriptionStore(
+    (state) => state.subscriptionData.paymentDay,
+  )
+  const paymentMethod = useSubscriptionStore(
+    (state) => state.subscriptionData.paymentMethod,
+  )
+  const memo = useSubscriptionStore((state) => state.subscriptionData.memo)
+
+  const createSubscription = useCreateSubscription()
+  const {
+    //subscriptionData,
+    //updateSubscription,
+    setSubscriptionData,
+    updatePaymentCycle,
+    updatePaymentDay,
+    updatePaymentMethod,
+    paymentMethodOptions,
+    paymentCycleOptions,
+    paymentDayOptions,
+    updateMemo,
+    resetSubscriptionData,
+  } = useSubscriptionStore()
+
+  const defaultPaymentCycle =
+    useSubscriptionStore.getState().subscriptionData.paymentCycle
+  const defaultPaymentDay =
+    useSubscriptionStore.getState().subscriptionData.paymentDay
+  const defaultPaymentMethod =
+    useSubscriptionStore.getState().subscriptionData.paymentMethod
+
+  const handleSubmit = (): boolean => {
+    const { title, paymentAmount, paymentCycle, paymentDay } = subscriptionData
+    return !!(title && paymentAmount && paymentCycle && paymentDay)
   }
 
   return (
     <CardTitle className="flex">
-      <h1>구독 서비스 세부설정</h1>
+      <h1 className="text-3xl font-bold justify-center flex">
+        구독 서비스 세부설정
+      </h1>
       <div className="flex flex-col justify-center items-center my-12">
         <form className="space-y-4 ">
           <div className="grid grid-cols-1 gap-4">
-            <div className="flex items-center justify-between">
-              <Label className="block mr-8 tracking-wide text-lg font-medium text-nowrap">
+            <SelectGroup className="flex items-center justify-between">
+              <SelectLabel
+                id="subscriptionTitle"
+                aria-labelledby="subscriptionTitle"
+                className="block mr-8 tracking-wide text-lg font-medium text-nowrap"
+              >
                 구독 서비스 *
-              </Label>
+              </SelectLabel>
               <Input
                 type="text"
-                value={serviceName}
-                onChange={handleInputChange}
+                aria-labelledby="subscriptionTitle"
+                value={subscriptionData.title}
+                onChange={(e) => setSubscriptionData({ title: e.target.value })}
+                readOnly={!selectedService?.isCustom}
                 placeholder="넷플릭스, 통신비, etc"
                 className="block max-w-60 min-w-60 pl-2 text-sm sm:text-base"
               />
-            </div>
-            <div className="flex items-center justify-between">
-              <Label className="block mr-8 tracking-wide text-lg font-medium text-nowrap">
+            </SelectGroup>
+            <SelectGroup className="flex items-center justify-between">
+              <SelectLabel
+                id="subscriptionAmount"
+                className="block mr-8 tracking-wide text-lg font-medium text-nowrap"
+              >
                 결제 금액 *
-              </Label>
+              </SelectLabel>
               <Input
                 type="number"
+                aria-labelledby="subscriptionAmount"
+                value={paymentAmount}
+                //value={subscriptionData.paymentAmount}
+                onChange={(e) =>
+                  setSubscriptionData({ paymentAmount: Number(e.target.value) })
+                }
                 placeholder="금액을 입력하세요"
                 className="block max-w-60 min-w-60 pl-2 text-sm sm:text-base"
               />
-            </div>
-            <div className="flex items-center justify-between">
-              <Label className="block mr-8 tracking-wide text-lg font-medium text-nowrap">
-                첫 결제 날짜 *
-              </Label>
-              <Input
-                type="date"
-                className="block pl-2 max-w-60 min-w-60 text-sm sm:text-base"
-              />
-            </div>
-            <div className="flex items-center justify-between">
-              <Label className="block mr-8 tracking-wide text-lg font-medium text-nowrap">
-                결제 수단
-              </Label>
-              <Input
-                type="text"
-                placeholder="결제수단을 입력하세요"
-                className="pl-2 max-w-60 min-w-60 text-sm sm:text-base"
-              />
-            </div>
+            </SelectGroup>
+            <SelectGroup className="flex items-center justify-between">
+              <SelectLabel
+                id="paymentCycleLabel"
+                className="block mr-8 tracking-wide text-lg font-medium text-nowrap"
+              >
+                결제 주기 *
+              </SelectLabel>
+              <SelectGroup className="flex items-center space-x-2">
+                <label
+                  id="cyclePrefixLabel"
+                  htmlFor="paymentCycle"
+                  className="text-sm font-medium"
+                >
+                  매
+                </label>
+                <Select onValueChange={(value) => updatePaymentCycle(value)}>
+                  <SelectTrigger
+                    id="paymentCycle"
+                    aria-labelledby="paymentCycleLabel cyclePrefixLabel"
+                    className="flex border rounded-md px-4"
+                  >
+                    {paymentCycle || defaultPaymentCycle}
+                    <SelectContent
+                      id="paymentCycle"
+                      className="border px-2 py-1 mr-10 rounded-md dark:text-black block"
+                    >
+                      {paymentCycleOptions.map((cycle) => (
+                        <SelectItem key={cycle} value={cycle}>
+                          {cycle}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </SelectTrigger>
+                </Select>
+                <Select
+                  onValueChange={(value) => updatePaymentDay(Number(value))}
+                >
+                  <SelectTrigger
+                    id="paymentDay"
+                    aria-labelledby="paymentCycleLabel cycleSuffixLabel"
+                    className="flex border rounded-md px-4"
+                  >
+                    {paymentDay || defaultPaymentDay}
+                    <SelectContent
+                      id="paymentDay"
+                      className="border px-2 py-1 mr-10 rounded-md dark:text-black block"
+                    >
+                      {paymentDayOptions.map((day) => (
+                        <SelectItem key={day} value={String(day)}>
+                          {day}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </SelectTrigger>
+                </Select>
+                <label
+                  id="cycleSuffixLabel"
+                  htmlFor="paymentDay"
+                  className="text-sm font-medium"
+                >
+                  일
+                </label>
+              </SelectGroup>
+            </SelectGroup>
+            <SelectGroup className="flex items-center justify-between">
+              <SelectLabel className="block mr-8 tracking-wide text-lg font-medium text-nowrap">
+                결제수단
+              </SelectLabel>
+              <Select onValueChange={(value) => updatePaymentMethod(value)}>
+                <SelectTrigger className="max-w-60 min-w-60 pl-2 flex tracking-wide text-lg font-medium text-nowrap">
+                  {paymentMethod || defaultPaymentMethod}
+                  <SelectContent
+                    id="paymentMethod"
+                    className="border rounded-md px-2 py-1 dark:text-black block"
+                  >
+                    {paymentMethodOptions.map((method) => (
+                      <SelectItem key={method} value={method}>
+                        {method}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </SelectTrigger>
+              </Select>
+            </SelectGroup>
             <div className="flex justify-end">
               <Link href="item/add/detail/custom">
                 <p className="tracking-wide underline text-base">
@@ -77,20 +197,31 @@ export default function Page() {
                 </p>
               </Link>
             </div>
-            <div className="flex justify-between">
-              <Label className="mr-8 tracking-wide block text-lg font-medium text-nowrap">
+            <SelectGroup className="flex justify-between">
+              <SelectLabel className="mr-8 tracking-wide block text-lg font-medium text-nowrap">
                 메모
-              </Label>
+              </SelectLabel>
               <textarea
                 placeholder="메모를 입력하세요"
-                className="p-2 max-w-60 min-w-60 text-sm sm:text-base block dark:text-black rounded-md border border-gray-300 shadow-sm"
+                onChange={(e) => updateMemo(e.target.value)}
+                value={memo}
+                className="p-2 max-w-60 min-w-60 text-sm sm:text-base block 
+                bg-white text-black dark:bg-zinc-800 
+                dark:text-white dark:border-white rounded-md border border-gray-300 shadow-sm"
                 rows={2}
               />
-            </div>
-
+            </SelectGroup>
             <Button
               type="submit"
-              className="w-full py-2 mt-4 text-base text-white shadow"
+              onClick={(e) => {
+                e.preventDefault()
+                createSubscription.mutate(subscriptionData)
+                resetSubscriptionData()
+              }}
+              disabled={!handleSubmit()}
+              className={`w-full py-2 mt-4 text-base text-white shadow ${
+                !handleSubmit() ? 'bg-gray-400 cursor-not-allowed' : 'primary'
+              }`}
             >
               저장하기
             </Button>

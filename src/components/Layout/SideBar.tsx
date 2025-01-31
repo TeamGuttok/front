@@ -3,7 +3,16 @@
 import useTheme from '#contexts/ThemeProvider/hook'
 
 import Link from 'next/link'
-import { Menu, Calendar, Users, Bell, User, LogIn } from 'lucide-react'
+import {
+  Menu,
+  Calendar,
+  Users,
+  Bell,
+  User,
+  LogIn,
+  Moon,
+  Sun,
+} from 'lucide-react'
 import { PATH } from '#app/routes'
 import { cn } from '#components/lib/utils'
 
@@ -75,9 +84,15 @@ export default function SideBar({ pathname }: { pathname: string }) {
         <ul>
           <li>
             <button
+              className={cn(itemClassName)}
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             >
-              테마
+              {theme === 'dark' ? (
+                <Moon aria-label="다크모드 버튼 아이콘" size={20} />
+              ) : (
+                <Sun aria-label="라이트모드 버튼 아이콘" size={20} />
+              )}
+              <span>테마</span>
             </button>
           </li>
           <li>
