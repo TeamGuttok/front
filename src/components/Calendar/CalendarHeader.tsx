@@ -8,18 +8,22 @@ import { calculateNewDate, formatLocalizedDate } from './calendarUtils'
 
 interface CalendarHeaderProps {
   currentDate: Date
+  viewType: CalendarViewType
   onDateChange: (date: Date) => void
   onViewChange: (view: CalendarViewType) => void
-  viewType: CalendarViewType
+  fetchNextData: () => void
 }
 
 export function CalendarHeader({
   currentDate,
+  viewType,
   onDateChange,
   onViewChange,
-  viewType,
+  fetchNextData,
 }: CalendarHeaderProps) {
   const handlePrev = () => {
+    fetchNextData()
+
     const newDate = calculateNewDate(currentDate, viewType, 'prev')
     onDateChange(newDate)
   }

@@ -6,14 +6,14 @@ import { DayCell } from './DayCell'
 
 interface CalendarGridProps {
   currentDate: Date
-  events: CalendarEvent[]
   viewType: CalendarViewType
+  events: CalendarEvent[]
 }
 
 export function CalendarGrid({
   currentDate,
-  events,
   viewType,
+  events,
 }: CalendarGridProps) {
   const monthStart = startOfMonth(currentDate)
   const daysInMonth = getDaysInMonth(monthStart)

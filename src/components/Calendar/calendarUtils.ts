@@ -9,6 +9,7 @@ export function calculateNewDate(
 
   switch (viewType) {
     case CalendarViewType.MONTHLY:
+      newDate.setDate(1)
       newDate.setMonth(newDate.getMonth() + (direction === 'prev' ? -1 : 1))
       break
     case CalendarViewType.YEARLY:
