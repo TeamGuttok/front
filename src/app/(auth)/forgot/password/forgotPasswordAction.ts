@@ -2,27 +2,25 @@
 
 import { z } from 'zod'
 
-const forgotPasswordSchema = z.object({
-  nickname: z.string().min(3, '닉네임은 최소 3자 이상이어야 합니다.'),
-  password: z.string().min(12, '비밀번호는 최소 12자 이상이어야 합니다.'),
+const emailSchema = z.object({
+  email: z.string().email('유효한 이메일 주소를 입력하세요.'),
 })
 
-interface State {
+export interface EmailActionState {
   isSuccess: boolean
   errors?: Record<string, string[]>
   formData?: FormData
 }
 
 export async function forgotPasswordAction(
-  prevState: State | null,
+  prevState: EmailActionState | null,
   formData: FormData,
-): Promise<State> {
+): Promise<EmailActionState> {
   const input = {
-    nickname: formData.get('nickname'),
-    password: formData.get('password'),
+    email: formData.get('email'),
   }
 
-  const parseResult = forgotPasswordSchema.safeParse(input)
+  const parseResult = emailSchema.safeParse(input)
   if (!parseResult.success) {
     const errors = parseResult.error.flatten().fieldErrors
     return {
