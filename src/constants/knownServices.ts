@@ -125,4 +125,4 @@ export const KNOWN_SERVICES = [
     iconUrl: '/images/logo/spotv-now-icon.svg',
     textUrl: '/images/logo/spotv-now-text.svg',
   },
-]
+] as const
