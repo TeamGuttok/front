@@ -39,38 +39,39 @@ export default function Page() {
   const currentHour = getHours(new Date())
 
   const getGreeting = () => {
-    if (currentHour >= 5 && currentHour < 12) return <h3>좋은 아침입니다, </h3>
-    if (currentHour >= 12 && currentHour < 18) return <h3>좋은 점심입니다, </h3>
+    if (currentHour >= 5 && currentHour < 12) return <h3>좋은 아침입니다,</h3>
+    if (currentHour >= 12 && currentHour < 18) return <h3>좋은 점심입니다,</h3>
     return <h3>좋은 저녁입니다, </h3>
   }
 
   return (
-    <>
-      <div className="max-w-2xl mx-auto p-4">
-        <div className="flex justify-between items-center mb-4">
-          {/* <div className="text-xl font-semibold flex flex-row"> */}
-          <div>
+    <div className="mx-auto p-5 flex flex-col min-h-[calc(100vh-4.5rem)] pb-[3rem]">
+      <div className="flex justify-between mb-6">
+        <div className="flex flex-col">
+          <h1 className="text-xl font-semibold flex flex-row">
             {getGreeting()}
             <span>&nbsp;</span>
-            <h3>사용자 님.</h3>
-          </div>
-          <div>
             <p>
-              이번 달 지출은 <span className="font-bold">₩24,400</span> 입니다.
+              <span>사용자</span> 님.
             </p>
-          </div>
-          <Link
-            href={PATH.calendarView}
-            aria-label="캘린더 페이지로 이동"
-            className="sm:hidden block"
-          >
-            <Button>
-              <CalendarDays className="w-5 h-5" />
-            </Button>
-          </Link>
+          </h1>
+          <h2>
+            이번 달 지출은 <span className="font-bold">₩24,400</span> 입니다.
+          </h2>
         </div>
+        <Link
+          href={PATH.calendarView}
+          aria-label="캘린더 페이지로 이동"
+          className="sm:hidden flex items-center"
+        >
+          <Button className="w-11 h-11">
+            <CalendarDays size={35} />
+          </Button>
+        </Link>
+      </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-3">
+      <div className="flex-1 overflow-auto">
+        <div className="grid grid-cols-1 gap-3">
           {subscriptions.map((sub) => (
             <Card
               key={sub.id}
@@ -100,14 +101,13 @@ export default function Page() {
             </Card>
           ))}
         </div>
-
-        {/* 추가 버튼 */}
-        <div className="flex justify-center mt-6">
-          <Button className="w-full max-w-xs flex items-center gap-2">
-            <Plus className="w-4 h-4" /> 추가하기
-          </Button>
-        </div>
       </div>
-    </>
+
+      <div className="fixed bottom-[5.5rem] sm:bottom-[3rem] right-4 sm:right-10 transform h-14 rounded-full shadow-lg flex items-center justify-center">
+        <Button className="flex w-16 h-16 rounded-full shadow-lg items-center justify-center">
+          <Plus size={48} className="w-14 h-14" />
+        </Button>
+      </div>
+    </div>
   )
 }
