@@ -23,23 +23,3 @@ export const useAuthStore = create<AuthState>()(
     },
   })),
 )
-
-// export const useAuthStore = create<AuthState>((set) => ({
-//   isLoggedIn: null,
-//   checkSession: () => {
-//     const cookies = document.cookie.split('; ').reduce(
-//       (acc, cookie) => {
-//         const [name, value] = cookie.split('=')
-//         acc[name] = value
-//         return acc
-//       },
-//       {} as Record<string, string>,
-//     )
-
-//     if (cookies['sessionToken']) {
-//       set({ isLoggedIn: true })
-//     } else {
-//       set({ isLoggedIn: false })
-//     }
-//   },
-// }))
