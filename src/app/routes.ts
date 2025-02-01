@@ -2,7 +2,6 @@ export const PATH = {
   listView: '/',
   calendarView: '',
   notification: '',
-  myPage: '',
 
   login: '/login',
   register: '/register',
@@ -18,4 +17,7 @@ export const PATH = {
   groupDetail: (groupId: number) => `/group/${groupId}`,
   groupEdit: (groupId: number) => `/group/${groupId}/edit`,
   groupMember: (groupId: number) => `/group/${groupId}/member`,
+
+  myPage: '/settings',
+  myPageEdit: '/settings/edit',
 }
