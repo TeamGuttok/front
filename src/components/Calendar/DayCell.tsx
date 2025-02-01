@@ -6,13 +6,13 @@ import { useMediaQuery } from '#hooks/useMediaQuery'
 import { BREAKPOINTS } from '#constants/breakpoints'
 import { cn } from '#components/lib/utils'
 
-import { CalendarEvent } from './calendarTypes'
-import { filterEventsByDate } from './calendarUtils'
+import type { SubscriptionContents } from '#types/subscription'
+import { filterEventsByDate } from '#utils/calendarUtils'
 
 interface DayCellProps {
   date: Date | null
   formattedDate: string
-  events: CalendarEvent[]
+  events: SubscriptionContents[]
   forceMobile?: boolean
 }
 

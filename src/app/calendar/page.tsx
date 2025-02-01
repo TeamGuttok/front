@@ -1,5 +1,6 @@
 import CalendarClientPage from '#app/calendar/CalendarClientPage'
-import { CalendarEvent } from '#components/Calendar/calendarTypes'
+
+import { SubscriptionContents } from '#types/subscription'
 
 function getInitialData() {
   return {
@@ -40,7 +41,7 @@ function getInitialData() {
         registerDate: '2025-01-15T00:00:00',
         updateDate: '2025-01-15T00:00:00',
       },
-    ] as CalendarEvent[],
+    ] as SubscriptionContents[],
     hasNext: true,
   }
 }

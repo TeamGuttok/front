@@ -1,24 +1,24 @@
 import { format } from 'date-fns'
 import { cn } from '#components/lib/utils'
 
-import { CalendarEvent, CalendarViewType } from './calendarTypes'
-import type { CalendarGrid } from './calendarUtils'
-import { generateCalendarGrid } from './calendarUtils'
+import { useCalendarStore } from '#stores/useCalendarStore'
+
+import type { SubscriptionContents } from '#types/subscription'
+import { CalendarViewEnum } from '#types/calendar'
+
+import type { CalendarGrid } from '#utils/calendarUtils'
+import { generateCalendarGrid } from '#utils/calendarUtils'
 import { DayCell } from './DayCell'
 
 interface CalendarGridProps {
-  currentDate: Date
-  viewType: CalendarViewType
-  events: CalendarEvent[]
+  events: SubscriptionContents[]
 }
 
-export function CalendarGrid({
-  currentDate,
-  viewType,
-  events,
-}: CalendarGridProps) {
+export default function CalendarGrid({ events }: CalendarGridProps) {
+  const { currentDate, viewType } = useCalendarStore()
+
   // Yearly View
-  if (viewType === CalendarViewType.YEARLY) {
+  if (viewType === CalendarViewEnum.YEARLY) {
     const monthsArray = Array.from({ length: 12 }, (_, i) => {
       const dateCopy = new Date(currentDate)
       dateCopy.setMonth(i)
@@ -60,7 +60,7 @@ export function CalendarGrid({
 
 interface MonthGridProps {
   weeks: CalendarGrid
-  events: CalendarEvent[]
+  events: SubscriptionContents[]
   forceMobile?: boolean
 }
 

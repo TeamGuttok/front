@@ -1,36 +1,30 @@
 'use client'
 
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { Button } from '#components/_common/Button'
 
-import { CalendarViewType } from './calendarTypes'
-import { calculateNewDate, formatLocalizedDate } from './calendarUtils'
+import { useCalendarStore } from '#stores/useCalendarStore'
+
+import { Button } from '#components/_common/Button'
+import { calculateNewDate, formatLocalizedDate } from '#utils/calendarUtils'
+import { CalendarViewEnum } from '#types/calendar'
 
 interface CalendarHeaderProps {
-  currentDate: Date
-  viewType: CalendarViewType
-  onDateChange: (date: Date) => void
-  onViewChange: (view: CalendarViewType) => void
   fetchNextData: () => void
 }
 
-export function CalendarHeader({
-  currentDate,
-  viewType,
-  onDateChange,
-  onViewChange,
-  fetchNextData,
-}: CalendarHeaderProps) {
+export default function CalendarHeader({ fetchNextData }: CalendarHeaderProps) {
+  const { currentDate, viewType, setCurrentDate, setViewType } =
+    useCalendarStore()
+
   const handlePrev = () => {
     fetchNextData()
-
     const newDate = calculateNewDate(currentDate, viewType, 'prev')
-    onDateChange(newDate)
+    setCurrentDate(newDate)
   }
 
   const handleNext = () => {
     const newDate = calculateNewDate(currentDate, viewType, 'next')
-    onDateChange(newDate)
+    setCurrentDate(newDate)
   }
 
   return (
@@ -60,15 +54,15 @@ export function CalendarHeader({
       <div className="flex gap-2">
         <Button
           type="button"
-          variant={viewType === CalendarViewType.MONTHLY ? 'default' : 'ghost'}
-          onClick={() => onViewChange(CalendarViewType.MONTHLY)}
+          variant={viewType === CalendarViewEnum.MONTHLY ? 'default' : 'ghost'}
+          onClick={() => setViewType(CalendarViewEnum.MONTHLY)}
         >
           월간
         </Button>
         <Button
           type="button"
-          variant={viewType === CalendarViewType.YEARLY ? 'default' : 'ghost'}
-          onClick={() => onViewChange(CalendarViewType.YEARLY)}
+          variant={viewType === CalendarViewEnum.YEARLY ? 'default' : 'ghost'}
+          onClick={() => setViewType(CalendarViewEnum.YEARLY)}
         >
           연간
         </Button>

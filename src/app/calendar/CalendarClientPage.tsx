@@ -1,18 +1,16 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { CalendarGrid } from '#components/Calendar/CalendarGrid'
-import { CalendarHeader } from '#components/Calendar/CalendarHeader'
-import {
-  CalendarEvent,
-  CalendarViewType,
-} from '#components/Calendar/calendarTypes'
+import { useSyncDateWithSearchParams } from '#hooks/useSyncDateWithSearchParams'
+
+import CalendarHeader from '#components/Calendar/CalendarHeader'
+import CalendarGrid from '#components/Calendar/CalendarGrid'
 import CalendarSideBar from '#components/Calendar/CalendarSideBar'
+
+import type { SubscriptionContents } from '#types/subscription'
 
 interface CalendarClientPageProps {
   initialData: {
-    contents: CalendarEvent[]
+    contents: SubscriptionContents[]
     lastId?: string
     hasNext: boolean
   }
@@ -21,55 +19,20 @@ interface CalendarClientPageProps {
 export default function CalendarClientPage({
   initialData,
 }: CalendarClientPageProps) {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const [currentDate, setCurrentDate] = useState<Date>(new Date())
-  const [viewType, setViewType] = useState(CalendarViewType.MONTHLY)
-
-  useEffect(() => {
-    const dateParam = searchParams.get('date')
-    if (dateParam) {
-      const parsedDate = new Date(dateParam)
-      if (!isNaN(parsedDate.getTime())) {
-        setCurrentDate(parsedDate)
-      }
-    }
-  }, [searchParams])
-
-  function handleDateChange(date: Date) {
-    const newParams = new URLSearchParams(searchParams.toString())
-    const formattedDate = date.toISOString().split('T')[0]
-    newParams.set('date', formattedDate)
-    router.replace(`?${newParams.toString()}`)
-    setCurrentDate(date)
-  }
-
-  function handleViewChange(view: CalendarViewType) {
-    setViewType(view)
-  }
+  useSyncDateWithSearchParams()
 
   // temporary pseudo code for react query
   const allEvents = initialData.contents
   const fetchNextData = () => {}
 
   return (
-    <div className="flex flex-col lg:flex-row h-full">
-      <div className="flex flex-col 2xl:max-w-[1200px] w-full 2xl:max-h-[800px] m-auto">
-        <CalendarHeader
-          currentDate={currentDate}
-          viewType={viewType}
-          onDateChange={handleDateChange}
-          onViewChange={handleViewChange}
-          fetchNextData={fetchNextData}
-        />
-        <CalendarGrid
-          currentDate={currentDate}
-          viewType={viewType}
-          events={allEvents}
-        />
+    <div className="flex flex-col lg:w-[calc(100%-224px)] h-full">
+      <div className="flex flex-col w-full h-full lg:max-w-[1200px] lg:max-h-[800px] m-auto mt-0 lg:mt-auto">
+        <CalendarHeader fetchNextData={fetchNextData} />
+        <CalendarGrid events={allEvents} />
       </div>
 
-      <CalendarSideBar allEvents={allEvents} />
+      <CalendarSideBar events={allEvents} />
     </div>
   )
 }
