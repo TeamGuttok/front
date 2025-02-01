@@ -13,7 +13,7 @@ interface State {
   formData?: FormData
 }
 
-export async function registerAction(
+export async function myPageEditAction(
   prevState: State | null,
   formData: FormData,
 ): Promise<State> {
@@ -21,7 +21,6 @@ export async function registerAction(
     email: formData.get('email'),
     password: formData.get('password'),
     nickname: formData.get('nickname'),
-    session: formData.get('session'),
   }
 
   console.log(input)
