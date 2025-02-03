@@ -9,9 +9,11 @@ export const PATH = {
   forgotEmail: '/forgot/email',
   forgotPassword: '/forgot/password',
 
-  add: '/add',
-  detail: 'add/detail',
-  addCustom: 'add/detail/custom',
+  itemAdd: '/item/add',
+  addDetail: 'item/add/detail',
+  //addCustom: 'add/detail/custom',
+  itemDetail: (itemId: number) => `item/${itemId}/detail`,
+  itemEdit: (itemId: number) => `item/${itemId}/edit`,
 
   group: '/group',
   groupAdd: '/group/add',
