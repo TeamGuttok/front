@@ -15,7 +15,7 @@ import {
 import CardTitle from '#components/_common/CardTitle'
 import { useServiceStore } from '#stores/useServiceStore'
 import { useSubscriptionStore } from '#stores/useSubscriptionStore'
-import { useCreateSubscription } from './CreateSubscriptionHook'
+import { useCreateSubscription } from '#apis/CreateSubscriptionHook'
 
 export default function Page() {
   const { selectedService } = useServiceStore()

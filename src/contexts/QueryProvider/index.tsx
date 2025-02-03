@@ -18,7 +18,7 @@ const queryClient = new QueryClient({
   mutationCache: new MutationCache({
     onError: (error) => {
       toast({
-        title: error.message || '요청에 실패햐였습니다.', // Todo: 에러 코드 소통 필요
+        title: error.message || '요청에 실패하하였습니다.', // Todo: 에러 코드 소통 필요
         variant: 'destructive',
       })
     },
