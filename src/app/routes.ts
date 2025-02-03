@@ -10,10 +10,10 @@ export const PATH = {
   forgotPassword: '/forgot/password',
 
   itemAdd: '/item/add',
-  addDetail: 'item/add/detail',
-  //addCustom: 'add/detail/custom',
-  itemDetail: (itemId: number) => `item/${itemId}/detail`,
-  itemEdit: (itemId: number) => `item/${itemId}/edit`,
+  addDetail: '/item/add/detail',
+  //addCustom: '/item/add/detail/custom',
+  itemDetail: (itemId: number) => `/item/${itemId}/detail`,
+  itemEdit: (itemId: number) => `/item/${itemId}/edit`,
 
   group: '/group',
   groupAdd: '/group/add',

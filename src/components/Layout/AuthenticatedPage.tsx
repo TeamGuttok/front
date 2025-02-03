@@ -47,9 +47,9 @@ export default function Page() {
       </div>
 
       <div className="fixed bottom-[5.5rem] sm:bottom-[3rem] right-4 sm:right-10 transform h-14 rounded-full shadow-lg flex items-center justify-center">
-        <Link href={PATH.itemAdd}>
+        <Link href={PATH.itemAdd} aria-label="구독 아이템 추가 페이지로 이동">
           <Button className="flex w-16 h-16 rounded-full shadow-lg items-center justify-center">
-            <Plus size={48} className="w-14 h-14" />
+            <Plus size={48} />
           </Button>
         </Link>
       </div>
