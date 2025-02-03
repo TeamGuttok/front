@@ -85,6 +85,7 @@ export default function Page() {
                 ) : (
                   <Plus
                     className="mb-4"
+                    className="mb-2"
                     aria-label="구독 내용 직접 입력하기"
                     size={20}
                     strokeWidth={3}
