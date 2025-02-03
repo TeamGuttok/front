@@ -1,10 +1,10 @@
 'use client'
 
-import * as React from "react"
-import * as SelectPrimitive from "@radix-ui/react-select"
-import { Check, ChevronDown, ChevronUp } from "lucide-react"
+import * as React from 'react'
+import * as SelectPrimitive from '@radix-ui/react-select'
+import { Check, ChevronDown, ChevronUp } from 'lucide-react'
 
-import { cn } from "#components/lib/utils"
+import { cn } from '#components/lib/utils'
 
 const Select = SelectPrimitive.Root
 
@@ -20,8 +20,10 @@ const SelectTrigger = React.forwardRef<
     ref={ref}
     className={cn(
       'flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
-      'bg-white text-black dark:bg-zinc-800 dark:text-gray-100',
+      'bg-white text-black dark:bg-[hsl(var(--secondary))] dark:text-gray-100',
       className,
+//       'bg-white text-black dark:bg-zinc-800 dark:text-gray-100',
+//       className,
     )}
     {...props}
   >
@@ -31,7 +33,7 @@ const SelectTrigger = React.forwardRef<
     )}
     {...props}
   >
-    {children}
+    <span className="text-sm sm:text-base mr-2">{children}</span>
     <SelectPrimitive.Icon asChild>
       <ChevronDown className="h-4 w-4 opacity-50" />
     </SelectPrimitive.Icon>
@@ -47,6 +49,7 @@ const SelectScrollUpButton = React.forwardRef<
     ref={ref}
     className={cn(
       'flex cursor-default items-center justify-center py-1',
+      className,
     )}
     {...props}
   >
@@ -62,8 +65,8 @@ const SelectScrollDownButton = React.forwardRef<
   <SelectPrimitive.ScrollDownButton
     ref={ref}
     className={cn(
-      "flex cursor-default items-center justify-center py-1",
-      className
+      'flex cursor-default items-center justify-center py-1',
+      className,
     )}
     {...props}
   >
@@ -76,14 +79,14 @@ SelectScrollDownButton.displayName =
 const SelectContent = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
->(({ className, children, position = "popper", ...props }, ref) => (
+>(({ className, children, position = 'popper', ...props }, ref) => (
   <SelectPrimitive.Portal>
     <SelectPrimitive.Content
       ref={ref}
       className={cn(
         'relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
         position === 'popper' &&
-          'data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1 bg-white text-black dark:bg-zinc-800 dark:text-gray-100',
+          'data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1 bg-white text-black dark:dark:bg-[hsl(var(--secondary))] dark:text-gray-100',
         className,
       )}
       position={position}
@@ -92,9 +95,9 @@ const SelectContent = React.forwardRef<
       <SelectScrollUpButton />
       <SelectPrimitive.Viewport
         className={cn(
-          "p-1",
-          position === "popper" &&
-            "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]"
+          'p-1',
+          position === 'popper' &&
+            'h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]',
         )}
       >
         {children}
@@ -111,7 +114,6 @@ const SelectLabel = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SelectPrimitive.Label
     ref={ref}
-    className={cn('px-2 py-1.5 text-sm font-semibold', className)}
     className={cn("px-2 py-1.5 text-sm font-semibold", className)}
     {...props}
   />

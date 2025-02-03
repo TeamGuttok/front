@@ -35,8 +35,8 @@ export default function Page() {
   }
 
   return (
-    <div className="flex flex-col h-full m-4">
-      <div className="flex flex-col flex-1 items-center justify-center p-6">
+    <div className="flex flex-col m-4 ">
+      <div className="flex flex-col items-center justify-center py-5 ">
         <h1 className="flex flex-row mt-8 mb-1 text-3xl font-bold text-center ">
           구독 서비스 선택
         </h1>
@@ -55,7 +55,7 @@ export default function Page() {
         </div>
       </div>
 
-      <div className="grid mb-8 gap-4 grid-cols-2 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid mb-4 gap-4 grid-cols-2 sm:grid-cols-2 lg:grid-cols-4">
         {allServices.map((service) => (
           <div
             key={service.id}
@@ -84,6 +84,7 @@ export default function Page() {
                   />
                 ) : (
                   <Plus
+                    className="mb-4"
                     className="mb-2"
                     aria-label="구독 내용 직접 입력하기"
                     size={20}
