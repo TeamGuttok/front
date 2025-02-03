@@ -7,7 +7,7 @@ import { Label } from '#components/_common/Label'
 import { Input } from '#components/_common/Input'
 import { ErrorMessage } from '#components/_common/ErrorMessage'
 import { Button } from '#components/_common/Button'
-import OTPForm from '#components/OTPForm'
+import OTPForm from '#components/_common/OTPForm'
 
 const emailSchema = z.object({
   email: z.string().email('유효한 이메일 주소를 입력하세요.'),
