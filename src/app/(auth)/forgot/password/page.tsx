@@ -5,7 +5,7 @@ import { Label } from '#components/_common/Label'
 import { Input } from '#components/_common/Input'
 import { ErrorMessage } from '#components/_common/ErrorMessage'
 import { Button } from '#components/_common/Button'
-import OTPForm from '#components/OTPForm'
+import OTPForm from '#components/_common/OTPForm'
 
 import { forgotPasswordAction } from './forgotPasswordAction'
 

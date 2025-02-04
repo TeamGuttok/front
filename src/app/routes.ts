@@ -1,22 +1,24 @@
 export const PATH = {
   listView: '/',
-  notification: '',
-  myPage: '',
+  calendarView: '/calendar',
+  notification: '/noti',
+  myPage: '/mypage',
+  mypageEdit: '/mypage/edit',
 
   login: '/login',
   register: '/register',
   forgotEmail: '/forgot/email',
   forgotPassword: '/forgot/password',
 
-  add: '/add',
-  detail: 'add/detail',
-  addCustom: 'add/detail/custom',
+  itemAdd: '/item/add',
+  addDetail: '/item/add/detail',
+  //addCustom: '/item/add/detail/custom',
+  itemDetail: (itemId: number) => `/item/${itemId}/detail`,
+  itemEdit: (itemId: number) => `/item/${itemId}/edit`,
 
   group: '/group',
   groupAdd: '/group/add',
   groupDetail: (groupId: number) => `/group/${groupId}`,
   groupEdit: (groupId: number) => `/group/${groupId}/edit`,
   groupMember: (groupId: number) => `/group/${groupId}/member`,
-
-  calendarView: '/calendar',
 }
