@@ -36,10 +36,10 @@ export default function NavigationBar({ pathname }: { pathname: string }) {
           </li>
           <li>
             <Link
-              href={PATH.myPage}
+              href={PATH.mypage}
               className={cn(
                 itemClassName,
-                pathname === PATH.myPage && 'text-foreground',
+                pathname === PATH.mypage && 'text-foreground',
               )}
             >
               <User aria-label="마이페이지 아이콘" />

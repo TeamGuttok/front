@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { PATH } from '#app/routes'
 import { cn } from '#components/lib/utils'
 import { Bell, CalendarCheck, Users, HandCoins } from 'lucide-react'
-import Carousel from '#components/_common/Carousel'
+import Carousel from '#components/_common/Carousel/index'
 import { Button } from '#components/_common/Button'
 
 export default function Home({ pathname }: { pathname: string }) {
@@ -14,7 +14,7 @@ export default function Home({ pathname }: { pathname: string }) {
     'w-16 h-16 stroke-[hsl(var(--primary))] mx-auto flex items-center justify-center'
 
   return (
-    <div className="pb-[10rem] background-color-[hsl(var(--background))] flex flex-col min-h-[calc(100vh-4.5rem)] my-auto 2xl:pb-[8rem]">
+    <div className="pb-[7rem] background-color-[hsl(var(--background))] flex flex-col min-h-[calc(100vh-4.5rem)] my-auto 2xl:pb-[8rem]">
       <div className="mt-10">
         <Carousel />
       </div>

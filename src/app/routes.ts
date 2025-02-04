@@ -1,8 +1,8 @@
 export const PATH = {
   listView: '/',
   calendarView: '/calendar',
-  notification: '/noti',
-  myPage: '/mypage',
+  notification: '/notification',
+  mypage: '/mypage',
   mypageEdit: '/mypage/edit',
 
   login: '/login',

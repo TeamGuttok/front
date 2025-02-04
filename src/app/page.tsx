@@ -40,15 +40,10 @@ export default function Home() {
 
   return (
     <main>
-      {/* {isLoggedIn ? (
-        <UnauthenticatedPage pathname="/" />
-      ) : (
-        <AuthenticatedPage pathname="/" />
-      )} */}
       {isLoggedIn ? (
-        <AuthenticatedPage pathname="/" />
-      ) : (
         <UnauthenticatedPage pathname="/" />
+      ) : (
+        <AuthenticatedPage />
       )}
     </main>
   )

@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+// import Link from 'next/link'
 import { Input } from '#components/_common/Input'
 import { Button } from '#components/_common/Button'
 import { cn } from '#components/lib/utils'
@@ -71,7 +71,7 @@ export default function Page() {
   return (
     <CardTitle className="flex flex-col max-w-[40rem] sm:max-w-[52rem] sm:p-8 sm:rounded-md sm:border sm:border-border m-auto -translate-y-8 px-4">
       <h1 className="text-3xl font-bold justify-center text-center">
-        구독 서비스 세부설정
+        구독 서비스 수정
       </h1>
       <div className="flex flex-col justify-center items-center my-8">
         <form className="grid grid-cols-1 gap-4">
@@ -243,11 +243,11 @@ export default function Page() {
               </Select>
             </SelectGroup>
             <div className="flex justify-end mb-2">
-              <Link href="item/add/detail/custom">
+              {/* <Link href="item/add/detail/custom">
                 <p className="tracking-wide underline text-base">
                   색깔과 아이콘을 선택해주세요
                 </p>
-              </Link>
+              </Link> */}
             </div>
             <SelectGroup className={cn(groupClassName)}>
               <SelectLabel className={cn(labelClassName)}>메모</SelectLabel>
