@@ -22,6 +22,17 @@ const SelectTrigger = React.forwardRef<
       'flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
       'bg-white text-black dark:bg-[hsl(var(--secondary))] dark:text-gray-100',
       className,
+<<<<<<< HEAD
+=======
+//       'bg-white text-black dark:bg-zinc-800 dark:text-gray-100',
+//       className,
+    )}
+    {...props}
+  >
+    <span className="text-sm sm:text-base mr-2">{children}</span>
+      "flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+      className
+>>>>>>> upstream/main
     )}
     {...props}
   >
@@ -120,7 +131,11 @@ const SelectItem = React.forwardRef<
     ref={ref}
     className={cn(
       'relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 text-black dark:text-gray-100',
+<<<<<<< HEAD
       className,
+=======
+      className
+>>>>>>> upstream/main
     )}
     {...props}
   >

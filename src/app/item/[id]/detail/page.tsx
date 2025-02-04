@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import Link from 'next/link'
 import { PATH } from '#app/routes'
 import { cn } from '#components/lib/utils'
@@ -68,3 +69,5 @@ export default async function SubscriptionDetailPage({
     </>
   )
 }
+=======
+>>>>>>> upstream/main
