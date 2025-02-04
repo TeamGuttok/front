@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { Input } from '#components/_common/Input'
 import { Button } from '#components/_common/Button'
 import { cn } from '#components/lib/utils'
-
 import {
   Select,
   SelectTrigger,
@@ -91,20 +90,6 @@ export default function Page() {
                 >
                   필수
                 </span>
-    <CardTitle className="flex">
-      <h1 className="text-3xl font-bold justify-center flex">
-        구독 서비스 세부설정
-      </h1>
-      <div className="flex flex-col justify-center items-center my-12">
-        <form className="space-y-4 ">
-          <div className="grid grid-cols-1 gap-4">
-            <SelectGroup className="flex items-center justify-between">
-              <SelectLabel
-                id="subscriptionTitle"
-                aria-labelledby="subscriptionTitle"
-                className="block mr-8 tracking-wide text-lg font-medium text-nowrap"
-              >
-                구독 서비스
               </SelectLabel>
               <Input
                 type="text"
@@ -117,7 +102,6 @@ export default function Page() {
                 className={cn(inputClassName)}
               />
             </SelectGroup>
-
             <SelectGroup className={cn(groupClassName)}>
               <SelectLabel
                 aria-labelledby="subscriptionAmount"
@@ -132,20 +116,12 @@ export default function Page() {
                 >
                   필수
                 </span>
-            <SelectGroup className="flex items-center justify-between">
-              <SelectLabel
-                id="subscriptionAmount"
-                className="block mr-8 tracking-wide text-lg font-medium text-nowrap"
-              >
-                결제 금액
               </SelectLabel>
               <Input
                 type="number"
                 aria-labelledby="subscriptionAmount"
                 aria-describedby="subscriptionAmount-required"
                 value={paymentAmount}
-                value={paymentAmount}
-                //value={subscriptionData.paymentAmount}
                 onChange={(e) =>
                   setSubscriptionData({ paymentAmount: Number(e.target.value) })
                 }
@@ -169,17 +145,6 @@ export default function Page() {
                 </span>
               </SelectLabel>
               <div className="flex items-center space-x-2">
-                className="block max-w-60 min-w-60 pl-2 text-sm sm:text-base"
-              />
-            </SelectGroup>
-            <SelectGroup className="flex items-center justify-between">
-              <SelectLabel
-                id="paymentCycleLabel"
-                className="block mr-8 tracking-wide text-lg font-medium text-nowrap"
-              >
-                결제 주기 *
-              </SelectLabel>
-              <SelectGroup className="flex items-center space-x-2">
                 <label
                   id="cyclePrefixLabel"
                   htmlFor="paymentCycle"
@@ -201,12 +166,6 @@ export default function Page() {
                     <SelectContent
                       id="paymentCycle-options"
                       className="border px-2 py-1 mr-10 rounded-md dark:text-black"
-                    className="flex border rounded-md px-4"
-                  >
-                    {paymentCycle || defaultPaymentCycle}
-                    <SelectContent
-                      id="paymentCycle"
-                      className="border px-2 py-1 mr-10 rounded-md dark:text-black block"
                     >
                       {paymentCycleOptions.map((cycle) => (
                         <SelectItem key={cycle} value={cycle}>
@@ -269,14 +228,6 @@ export default function Page() {
                   className="w-[12.5rem] sm:max-w-[12.5rem] sm:min-w-[12.5rem] 
                 pl-2 flex tracking-wide text-lg font-medium text-nowrap"
                 >
-              </SelectGroup>
-            </SelectGroup>
-            <SelectGroup className="flex items-center justify-between">
-              <SelectLabel className="block mr-8 tracking-wide text-lg font-medium text-nowrap">
-                결제수단
-              </SelectLabel>
-              <Select onValueChange={(value) => updatePaymentMethod(value)}>
-                <SelectTrigger className="max-w-60 min-w-60 pl-2 flex tracking-wide text-lg font-medium text-nowrap">
                   {paymentMethod || defaultPaymentMethod}
                   <SelectContent
                     id="paymentMethod"
@@ -292,7 +243,6 @@ export default function Page() {
               </Select>
             </SelectGroup>
             <div className="flex justify-end mb-2">
-            <div className="flex justify-end">
               <Link href="item/add/detail/custom">
                 <p className="tracking-wide underline text-base">
                   색깔과 아이콘을 선택해주세요
@@ -301,18 +251,12 @@ export default function Page() {
             </div>
             <SelectGroup className={cn(groupClassName)}>
               <SelectLabel className={cn(labelClassName)}>메모</SelectLabel>
-            <SelectGroup className="flex justify-between">
-              <SelectLabel className="mr-8 tracking-wide block text-lg font-medium text-nowrap">
-                메모
-              </SelectLabel>
               <textarea
                 placeholder="메모를 입력하세요"
                 onChange={(e) => updateMemo(e.target.value)}
                 value={memo}
                 className="p-2 w-[12.5rem] sm:max-w-[12.5rem] sm:min-w-[12.5rem]  text-sm sm:text-base block 
                 bg-white text-black dark:bg-[hsl(var(--secondary))] placeholder-[hsl(var(--muted-foreground))]
-                className="p-2 max-w-60 min-w-60 text-sm sm:text-base block 
-                bg-white text-black dark:bg-zinc-800 
                 dark:text-white dark:border-white rounded-md border border-gray-300 shadow-sm"
                 rows={2}
               />

@@ -96,10 +96,10 @@ export default function SideBar({ pathname }: { pathname: string }) {
           </li>
           <li>
             <Link
-              href={PATH.myPage}
+              href={PATH.mypage}
               className={cn(
                 itemClassName,
-                pathname === PATH.myPage && 'bg-accent',
+                pathname === PATH.mypage && 'bg-accent',
               )}
             >
               <User aria-label="마이페이지 아이콘" size={20} />
