@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { PATH } from '#app/routes'
-import CardTitle from '#components/_common/CardTitle'
 import { cn } from '#components/lib/utils'
 import { Settings, Trash2 } from 'lucide-react'
 
