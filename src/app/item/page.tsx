@@ -38,15 +38,15 @@ export default function ItemList() {
           <Card
             key={sub.id}
             className={cn(
-              'flex justify-between items-center p-4 rounded-lg shadow-md [hsl(var(--primary-hover))]',
+              'flex justify-between items-center p-4 rounded-lg shadow-md dark:bg-gray-800 bg-white hover:bg-slate-200 hover:dark:bg-gray-700',
               sub.shared ? 'bg-red-100' : 'bg-white',
             )}
           >
             <div className="flex items-center gap-3">
               <div className={cn('w-8 h-8 rounded-full', sub.color)}></div>
-              <div>
+              <div className="dark:color-black">
                 <h3 className="font-medium">{sub.name}</h3>
-                <p className="text-xs text-gray-500">{sub.cycle}</p>
+                <p className="text-xs dark:text-gray-500">{sub.cycle}</p>
               </div>
             </div>
             <div className="text-right">

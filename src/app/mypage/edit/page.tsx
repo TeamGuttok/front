@@ -85,11 +85,11 @@ export default function MyPage() {
         </form>
       </div>
       <div className="flex w-full my-5">
-        {/* <Link href={PATH.mypage}> */}
-        <Button className="w-full bg-primary text-white hover:bg-[hsl(var(--primary-hover))]">
-          <span>저장하기</span>
-        </Button>
-        {/* </Link> */}
+        <Link href={PATH.mypage}>
+          <Button className="w-full bg-primary text-white hover:bg-[hsl(var(--primary-hover))]">
+            <span>저장하기</span>
+          </Button>
+        </Link>
       </div>
     </CardTitle>
   )

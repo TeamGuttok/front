@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { PATH } from '#app/routes'
 import { Input } from '#components/_common/Input'
 import { KNOWN_SERVICES } from '#constants/knownServices'
 import { Button } from '#components/_common/Button'
@@ -76,7 +77,7 @@ export default function Page() {
               className="dark:bg-gray-800 bg-white hover:bg-slate-200 hover:dark:bg-gray-700 min-h-[5.5rem]
         flex content-center justify-evenly items-center rounded-lg flex-col px-16 py-4 sm:py-3 border border-[rgba(0,0,0,0.2)] cursor-pointer"
             >
-              <Link href="add/detail">
+              <Link href={PATH.addDetail}>
                 <div className="flex flex-col items-center">
                   {service.iconUrl ? (
                     <div
