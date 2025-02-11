@@ -3,7 +3,7 @@
 import { Button } from '#components/_common/Button'
 import { PATH } from '#app/routes'
 import Link from 'next/link'
-import ItemList from '../../app/item/page'
+import ItemList from '../../../app/item/page'
 import { getHours } from 'date-fns'
 import { CalendarDays, Plus } from 'lucide-react'
 

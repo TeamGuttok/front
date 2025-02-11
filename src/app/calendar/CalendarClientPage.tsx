@@ -2,9 +2,9 @@
 
 import { useSyncDateWithSearchParams } from '#hooks/useSyncDateWithSearchParams'
 
-import CalendarHeader from '#components/Calendar/CalendarHeader'
-import CalendarGrid from '#components/Calendar/CalendarGrid'
-import CalendarSideBar from '#components/Calendar/CalendarSideBar'
+import CalendarHeader from '#components/Layout/Calendar/CalendarHeader'
+import CalendarGrid from '#components/Layout/Calendar/CalendarGrid'
+import CalendarSideBar from '#components/Layout/Calendar/CalendarSideBar'
 
 import type { SubscriptionContents } from '#types/subscription'
 

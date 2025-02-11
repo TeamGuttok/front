@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
-import { useSearchStore } from '#stores/useSearchStore'
+import { useSearchStore } from '#stores/subscriptions/useSearchStore'
 
 export const fetchSearchResults = async (query: string) => {
   const response = await fetch(`/api/search?query=${query}`)

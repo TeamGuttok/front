@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { useSubscriptionStore } from '#stores/useSubscriptionStore'
+import { useSubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
 
 export type ServiceStore = {
   id: string

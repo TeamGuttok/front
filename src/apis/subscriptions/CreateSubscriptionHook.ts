@@ -1,13 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { CreateSubscriptionAPI } from './CreateSubscriptionAPI'
-import { SubscriptionStore } from '#stores/useSubscriptionStore'
+import { SubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
+import { CreateSubscriptionResponse } from './CreateSubscriptionAPI'
 
 export function useCreateSubscription() {
   const queryClient = useQueryClient()
   const router = useRouter()
 
-  return useMutation<void, Error, SubscriptionStore>({
+  return useMutation<CreateSubscriptionResponse, Error, SubscriptionStore>({
     mutationFn: CreateSubscriptionAPI,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['subscriptions'] })

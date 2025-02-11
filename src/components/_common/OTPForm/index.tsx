@@ -9,29 +9,64 @@ import {
 } from '#components/_common/InputOtp'
 import { cn } from '#components/lib/utils'
 
+const TIME_LIMIT_SECONDS = 10 * 60 // 10분
+
 interface OTPFormProps {
   email: string
-  onSuccess?:
-    | ((
-        data: unknown,
-        variables: void,
-        context: unknown,
-      ) => Promise<unknown> | unknown)
-    | undefined
+  onSuccess: (session: string) => void
+  // onSuccess?:
+  //   | ((
+  //       data: unknown,
+  //       variables: void,
+  //       context: unknown,
+  //     ) => Promise<unknown> | unknown)
+  //   | undefined
   className?: string
 }
 
-const TIME_LIMIT_SECONDS = 10 * 60 // 10분
+async function verifyOTP(
+  email: string,
+  otp: string,
+): Promise<{ session: string }> {
+  const response = await fetch('/api/users/email-verification/confirm', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, certificationNumber: otp }),
+  })
 
-// Todo: API 연동
+  if (!response.ok) {
+    const errorData = await response.json()
+    throw new Error(errorData.message || 'OTP 인증 실패')
+  }
+
+  return response.json()
+}
+
 export default function OTPForm({ email, onSuccess, className }: OTPFormProps) {
   const inputRef = useRef<HTMLInputElement>(null)
 
   const [otp, setOtp] = useState('')
   const [timeLeft, setTimeLeft] = useState(TIME_LIMIT_SECONDS)
-  const [startTime] = useState(() => performance.now())
+  const [errors, setErrors] = useState<string[]>([])
+  const [startTime, setStartTime] = useState(() => performance.now())
+  //const [startTime] = useState(() => performance.now())
 
-  const { mutate, isPending } = useMutation({ onSuccess })
+  //const { mutate, isPending } = useMutation({ onSuccess })
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: () => verifyOTP(email, otp), // ✅ email, otp를 전달
+    onSuccess: (data) => {
+      console.log('OTP 인증 성공:', data)
+      onSuccess(data.session) // ✅ 인증 성공 후 session 전달
+    },
+    onError: async (err: unknown) => {
+      if (err instanceof Error) {
+        setErrors([`오류 발생: ${err.message}`])
+      } else {
+        setErrors(['OTP 인증 실패'])
+      }
+    },
+  })
 
   useEffect(() => {
     if (inputRef.current) {
@@ -65,7 +100,9 @@ export default function OTPForm({ email, onSuccess, className }: OTPFormProps) {
 
   function handleComplete(value: string) {
     setOtp(value)
-    // mutate({email, value})
+    mutate()
+    console.log('otp 입력 완료', value)
+    //mutate({email, value})
   }
 
   return (
@@ -97,6 +134,11 @@ export default function OTPForm({ email, onSuccess, className }: OTPFormProps) {
           </InputOTPGroup>
         </InputOTP>
       </div>
+
+      {/* 삭제예정 */}
+      {errors.length > 0 && (
+        <div className="text-center text-destructive text-sm">{errors[0]}</div>
+      )}
 
       {timeLeft === 0 && (
         <div className="text-center text-destructive text-sm">

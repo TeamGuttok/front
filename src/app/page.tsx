@@ -1,9 +1,9 @@
 'use client'
 
 import { useEffect } from 'react'
-import { useAuthStore } from '../stores/authStore'
-import UnauthenticatedPage from '../components/Layout/UnauthenticatedPage'
-import AuthenticatedPage from '../components/Layout/AuthenticatedPage'
+import { useAuthStore } from '../stores/auth/useAuthStore'
+import UnauthenticatedPage from '../components/Layout/Main/UnauthenticatedPage'
+import AuthenticatedPage from '../components/Layout/Main/AuthenticatedPage'
 import { Skeleton } from '../components/_common/Skeleton'
 
 export default function Home() {

@@ -1,6 +1,7 @@
 'use server'
 
 import { z } from 'zod'
+import { RegisterUser } from '#apis/auth/RegisterUser'
 
 const registerSchema = z.object({
   nickname: z.string().min(3, '닉네임은 최소 3자 이상이어야 합니다.'),
@@ -24,6 +25,7 @@ interface State {
     password: string
     nickname: string
     alarm: boolean
+    session: string
   }
   errors?: Record<string, string[]>
   formData?: FormData
@@ -34,10 +36,14 @@ export async function registerAction(
   formData: FormData,
 ): Promise<State> {
   const input = {
-    email: formData.get('email'),
-    password: formData.get('password'),
-    nickname: formData.get('nickname'),
-    session: formData.get('session'),
+    // email: formData.get('email'),
+    // password: formData.get('password'),
+    // nickname: formData.get('nickname'),
+    // session: formData.get('session'),
+    email: formData.get('email')?.toString() ?? '',
+    password: formData.get('password')?.toString() ?? '',
+    nickname: formData.get('nickname')?.toString() ?? '',
+    session: formData.get('session')?.toString() ?? '',
   }
 
   console.log(input)
@@ -61,14 +67,37 @@ export async function registerAction(
     }
   }
 
-  // Todo: api 호출 및 return
+  try {
+    const data = await RegisterUser({
+      email: input.email!,
+      password: input.password!,
+      nickname: input.nickname!,
+    })
 
-  return {
-    data: {
-      email: 'you@dsfs',
-      password: '1233dsdsff',
-      nickname: 'gwjun',
-      alarm: true,
-    },
+    return {
+      data: {
+        email: data.data.email,
+        password: input.password,
+        nickname: data.data.nickName,
+        session: data.data.session ?? '',
+        alarm: true,
+      },
+    }
+  } catch (error: unknown) {
+    return {
+      errors: {
+        general: [error instanceof Error ? error.message : '회원가입 실패'],
+      },
+      formData,
+    }
   }
 }
+
+// return {
+//   data: {
+//     email: 'you@dsfs',
+//     password: '1233dsdsff',
+//     nickname: 'gwjun',
+//     alarm: true,
+//   },
+// }

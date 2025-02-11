@@ -2,7 +2,7 @@
 
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
-import { useCalendarStore } from '#stores/useCalendarStore'
+import { useCalendarStore } from '#stores/subscriptions/useCalendarStore'
 
 import { Button } from '#components/_common/Button'
 import { calculateNewDate, formatLocalizedDate } from '#utils/calendarUtils'

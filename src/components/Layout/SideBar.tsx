@@ -116,6 +116,8 @@ export default function SideBar({ pathname }: { pathname: string }) {
             >
               <LogIn aria-label="로그인 아이콘" size={20} />
               <span>로그인</span>
+              {/* TODO
+              [ ] 로그인하고 나면 로그아웃으로 보이도록 변경 */}
             </Link>
           </li>
         </ul>

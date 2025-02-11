@@ -4,7 +4,8 @@ interface FetchOptions extends RequestInit {
   retryDelay?: number
 }
 
-const BASE_URL = '/api'
+//const BASE_URL = '/api'
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080'
 const DEFAULT_TIMEOUT = 10000 // 10 seconds
 const DEFAULT_RETRIES = 1
 const DEFAULT_RETRY_DELAY = 500 // 0.5 second

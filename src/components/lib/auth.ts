@@ -1,4 +1,4 @@
-import Fetcher from '../../apis/fetcher'
+import Fetcher from '../../apis/common/fetcher'
 
 const api = new Fetcher()
 
