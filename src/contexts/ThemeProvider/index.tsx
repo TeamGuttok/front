@@ -5,18 +5,28 @@ import { useState, useEffect } from 'react'
 import { ThemeContext, ThemeMode } from '#contexts/ThemeProvider/context'
 
 export default function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<ThemeMode>(() => {
-    if (typeof window !== 'undefined') {
-      // localStorage theme
-      const storedTheme = localStorage.getItem('theme') as ThemeMode
-      if (storedTheme) return storedTheme
+  const [mounted, setMounted] = useState(false)
+  const [theme, setTheme] = useState<ThemeMode>('light')
+  // const [theme, setTheme] = useState<ThemeMode>(() => {
+  //   if (typeof window !== 'undefined') {
+  //     const storedTheme = localStorage.getItem('theme') as ThemeMode
+  //     if (storedTheme) return storedTheme
 
-      // system theme
-      if (window.matchMedia('(prefers-color-scheme: dark)').matches)
-        return 'dark'
+  //     if (window.matchMedia('(prefers-color-scheme: dark)').matches)
+  //       return 'dark'
+  //   }
+  //   return 'light'
+  // })
+
+  useEffect(() => {
+    setMounted(true)
+    const storedTheme = localStorage.getItem('theme') as ThemeMode
+    if (storedTheme) {
+      setTheme(storedTheme)
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      setTheme('dark')
     }
-    return 'light'
-  })
+  }, [])
 
   useEffect(() => {
     const isDarkMode =
@@ -33,6 +43,10 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
       localStorage.removeItem('theme')
     }
   }, [theme])
+
+  if (!mounted) {
+    return null
+  }
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>

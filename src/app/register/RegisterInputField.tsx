@@ -2,7 +2,7 @@ import type { Dispatch, SetStateAction } from 'react'
 import { useRef, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { z } from 'zod'
-import { RegisterUser } from '#apis/auth/RegisterUser'
+//import { RegisterUser } from '#apis/auth/RegisterUser'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 //import Fetcher from '#apis/common/fetcher'
 import { Label } from '#components/_common/Label'
@@ -19,10 +19,9 @@ const emailSchema = z.object({
 
 interface RegisterInputFieldProps {
   defaultValue: string
-  setSession: Dispatch<SetStateAction<string>>
+  setSession: Dispatch<SetStateAction<string>> // otp 인증 후 백엔드 세션 저장
 }
 
-// Todo: API 연동 및 setSession 설정
 export default function RegisterInputField({
   defaultValue,
   setSession,
@@ -31,25 +30,26 @@ export default function RegisterInputField({
   const buttonRef = useRef<HTMLButtonElement>(null)
 
   const [errors, setErrors] = useState<string[]>([])
-  const [isOTPOpen, setIsOTPOpen] = useState<boolean>(false)
+  const [isOTPOpen, setIsOTPOpen] = useState<boolean>(false) // 인증번호 요청하면 otp폼 렌더링
+  const [otpReset, setOtpReset] = useState(0) // 시간 만료 후 인증번호 재요청
 
   const setUser = useAuthStore((state) => state.setUser)
-
-  // const { mutate, isPending, isSuccess } = useMutation({})
 
   // useEffect(() => {
   //   if (isSuccess) setIsOTPOpen(true)
   // }, [isSuccess])
 
+  // 이메일 인증
   const TEST_EMAIL = 'guttok.mail@gmail.com'
 
   const { mutate: requestEmailVerification, isPending: isVerifyingEmail } =
     useMutation({
       mutationFn: async (email: string) => {
-        console.log('이메일 인증 요청 시작:', email)
+        console.log('인증번호 이메일로 발송:', email)
 
         const response = await fetch(
           'http://localhost:8080/api/mail/certification',
+          //'http://localhost:8080/api/users/email-verification',
           {
             method: 'POST',
             headers: {
@@ -85,22 +85,28 @@ export default function RegisterInputField({
       },
     })
 
-  const { mutate: verifyOTPCode, isPending: isVerifyingOTP } = useMutation({
+  // 인증번호 검증, 백엔드에서 최초로 생성된 세션 받아오는 시점
+  const { mutate: verifyOTPCode } = useMutation({
     mutationFn: async ({
-      email,
       certificationNumber,
+      email,
     }: {
-      email: string
       certificationNumber: string
+      email: string
     }) => {
       const response = await fetch(
+        // 인증번호 otp에 입력 후 검증
         'http://localhost:8080/api/users/certification-number',
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ email, certificationNumber }),
+          body: JSON.stringify({
+            certificationNumber,
+            email,
+            certificationNumberDto: { certificationNumber, email },
+          }),
         },
       )
 
@@ -110,14 +116,6 @@ export default function RegisterInputField({
 
       return response.json()
     },
-    //   return fetcher.post<{ session: string; email: string; nickName: string }>(
-    //     '/api/users/certification-number',
-    //     {
-    //       email,
-    //       certificationNumber,
-    //     },
-    //   )
-    // },
     onSuccess: (data) => {
       setSession(data.session)
       setIsOTPOpen(false)
@@ -145,13 +143,27 @@ export default function RegisterInputField({
       setErrors(result.error.errors.map((err) => err.message))
       return
     }
+    if (isOTPOpen) {
+      handleResendOTP() // 수정됨: OTP 재발송 시 리셋 신호 전달
+    }
 
     requestEmailVerification(email)
+  }
+
+  const handleResendOTP = () => {
+    setOtpReset((prev) => prev + 1)
   }
 
   function handleOTPVerification(otp: string) {
     const email = inputRef.current?.value || ''
     verifyOTPCode({ email, certificationNumber: otp })
+
+    if (inputRef.current && buttonRef.current) {
+      inputRef.current.readOnly = true
+      buttonRef.current.disabled = true
+    }
+
+    setErrors([])
   }
 
   // function handleClick() {
@@ -195,7 +207,7 @@ export default function RegisterInputField({
           className="rounded-lg"
           disabled={isVerifyingEmail}
         >
-          {isOTPOpen ? '다시 보내기' : '인증하기'}
+          {isOTPOpen ? '다시 보내기' : '인증번호 발송'}
         </Button>
       </div>
       <ErrorMessage errors={errors} className="ml-20" />
@@ -203,6 +215,7 @@ export default function RegisterInputField({
       {isOTPOpen && (
         <OTPForm
           email={inputRef.current?.value as string}
+          resetTrigger={otpReset}
           onSuccess={handleOTPVerification}
           className="mt-2 mb-3 space-y-4"
         />

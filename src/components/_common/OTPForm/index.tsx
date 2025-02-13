@@ -8,12 +8,16 @@ import {
   InputOTPSlot,
 } from '#components/_common/InputOtp'
 import { cn } from '#components/lib/utils'
+import { Button } from '#components/_common/Button'
+import { OTPInputContext } from 'input-otp'
 
-const TIME_LIMIT_SECONDS = 10 * 60 // 10분
+//const TIME_LIMIT_SECONDS = 10 * 60 // 10분
+const TIME_LIMIT_SECONDS = 30 * 60 // 테스트할 때만
 
 interface OTPFormProps {
   email: string
   onSuccess: (session: string) => void
+  resetTrigger: number
   // onSuccess?:
   //   | ((
   //       data: unknown,
@@ -25,45 +29,61 @@ interface OTPFormProps {
 }
 
 async function verifyOTP(
-  email: string,
   otp: string,
+  email: string,
 ): Promise<{ session: string }> {
-  const response = await fetch('/api/users/email-verification/confirm', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, certificationNumber: otp }),
-  })
+  //const response = await fetch('/api/users/certification-number', {
+  const response = await fetch(
+    'http://localhost:8080/api/users/certification-number',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        certificationNumber: otp,
+        email: email,
+        certificationNumberDto: {
+          certificationNumber: otp,
+          email: email,
+        },
+      }),
+    },
+  )
 
   if (!response.ok) {
     const errorData = await response.json()
-    throw new Error(errorData.message || 'OTP 인증 실패')
+    throw new Error(errorData.message || '올바른 인증번호를 입력해주세요.')
   }
 
   return response.json()
 }
 
-export default function OTPForm({ email, onSuccess, className }: OTPFormProps) {
+export default function OTPForm({
+  email,
+  onSuccess,
+  className,
+  resetTrigger,
+}: OTPFormProps) {
   const inputRef = useRef<HTMLInputElement>(null)
-
   const [otp, setOtp] = useState('')
   const [timeLeft, setTimeLeft] = useState(TIME_LIMIT_SECONDS)
   const [errors, setErrors] = useState<string[]>([])
   const [startTime, setStartTime] = useState(() => performance.now())
-  //const [startTime] = useState(() => performance.now())
-
-  //const { mutate, isPending } = useMutation({ onSuccess })
+  const [isSubmitted, setIsSubmitted] = useState(false)
 
   const { mutate, isPending } = useMutation({
-    mutationFn: () => verifyOTP(email, otp), // ✅ email, otp를 전달
+    mutationFn: () => verifyOTP(email, otp),
     onSuccess: (data) => {
+      onSuccess(data.session) // 인증 성공 후 session 전달
+      setIsSubmitted(false)
       console.log('OTP 인증 성공:', data)
-      onSuccess(data.session) // ✅ 인증 성공 후 session 전달
     },
     onError: async (err: unknown) => {
+      setIsSubmitted(false)
       if (err instanceof Error) {
         setErrors([`오류 발생: ${err.message}`])
       } else {
-        setErrors(['OTP 인증 실패'])
+        setErrors(['올바른 인증번호를 입력해주세요.'])
       }
     },
   })
@@ -74,7 +94,17 @@ export default function OTPForm({ email, onSuccess, className }: OTPFormProps) {
     }
   }, [])
 
-  // timer
+  useEffect(() => {
+    setOtp('')
+    setStartTime(performance.now())
+    setTimeLeft(TIME_LIMIT_SECONDS)
+    setErrors([])
+    if (inputRef.current) {
+      inputRef.current.focus()
+    }
+    setIsSubmitted(false)
+  }, [resetTrigger])
+
   useEffect(() => {
     const timer = setInterval(() => {
       const elapsed = performance.now() - startTime
@@ -98,11 +128,18 @@ export default function OTPForm({ email, onSuccess, className }: OTPFormProps) {
     return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
   }
 
-  function handleComplete(value: string) {
-    setOtp(value)
+  function handleVerifyOTP(value: string) {
+    if (otp.length !== 6) {
+      setErrors(['인증번호를 모두 입력해주세요.'])
+      return
+    }
+    if (isSubmitted || isPending) {
+      return
+    }
+    setIsSubmitted(true)
+    // setOtp(value)
     mutate()
     console.log('otp 입력 완료', value)
-    //mutate({email, value})
   }
 
   return (
@@ -120,25 +157,29 @@ export default function OTPForm({ email, onSuccess, className }: OTPFormProps) {
       <div className="flex justify-center">
         <InputOTP
           ref={inputRef}
-          maxLength={4}
+          maxLength={6}
           value={otp}
           onChange={(value) => setOtp(value)}
-          onComplete={handleComplete}
+          //onComplete={handleComplete}
           containerClassName="justify-center"
           disabled={isPending || timeLeft === 0}
         >
           <InputOTPGroup>
-            {Array.from({ length: 4 }).map((_, index) => (
+            {Array.from({ length: 6 }).map((_, index) => (
               <InputOTPSlot key={index} index={index} />
             ))}
           </InputOTPGroup>
         </InputOTP>
-      </div>
 
-      {/* 삭제예정 */}
-      {errors.length > 0 && (
-        <div className="text-center text-destructive text-sm">{errors[0]}</div>
-      )}
+        <Button
+          type="button"
+          onClick={() => handleVerifyOTP(otp)}
+          disabled={isPending || otp.length !== 6}
+          className="w-32"
+        >
+          인증하기
+        </Button>
+      </div>
 
       {timeLeft === 0 && (
         <div className="text-center text-destructive text-sm">

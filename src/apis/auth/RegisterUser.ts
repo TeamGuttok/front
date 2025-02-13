@@ -1,7 +1,7 @@
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import Fetcher from '#apis/common/fetcher'
 
-const fetcher = new Fetcher() // Fetcher 인스턴스 생성
+const fetcher = new Fetcher()
 
 interface RegisterInput {
   email: string
