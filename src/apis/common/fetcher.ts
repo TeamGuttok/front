@@ -2,9 +2,11 @@ interface FetchOptions extends RequestInit {
   timeout?: number
   retries?: number
   retryDelay?: number
+  skipSessionCheck?: boolean
 }
 
-const BASE_URL = '/api'
+//const BASE_URL = '/api'
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080'
 const DEFAULT_TIMEOUT = 10000 // 10 seconds
 const DEFAULT_RETRIES = 1
 const DEFAULT_RETRY_DELAY = 500 // 0.5 second
@@ -16,6 +18,10 @@ class Fetcher {
     this.baseUrl = BASE_URL + baseUrl
   }
 
+  private async checkSession(): Promise<void> {
+    await this.request('/api/users/check-session', { skipSessionCheck: true })
+  }
+
   private async request<T>(
     url: string,
     options: FetchOptions = {},
@@ -24,8 +30,13 @@ class Fetcher {
       timeout = DEFAULT_TIMEOUT,
       retries = DEFAULT_RETRIES,
       retryDelay = DEFAULT_RETRY_DELAY,
+      skipSessionCheck,
       ...fetchOptions
     } = options
+
+    if (!skipSessionCheck && url !== '/api/users/check-session') {
+      await this.checkSession()
+    }
 
     const controller = new AbortController()
     const timeoutId = setTimeout(() => controller.abort(), timeout)
@@ -106,6 +117,18 @@ class Fetcher {
     return this.request<T>(url, {
       ...options,
       method: 'DELETE',
+    })
+  }
+
+  public patch<T>(
+    url: string,
+    body: unknown,
+    options: Omit<FetchOptions, 'method' | 'body'> = {},
+  ): Promise<T> {
+    return this.request<T>(url, {
+      ...options,
+      method: 'PATCH',
+      body: JSON.stringify(body),
     })
   }
 }

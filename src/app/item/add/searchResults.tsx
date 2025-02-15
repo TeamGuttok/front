@@ -1,4 +1,4 @@
-import { useSearchStore } from '#stores/useSearchStore'
+import { useSearchStore } from '#stores/subscriptions/useSearchStore'
 import Link from 'next/link'
 import clsx from 'clsx'
 

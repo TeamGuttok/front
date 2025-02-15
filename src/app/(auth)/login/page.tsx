@@ -33,7 +33,7 @@ export default function Login() {
               type="email"
               placeholder="이메일을 입력하세요"
               className="w-0 grow"
-              defaultValue={formData?.get('email') as string}
+              defaultValue={formData?.get('email')?.toString() ?? ''}
             />
           </div>
           <ErrorMessage errors={errors?.email} className="ml-20" />
@@ -49,7 +49,7 @@ export default function Login() {
               type="password"
               placeholder="비밀번호를 입력하세요"
               className="w-0 grow"
-              defaultValue={formData?.get('password') as string}
+              defaultValue={formData?.get('password')?.toString() ?? ''}
             />
           </div>
           <ErrorMessage errors={errors?.password} className="ml-20" />

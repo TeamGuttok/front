@@ -6,17 +6,20 @@ import { Label } from '#components/_common/Label'
 import { Input } from '#components/_common/Input'
 import { Button } from '#components/_common/Button'
 import { ErrorMessage } from '#components/_common/ErrorMessage'
-
 import RegisterInputField from './RegisterInputField'
 import { registerAction } from './registerAction'
+import { RegisterUser } from '#apis/auth/RegisterUser'
+import Fetcher from '#apis/common/fetcher'
+import { string } from 'zod'
+import ForgotPassword from '#app/(auth)/forgot/password/page'
 
 const RegisterSuccess = dynamic(() => import('./RegisterSuccess'))
+const fetcher = new Fetcher()
 
 export default function Register() {
   const [session, setSession] = useState<string>('')
   const [state, onSubmit, isPending] = useActionState(registerAction, null)
-
-  if (state?.data) return <RegisterSuccess nickname={state.data.nickname} />
+  if (state?.data) return <RegisterSuccess nickName={state.data.nickName} />
 
   const formData = state?.formData
   const errors = state?.errors
@@ -28,14 +31,6 @@ export default function Register() {
 
   return (
     <div className="flex flex-col items-center sm:m-auto sm:-translate-y-12">
-      <p className="hidden sm:block text-4xl mb-2">
-        <span className="font-bold">구</span>독을{' '}
-        <span className="font-bold">똑</span>똑하게
-      </p>
-      <p className="hidden sm:block text-lg text-sub mb-6">
-        스마트한 구독 생활을 위한 최고의 선택
-      </p>
-
       <div className="w-full sm:w-[60vw] sm:max-w-[832px] sm:p-8 sm:rounded-md sm:border sm:border-border">
         <div className="flex flex-col justify-center items-center">
           <div className="flex flex-col items-center w-full mt-5">
@@ -56,14 +51,14 @@ export default function Register() {
                   name="nickname"
                   placeholder="닉네임을 입력하세요"
                   className="w-0 grow"
-                  defaultValue={formData?.get('nickname') as string}
+                  //defaultValue={formData?.get('nickname') as string}
                 />
               </div>
               <ErrorMessage errors={errors?.nickname} className="ml-20" />
             </div>
 
             <RegisterInputField
-              defaultValue={formData?.get('email') as string}
+              defaultValue={formData?.get('email')?.toString() ?? ''}
               setSession={setSession}
             />
 

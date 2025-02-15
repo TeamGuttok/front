@@ -2,6 +2,7 @@
 
 import { z } from 'zod'
 import { redirect } from 'next/navigation'
+import Fetcher from '#apis/common/fetcher'
 
 const loginSchema = z.object({
   email: z.string().email('유효한 이메일 주소를 입력하세요.'),
@@ -31,7 +32,18 @@ export async function loginAction(
     }
   }
 
-  // Todo: api 호출 및 error return
-
-  redirect('/')
+  const fetcher = new Fetcher()
+  try {
+    await fetcher.post('/api/users/signin', input, { skipSessionCheck: true })
+    redirect('/')
+  } catch (error: unknown) {
+    return {
+      errors: {
+        general: [
+          error instanceof Error ? error.message : '로그인에 실패했습니다.',
+        ],
+      },
+      formData,
+    }
+  }
 }

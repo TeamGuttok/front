@@ -8,9 +8,12 @@ import { Button } from '#components/_common/Button'
 import { Plus, Search } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import clsx from 'clsx'
-import { useServiceStore } from '#stores/useServiceStore'
-import { useSearchStore, ServiceStores } from '#stores/useSearchStore'
-import { useSearch } from '#apis/searchService'
+import { useServiceStore } from '#stores/subscriptions/useServiceStore'
+import {
+  useSearchStore,
+  ServiceStores,
+} from '#stores/subscriptions/useSearchStore'
+import { useSearch } from '#apis/subscriptions/SearchService'
 import SearchResults from './searchResults'
 
 export const allServices = [

@@ -3,7 +3,7 @@
 import { Button } from '#components/_common/Button'
 import { PATH } from '#app/routes'
 import Link from 'next/link'
-import ItemList from '../../app/item/page'
+import ItemList from '../../../app/item/page'
 import { getHours } from 'date-fns'
 import { CalendarDays, Plus } from 'lucide-react'
 
@@ -11,9 +11,9 @@ export default function Page() {
   const currentHour = getHours(new Date())
 
   const getGreeting = () => {
-    if (currentHour >= 5 && currentHour < 12) return <h3>좋은 아침입니다,</h3>
-    if (currentHour >= 12 && currentHour < 18) return <h3>좋은 점심입니다,</h3>
-    return <h3>좋은 저녁입니다, </h3>
+    if (currentHour >= 5 && currentHour < 12) return <p>좋은 아침입니다,</p>
+    if (currentHour >= 12 && currentHour < 18) return <p>좋은 점심입니다,</p>
+    return <p>좋은 저녁입니다, </p>
   }
 
   return (

@@ -13,9 +13,9 @@ import {
   SelectGroup,
 } from '#components/_common/Select'
 import CardTitle from '#components/_common/CardTitle'
-import { useServiceStore } from '#stores/useServiceStore'
-import { useSubscriptionStore } from '#stores/useSubscriptionStore'
-import { useCreateSubscription } from '../../../../apis/CreateSubscriptionHook'
+import { useServiceStore } from '#stores/subscriptions/useServiceStore'
+import { useSubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
+import { useCreateSubscription } from '../../../../apis/subscriptions/CreateSubscriptionHook'
 
 export default function Page() {
   const { selectedService } = useServiceStore()
@@ -56,11 +56,27 @@ export default function Page() {
     useSubscriptionStore.getState().subscriptionData.paymentDay
   const defaultPaymentMethod =
     useSubscriptionStore.getState().subscriptionData.paymentMethod
+  const isFormValid =
+    !!subscriptionData.title &&
+    !!subscriptionData.paymentAmount &&
+    !!subscriptionData.paymentCycle &&
+    !!subscriptionData.paymentDay
 
-  const handleSubmit = (): boolean => {
-    const { title, paymentAmount, paymentCycle, paymentDay } = subscriptionData
-    return !!(title && paymentAmount && paymentCycle && paymentDay)
-  }
+  const isPending = createSubscription.isPending
+  const isDisabled = !isFormValid || isPending
+
+  const buttonBaseClass = 'w-full py-2 mt-4 text-base text-white shadow'
+  const buttonDynamicClass = isDisabled
+    ? 'bg-gray-400 cursor-not-allowed'
+    : 'primary'
+
+  // TODO
+  // [ ] 자주 사용되는 클래스들 global에 정의
+
+  // const handleSubmit = (): boolean => {
+  //   const { title, paymentAmount, paymentCycle, paymentDay } = subscriptionData
+  //   return !!(title && paymentAmount && paymentCycle && paymentDay)
+  // }
 
   const groupClassName = 'flex items-start sm:items-center justify-between'
   const labelClassName =
@@ -68,13 +84,29 @@ export default function Page() {
   const inputClassName =
     'block w-[12.5rem] sm:max-w-[12.5rem] sm:min-w-[12.5rem] pl-2 text-sm sm:text-base placeholder-[hsl(var(--muted-foreground))]'
 
+  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    // 필수 입력값 검증
+    const { title, paymentAmount, paymentCycle, paymentDay } = subscriptionData
+    const isValid = title && paymentAmount && paymentCycle && paymentDay
+    if (!isValid) return
+
+    // API 요청 실행 및 성공 시 상태 초기화
+    createSubscription.mutate(subscriptionData, {
+      onSuccess: () => {
+        resetSubscriptionData()
+      },
+    })
+  }
+
   return (
     <CardTitle className="flex flex-col max-w-[40rem] sm:max-w-[52rem] sm:p-8 sm:rounded-md sm:border sm:border-border m-auto -translate-y-8 px-4">
       <h1 className="text-3xl font-bold justify-center text-center">
         구독 서비스 세부설정
       </h1>
       <div className="flex flex-col justify-center items-center my-8">
-        <form className="grid grid-cols-1 gap-4">
+        <form className="grid grid-cols-1 gap-4" onSubmit={handleFormSubmit}>
           <div className="grid grid-cols-1 flex-col gap-2 sm:gap-4">
             <SelectGroup className={cn(groupClassName)}>
               <SelectLabel
@@ -263,17 +295,15 @@ export default function Page() {
             </SelectGroup>
             <Button
               type="submit"
+              disabled={isDisabled}
               onClick={(e) => {
                 e.preventDefault()
                 createSubscription.mutate(subscriptionData)
                 resetSubscriptionData()
               }}
-              disabled={!handleSubmit()}
-              className={`w-full py-2 mt-4 text-base text-white shadow ${
-                !handleSubmit() ? 'bg-gray-400 cursor-not-allowed' : 'primary'
-              }`}
+              className={`${buttonBaseClass} ${buttonDynamicClass}`}
             >
-              저장하기
+              {createSubscription.isPending ? '저장 중...' : '저장하기'}
             </Button>
           </div>
         </form>

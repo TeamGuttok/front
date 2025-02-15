@@ -1,7 +1,7 @@
 import { format } from 'date-fns'
 import { cn } from '#components/lib/utils'
 
-import { useCalendarStore } from '#stores/useCalendarStore'
+import { useCalendarStore } from '#stores/subscriptions/useCalendarStore'
 
 import type { SubscriptionContents } from '#types/subscription'
 import { CalendarViewEnum } from '#types/calendar'

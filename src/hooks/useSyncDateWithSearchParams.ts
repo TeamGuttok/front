@@ -1,7 +1,7 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
 
-import { useCalendarStore } from '#stores/useCalendarStore'
+import { useCalendarStore } from '#stores/subscriptions/useCalendarStore'
 
 export const useSyncDateWithSearchParams = () => {
   const router = useRouter()
