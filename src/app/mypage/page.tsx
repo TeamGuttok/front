@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link'
 import { PATH } from '#app/routes'
 import { Settings, ToggleLeft, ToggleRight } from 'lucide-react'

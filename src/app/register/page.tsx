@@ -1,31 +1,57 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { useActionState, useState } from 'react'
+import { useActionState, useState, useEffect } from 'react'
 import { Label } from '#components/_common/Label'
 import { Input } from '#components/_common/Input'
 import { Button } from '#components/_common/Button'
 import { ErrorMessage } from '#components/_common/ErrorMessage'
 import RegisterInputField from './RegisterInputField'
 import { registerAction } from './registerAction'
+import { useRouter } from 'next/router'
 import { RegisterUser } from '#apis/auth/RegisterUser'
-import Fetcher from '#apis/common/fetcher'
+//import Fetcher from '#apis/common/fetcher'
 import { string } from 'zod'
-import ForgotPassword from '#app/(auth)/forgot/password/page'
 
 const RegisterSuccess = dynamic(() => import('./RegisterSuccess'))
-const fetcher = new Fetcher()
+//const fetcher = new Fetcher()
 
 export default function Register() {
   const [session, setSession] = useState<string>('')
   const [state, onSubmit, isPending] = useActionState(registerAction, null)
   if (state?.data) return <RegisterSuccess nickName={state.data.nickName} />
 
+  const router = useRouter()
+  const { query } = router
+
+  const [nickname, setNickname] = useState<string>(
+    (query.nickname as string) || '',
+  )
+  const [email, setEmail] = useState<string>((query.email as string) || '')
+
   const formData = state?.formData
   const errors = state?.errors
 
+  useEffect(() => {
+    if (query.nickname) setNickname(query.nickname as string)
+    if (query.email) setEmail(query.email as string)
+  }, [query.nickname, query.email])
+
+  const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setNickname(value)
+    router.replace(
+      {
+        pathname: router.pathname,
+        query: { ...router.query, nickname: value },
+      },
+      undefined,
+      { shallow: true },
+    )
+  }
+
   function handleSubmit(payload: FormData) {
-    payload.append('session', session)
+    // payload.append('session', session)
     onSubmit(payload)
   }
 
@@ -51,10 +77,13 @@ export default function Register() {
                   name="nickname"
                   placeholder="닉네임을 입력하세요"
                   className="w-0 grow"
+                  value={nickname}
+                  onChange={handleNicknameChange}
+                  // TODO 이메일에 추가
                   //defaultValue={formData?.get('nickname') as string}
                 />
               </div>
-              <ErrorMessage errors={errors?.nickname} className="ml-20" />
+              <ErrorMessage errors={errors?.nickname || []} className="ml-20" />
             </div>
 
             <RegisterInputField
@@ -73,9 +102,10 @@ export default function Register() {
                   placeholder="비밀번호를 입력하세요"
                   className="w-0 grow"
                   defaultValue={formData?.get('password') as string}
+                  autoComplete="new-password"
                 />
               </div>
-              <ErrorMessage errors={errors?.password} className="ml-20" />
+              <ErrorMessage errors={errors?.password || []} className="ml-20" />
             </div>
 
             <div className="flex flex-col gap-1 min-h-16">
@@ -94,19 +124,20 @@ export default function Register() {
                   placeholder="비밀번호를 입력하세요"
                   className="w-0 grow"
                   defaultValue={formData?.get('password-confirm') as string}
+                  autoComplete="new-password"
                 />
               </div>
               <ErrorMessage
-                errors={errors?.passwordConfirm}
+                errors={errors?.passwordConfirm || []}
                 className="ml-20"
               />
             </div>
 
-            <ErrorMessage errors={errors?.session} />
+            <ErrorMessage errors={errors?.session || []} />
             <Button
               type="submit"
               className="flex justify-self-center w-full h-10 text-md rounded-lg mt-10"
-              disabled={isPending || session.length <= 0}
+              disabled={isPending}
             >
               회원가입
             </Button>

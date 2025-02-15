@@ -26,7 +26,13 @@ export default function ForgotPassword() {
       <div className="w-full h-[1px] bg-border mt-5"></div>
 
       {state?.isSuccess ? (
-        <OTPForm email={formData?.get('email') as string} />
+        <OTPForm
+          email={formData?.get('email') as string}
+          onSuccess={(session) => {
+            console.log('인증 성공, 세션:', session)
+          }}
+          resetTrigger={0}
+        />
       ) : (
         <form action={handleSubmit} className="w-full max-w-lg mt-10 px-10">
           <div className="flex flex-col gap-1 min-h-16">

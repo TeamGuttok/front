@@ -10,12 +10,11 @@ import {
 import { cn } from '#components/lib/utils'
 import { Button } from '#components/_common/Button'
 //import { OTPInputContext } from 'input-otp'
-import Fetcher from '#apis/common/fetcher'
+// import Fetcher from '#apis/common/fetcher'
 
-const fetcher = new Fetcher()
+// const fetcher = new Fetcher()
 
-//const TIME_LIMIT_SECONDS = 10 * 60 // 10분
-const TIME_LIMIT_SECONDS = 30 * 60 // 테스트
+const TIME_LIMIT_SECONDS = 10 * 60 // 10분
 
 interface OTPFormProps {
   email: string
@@ -25,36 +24,33 @@ interface OTPFormProps {
 }
 
 // 회원가입 과정 2. 인증번호 검증, 세션 받기
-async function verifyOTP(
-  otp: string,
-  email: string,
-): Promise<{ session: string }> {
-  return fetcher.post(
-    '/users/certification-number',
-    {
-      certificationNumber: otp,
-      email,
-      certificationNumberDto: { certificationNumber: otp, email },
-    },
-    { skipSessionCheck: true },
-  )
-}
-// const response = await fetch(
-//   'http://localhost:8080/api/users/certification-number',
-//   {
-//     method: 'POST',
-//     headers: { 'Content-Type': 'application/json' },
-//     credentials: 'include',
-//     body: JSON.stringify({
-//       certificationNumber: otp,
-//       email: email,
-//       certificationNumberDto: {
-//         certificationNumber: otp,
-//         email: email,
+// async function verifyOTP(
+//   otp: string,
+//   email: string,
+// ): Promise<{ session: string }> {
+//   const response = await fetch(
+//     'http://localhost:8080/api/users/email-verification',
+//     {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
 //       },
-//     }),
-//   },
-// )
+//       credentials: 'include',
+//       body: JSON.stringify({
+//         email: email,
+//         certificationNumber: otp,
+//       }),
+//     },
+//   )
+
+//   if (!response.ok) {
+//     throw new Error(`HTTP error! status: ${response.status}`)
+//   }
+
+//   return response.json()
+// }
+
+//const { mutate: requestEmailVerification, isPending: isVerifyingEmail } = useMutation
 
 export default function OTPForm({
   email,
@@ -71,23 +67,59 @@ export default function OTPForm({
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isVerified, setIsVerified] = useState(false)
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: () => verifyOTP(email, otp),
+  const {
+    mutate: verifyOTP,
+    isPending: isLoading,
+    isSuccess,
+    reset,
+  } = useMutation({
+    mutationFn: async () => {
+      console.log('인증번호 검증:', email, otp)
+      const response = await fetch(
+        'http://localhost:8080/api/users/email-verification',
+        {
+          method: 'POST',
+          headers: {
+            'Content-type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: email,
+            certificationNumber: otp,
+          }),
+        },
+      )
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      return response.json()
+    },
     onSuccess: (data) => {
-      onSuccess(data.session) // 인증 성공 후 session 전달
-      setIsVerified(true)
-      setIsSubmitted(false)
-      console.log('OTP 인증 성공:', data)
+      console.log('인증번호 검증 성공:', email, otp)
+      onSuccess(data.session)
     },
     onError: (err: unknown) => {
-      setIsSubmitted(false)
       if (err instanceof Error) {
-        setErrors([`오류 발생: ${err.message}`])
-      } else {
-        setErrors(['올바른 인증번호를 입력해주세요.'])
+        setErrors([`이메일 인증 요청 실패: ${err.message}`])
       }
     },
   })
+  //   onSuccess: (data) => {
+  //     onSuccess(data.session) // 인증 성공 후 session 전달
+  //     setIsVerified(true)
+  //     setIsSubmitted(false)
+  //     console.log('OTP 인증 성공:', data)
+  //   },
+  //   onError: (err: unknown) => {
+  //     setIsSubmitted(false)
+  //     if (err instanceof Error) {
+  //       setErrors([`오류 발생: ${err.message}`])
+  //     } else {
+  //       setErrors(['올바른 인증번호를 입력해주세요.'])
+  //     }
+  //   },
+  // })
 
   useEffect(() => {
     setOtp('')
@@ -100,6 +132,7 @@ export default function OTPForm({
     setIsSubmitted(false)
   }, [resetTrigger])
 
+  // 타이머
   useEffect(() => {
     const timer = setInterval(() => {
       const elapsed = performance.now() - startTime
@@ -124,16 +157,16 @@ export default function OTPForm({
   }
 
   function handleVerifyOTP(value: string) {
-    if (otp.length !== 6) {
-      setErrors(['인증번호를 모두 입력해주세요.'])
-      return
-    }
-    if (isSubmitted || isPending || isVerified) {
+    // if (otp.length !== 6) {
+    //   setErrors(['인증번호를 모두 입력해주세요.'])
+    //   return
+    // }
+    if (isSubmitted || isLoading || isVerified) {
       return
     }
     setIsSubmitted(true)
-    // setOtp(value)
-    mutate()
+    verifyOTP()
+    //mutate()
     console.log('otp 입력 완료', value)
   }
 
@@ -157,7 +190,7 @@ export default function OTPForm({
           onChange={(value) => setOtp(value)}
           //onComplete={handleComplete}
           containerClassName="justify-center"
-          disabled={isPending || timeLeft === 0}
+          disabled={isLoading || timeLeft === 0}
         >
           <InputOTPGroup>
             {Array.from({ length: 6 }).map((_, index) => (
@@ -169,10 +202,10 @@ export default function OTPForm({
         <Button
           type="button"
           onClick={() => handleVerifyOTP(otp)}
-          disabled={isPending || otp.length !== 6}
+          disabled={isLoading}
           className="w-32 mt-5 mb-3"
         >
-          {isVerified ? '인증 완료' : '인증하기'}
+          {isLoading ? '인증중...' : isSuccess ? '인증완료' : '인증하기'}
         </Button>
       </div>
 
