@@ -9,54 +9,52 @@ import {
 } from '#components/_common/InputOtp'
 import { cn } from '#components/lib/utils'
 import { Button } from '#components/_common/Button'
-import { OTPInputContext } from 'input-otp'
+//import { OTPInputContext } from 'input-otp'
+import Fetcher from '#apis/common/fetcher'
+
+const fetcher = new Fetcher()
 
 //const TIME_LIMIT_SECONDS = 10 * 60 // 10분
-const TIME_LIMIT_SECONDS = 30 * 60 // 테스트할 때만
+const TIME_LIMIT_SECONDS = 30 * 60 // 테스트
 
 interface OTPFormProps {
   email: string
   onSuccess: (session: string) => void
   resetTrigger: number
-  // onSuccess?:
-  //   | ((
-  //       data: unknown,
-  //       variables: void,
-  //       context: unknown,
-  //     ) => Promise<unknown> | unknown)
-  //   | undefined
   className?: string
 }
 
+// 회원가입 과정 2. 인증번호 검증, 세션 받기
 async function verifyOTP(
   otp: string,
   email: string,
 ): Promise<{ session: string }> {
-  //const response = await fetch('/api/users/certification-number', {
-  const response = await fetch(
-    'http://localhost:8080/api/users/certification-number',
+  return fetcher.post(
+    '/users/certification-number',
     {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify({
-        certificationNumber: otp,
-        email: email,
-        certificationNumberDto: {
-          certificationNumber: otp,
-          email: email,
-        },
-      }),
+      certificationNumber: otp,
+      email,
+      certificationNumberDto: { certificationNumber: otp, email },
     },
+    { skipSessionCheck: true },
   )
-
-  if (!response.ok) {
-    const errorData = await response.json()
-    throw new Error(errorData.message || '올바른 인증번호를 입력해주세요.')
-  }
-
-  return response.json()
 }
+// const response = await fetch(
+//   'http://localhost:8080/api/users/certification-number',
+//   {
+//     method: 'POST',
+//     headers: { 'Content-Type': 'application/json' },
+//     credentials: 'include',
+//     body: JSON.stringify({
+//       certificationNumber: otp,
+//       email: email,
+//       certificationNumberDto: {
+//         certificationNumber: otp,
+//         email: email,
+//       },
+//     }),
+//   },
+// )
 
 export default function OTPForm({
   email,
@@ -64,21 +62,24 @@ export default function OTPForm({
   className,
   resetTrigger,
 }: OTPFormProps) {
+  // TODO 스토어로 정리하기
   const inputRef = useRef<HTMLInputElement>(null)
   const [otp, setOtp] = useState('')
   const [timeLeft, setTimeLeft] = useState(TIME_LIMIT_SECONDS)
   const [errors, setErrors] = useState<string[]>([])
   const [startTime, setStartTime] = useState(() => performance.now())
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isVerified, setIsVerified] = useState(false)
 
   const { mutate, isPending } = useMutation({
     mutationFn: () => verifyOTP(email, otp),
     onSuccess: (data) => {
       onSuccess(data.session) // 인증 성공 후 session 전달
+      setIsVerified(true)
       setIsSubmitted(false)
       console.log('OTP 인증 성공:', data)
     },
-    onError: async (err: unknown) => {
+    onError: (err: unknown) => {
       setIsSubmitted(false)
       if (err instanceof Error) {
         setErrors([`오류 발생: ${err.message}`])
@@ -87,12 +88,6 @@ export default function OTPForm({
       }
     },
   })
-
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus()
-    }
-  }, [])
 
   useEffect(() => {
     setOtp('')
@@ -133,7 +128,7 @@ export default function OTPForm({
       setErrors(['인증번호를 모두 입력해주세요.'])
       return
     }
-    if (isSubmitted || isPending) {
+    if (isSubmitted || isPending || isVerified) {
       return
     }
     setIsSubmitted(true)
@@ -154,7 +149,7 @@ export default function OTPForm({
         </p>
       </div>
 
-      <div className="flex justify-center">
+      <div className="flex flex-col items-center">
         <InputOTP
           ref={inputRef}
           maxLength={6}
@@ -175,9 +170,9 @@ export default function OTPForm({
           type="button"
           onClick={() => handleVerifyOTP(otp)}
           disabled={isPending || otp.length !== 6}
-          className="w-32"
+          className="w-32 mt-5 mb-3"
         >
-          인증하기
+          {isVerified ? '인증 완료' : '인증하기'}
         </Button>
       </div>
 

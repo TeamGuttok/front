@@ -28,7 +28,7 @@ export default function ForgotEmail() {
 
       {state?.data ? (
         <ForgotEmailSuccess
-          nickname={state.data.nickname}
+          nickName={state.data.nickName}
           email={state.data.email}
         />
       ) : (
@@ -39,10 +39,10 @@ export default function ForgotEmail() {
                 <span className="text-base font-medium">닉네임</span>
               </Label>
               <Input
-                name="nickname"
+                name="nickName"
                 placeholder="닉네임을 입력하세요"
                 className="w-0 grow"
-                defaultValue={formData?.get('nickname') as string}
+                defaultValue={formData?.get('nickName') as string}
               />
             </div>
             <ErrorMessage errors={errors?.nickname} className="ml-20" />

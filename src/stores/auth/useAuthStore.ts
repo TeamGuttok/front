@@ -3,7 +3,7 @@ import { subscribeWithSelector } from 'zustand/middleware'
 
 interface User {
   email: string
-  nickname: string
+  nickName: string
   session: string
 }
 
@@ -55,21 +55,3 @@ export const useAuthStore = create<AuthState>()(
     },
   })),
 )
-
-// export const useAuthStore = create<AuthState>()(
-//   subscribeWithSelector((set) => ({
-//     isLoggedIn: null,
-//     checkSession: () => {
-//       const cookies = document.cookie.split('; ').reduce(
-//         (acc, cookie) => {
-//           const [name, value] = cookie.split('=')
-//           acc[name] = value
-//           return acc
-//         },
-//         {} as Record<string, string>,
-//       )
-
-//       set({ isLoggedIn: !!cookies['sessionToken'] })
-//     },
-//   })),
-// )

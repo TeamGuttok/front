@@ -1,11 +1,11 @@
 import Link from 'next/link'
 import { Button } from '#components/_common/Button'
 
-export default function RegisterSuccess({ nickname }: { nickname: string }) {
+export default function RegisterSuccess({ nickName }: { nickName: string }) {
   return (
     <div className="flex flex-col items-center m-auto">
       <div className="flex flex-col gap-1 text-center text-2xl font-bold">
-        <span>{nickname} 님,</span>
+        <span>{nickName} 님,</span>
         <p>회원가입을 축하합니다!</p>
       </div>
 

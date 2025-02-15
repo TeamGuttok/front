@@ -6,17 +6,20 @@ import { Label } from '#components/_common/Label'
 import { Input } from '#components/_common/Input'
 import { Button } from '#components/_common/Button'
 import { ErrorMessage } from '#components/_common/ErrorMessage'
-import { useMutation } from '@tanstack/react-query'
 import RegisterInputField from './RegisterInputField'
 import { registerAction } from './registerAction'
+import { RegisterUser } from '#apis/auth/RegisterUser'
+import Fetcher from '#apis/common/fetcher'
+import { string } from 'zod'
+import ForgotPassword from '#app/(auth)/forgot/password/page'
 
 const RegisterSuccess = dynamic(() => import('./RegisterSuccess'))
+const fetcher = new Fetcher()
 
 export default function Register() {
   const [session, setSession] = useState<string>('')
   const [state, onSubmit, isPending] = useActionState(registerAction, null)
-
-  if (state?.data) return <RegisterSuccess nickname={state.data.nickname} />
+  if (state?.data) return <RegisterSuccess nickName={state.data.nickName} />
 
   const formData = state?.formData
   const errors = state?.errors
@@ -48,14 +51,14 @@ export default function Register() {
                   name="nickname"
                   placeholder="닉네임을 입력하세요"
                   className="w-0 grow"
-                  defaultValue={formData?.get('nickname') as string}
+                  //defaultValue={formData?.get('nickname') as string}
                 />
               </div>
               <ErrorMessage errors={errors?.nickname} className="ml-20" />
             </div>
 
             <RegisterInputField
-              defaultValue={formData?.get('email') as string}
+              defaultValue={formData?.get('email')?.toString() ?? ''}
               setSession={setSession}
             />
 

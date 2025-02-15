@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 import QueryProvider from '#contexts/QueryProvider'
 import ThemeProvider from '#contexts/ThemeProvider'
 import Layout from '#components/Layout'
-import { Toaster } from '#components/_common/Toast/toaster'
+// import { Toaster } from '#components/_common/Toast/toaster'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -29,7 +29,7 @@ export default function RootLayout({
                 {children}
               </main>
             </Layout>
-            <Toaster />
+            {/* <Toaster /> */}
           </ThemeProvider>
         </QueryProvider>
       </body>

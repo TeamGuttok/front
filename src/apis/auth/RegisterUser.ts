@@ -6,7 +6,7 @@ const fetcher = new Fetcher()
 interface RegisterInput {
   email: string
   password: string
-  nickname: string
+  nickName: string
 }
 
 interface RegisterResponse {
@@ -20,19 +20,23 @@ interface RegisterResponse {
 export async function RegisterUser({
   email,
   password,
-  nickname,
+  nickName,
 }: RegisterInput): Promise<RegisterResponse> {
   try {
-    const data = await fetcher.post<RegisterResponse>('/api/users/signup', {
-      email,
-      password,
-      nickName: nickname,
-      alarm: true,
-    })
+    const data = await fetcher.post<RegisterResponse>(
+      '/api/users/signup',
+      {
+        email,
+        password,
+        nickName: nickName,
+        alarm: true,
+      },
+      { skipSessionCheck: true },
+    )
 
     useAuthStore.getState().setUser({
       email: data.data.email,
-      nickname: data.data.nickName,
+      nickName: data.data.nickName,
       session: data.data.session || '',
     })
 

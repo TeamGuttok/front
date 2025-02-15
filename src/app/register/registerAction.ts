@@ -4,17 +4,17 @@ import { z } from 'zod'
 import { RegisterUser } from '#apis/auth/RegisterUser'
 
 const registerSchema = z.object({
-  nickname: z.string().min(3, '닉네임은 최소 3자 이상이어야 합니다.'),
+  nickName: z.string().min(1, '최소 1자 이상 입력해주세요.'),
   email: z.string().email('유효한 이메일 주소를 입력하세요.'),
   password: z
     .string()
     .min(
-      12,
-      '특수문자(@$!%*?&#), 영어 소문자, 숫자를 포함한 12자 이상이어야 합니다.',
+      8,
+      '특수문자(@$!%*?&#), 영어 소문자, 숫자를 포함한 8자 이상 입력해주세요.',
     )
     .regex(
       /^(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{12,}$/,
-      '특수문자(@$!%*?&#), 영어 소문자, 숫자를 포함해야 합니다.',
+      '특수문자(@$!%*?&#), 영어 소문자, 숫자를 포함해주세요.',
     ),
   session: z.string().min(1, '새로고침하여 다시 이메일을 인증해 주세요'),
 })
@@ -23,7 +23,7 @@ interface State {
   data?: {
     email: string
     password: string
-    nickname: string
+    nickName: string
     alarm: boolean
     session: string
   }
@@ -36,13 +36,9 @@ export async function registerAction(
   formData: FormData,
 ): Promise<State> {
   const input = {
-    // email: formData.get('email'),
-    // password: formData.get('password'),
-    // nickname: formData.get('nickname'),
-    // session: formData.get('session'),
-    email: formData.get('email')?.toString() ?? '',
     password: formData.get('password')?.toString() ?? '',
-    nickname: formData.get('nickname')?.toString() ?? '',
+    email: formData.get('email')?.toString() ?? '',
+    nickName: formData.get('nickname')?.toString() ?? '',
     session: formData.get('session')?.toString() ?? '',
   }
 
@@ -71,14 +67,14 @@ export async function registerAction(
     const data = await RegisterUser({
       email: input.email!,
       password: input.password!,
-      nickname: input.nickname!,
+      nickName: input.nickName!,
     })
 
     return {
       data: {
         email: data.data.email,
         password: input.password,
-        nickname: data.data.nickName,
+        nickName: data.data.nickName,
         session: data.data.session ?? '',
         alarm: true,
       },
@@ -92,12 +88,3 @@ export async function registerAction(
     }
   }
 }
-
-// return {
-//   data: {
-//     email: 'you@dsfs',
-//     password: '1233dsdsff',
-//     nickname: 'gwjun',
-//     alarm: true,
-//   },
-// }

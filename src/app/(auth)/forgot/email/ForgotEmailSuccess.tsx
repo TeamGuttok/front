@@ -3,19 +3,19 @@ import Link from 'next/link'
 import { PATH } from '#app/routes'
 
 export interface ForgotEmailSuccessProps {
-  nickname: string
+  nickName: string
   email: string
 }
 
 export default function ForgotEmailSuccess({
-  nickname,
+  nickName,
   email,
 }: ForgotEmailSuccessProps) {
   return (
     <div className="w-full max-w-lg mt-10 px-10">
       <div className="flex flex-col gap-1 min-h-16">
         <p className="mt-6 text-center text-lg font-medium text-sub">
-          {nickname} 님의 이메일은 <strong>{email}</strong> 입니다.
+          {nickName} 님의 이메일은 <strong>{email}</strong> 입니다.
         </p>
       </div>
 

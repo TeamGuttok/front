@@ -14,11 +14,25 @@ import {
 } from 'lucide-react'
 import { PATH } from '#app/routes'
 import { cn } from '#components/lib/utils'
+import { useActionState } from 'react'
+import { logoutAction } from '#app/(auth)/login/logoutAction'
+import * as Dialog from '@radix-ui/react-dialog'
+import { useAuthStore } from '#stores/auth/useAuthStore'
 
 export default function SideBar({ pathname }: { pathname: string }) {
   const { theme, setTheme } = useTheme()
   const itemClassName =
     'flex items-center gap-2 p-3 text-sub hover:text-primary rounded-md'
+
+  const isLoggedIn = useAuthStore((state) => !!state.user?.session)
+  const [logoutState, handleLogout, isLogoutPending] = useActionState(
+    logoutAction,
+    null,
+  )
+
+  const handleConfirmLogout = () => {
+    handleLogout()
+  }
 
   return (
     <aside className="fixed flex z-50 flex-col w-56 h-screen p-5 bg-secondary shadow-sm mb-5">
@@ -107,18 +121,62 @@ export default function SideBar({ pathname }: { pathname: string }) {
             </Link>
           </li>
           <li>
-            <Link
-              href={PATH.login}
-              className={cn(
-                itemClassName,
-                pathname === PATH.login && 'bg-accent',
-              )}
-            >
-              <LogIn aria-label="로그인 아이콘" size={20} />
-              <span>로그인</span>
-              {/* TODO
-              [ ] 로그인하고 나면 로그아웃으로 보이도록 변경 */}
-            </Link>
+            {isLoggedIn ? (
+              <Link
+                href={PATH.login}
+                className={cn(
+                  itemClassName,
+                  pathname === PATH.login && 'bg-accent',
+                )}
+              >
+                <LogIn aria-label="로그인 아이콘" size={20} />
+                <span>로그인</span>
+              </Link>
+            ) : (
+              // TODO
+              // [ ] 컴포넌트 분리
+              // [ ] 모바일 마이페이지에 추가
+              <Dialog.Root>
+                <Dialog.Trigger asChild>
+                  <button
+                    type="button"
+                    className={cn(
+                      itemClassName,
+                      pathname === PATH.login && 'bg-accent',
+                    )}
+                  >
+                    <LogIn aria-label="로그아웃 아이콘" size={20} />
+                    <span>로그아웃</span>
+                  </button>
+                </Dialog.Trigger>
+                <Dialog.Portal>
+                  <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-50" />
+                  <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-md shadow-md">
+                    <Dialog.Title className="mb-4 text-lg font-medium dark:text-black">
+                      로그아웃 하시겠습니까?
+                    </Dialog.Title>
+                    <div className="flex justify-end gap-4">
+                      <button
+                        type="button"
+                        onClick={handleConfirmLogout}
+                        disabled={isLogoutPending}
+                        className="px-4 py-2 bg-red-500 text-white rounded-md"
+                      >
+                        예
+                      </button>
+                      <Dialog.Close asChild>
+                        <button
+                          type="button"
+                          className="px-4 py-2 bg-gray-300 rounded-md"
+                        >
+                          아니오
+                        </button>
+                      </Dialog.Close>
+                    </div>
+                  </Dialog.Content>
+                </Dialog.Portal>
+              </Dialog.Root>
+            )}
           </li>
         </ul>
       </nav>

@@ -3,10 +3,41 @@ import { PATH } from '#app/routes'
 import { Settings, ToggleLeft, ToggleRight } from 'lucide-react'
 import CardTitle from '#components/_common/CardTitle'
 import { Button } from '#components/_common/Button'
-//import useTheme from '#contexts/ThemeProvider/hook'
+import { useEffect, useState } from 'react'
+import { useMyPageStore } from './edit/mypageAction'
+import { useAuthStore } from '#stores/auth/useAuthStore'
+import Fetcher from '#apis/common/fetcher'
 
 export default function MyPage() {
-  //const { theme, setTheme } = useTheme()
+  const { nickName, fetchProfile } = useMyPageStore()
+  const { user } = useAuthStore()
+  const email = user?.email
+
+  const [alarm, setAlarm] = useState<boolean>(false)
+  const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false)
+
+  useEffect(() => {
+    fetchProfile()
+  }, [fetchProfile])
+
+  const fetcher = new Fetcher()
+
+  const handleToggleAlarm = async () => {
+    try {
+      await fetcher.patch('/api/users/alarm', {})
+      setAlarm((prev) => !prev)
+    } catch (error) {
+      console.error('알림 설정 변경 실패', error)
+    }
+  }
+
+  const handleDeleteAccount = async () => {
+    try {
+      await fetcher.delete('/api/users')
+    } catch (error) {
+      console.error('회원 탈퇴 실패', error)
+    }
+  }
 
   return (
     <CardTitle>
@@ -34,11 +65,11 @@ export default function MyPage() {
         </div>
         <div className="flex justify-between mb-2">
           <p className="text-gray-600">닉네임</p>
-          <div>구똑</div>
+          <div>{nickName}</div>
         </div>
         <div className="flex justify-between mb-2">
           <p className="text-gray-600">이메일</p>
-          <div>email@example.com</div>
+          <div>{email}</div>
         </div>
       </div>
       <hr />
@@ -49,10 +80,19 @@ export default function MyPage() {
         <div className="flex justify-between mb-2">
           <p className="text-gray-600">이메일 결제 리마인드</p>
           <div>
-            <ToggleLeft
-              aria-label="이메일 결제 리마인드 동의"
-              className="w-[2.5rem] h-[2.5rem] fill-[hsl(var(--primary))] strokeWidth={0} stroke-[hsl(var(--background))]"
-            />
+            <button onClick={handleToggleAlarm}>
+              {alarm ? (
+                <ToggleLeft
+                  aria-label="이메일 결제 리마인드 동의"
+                  className="w-[2.5rem] h-[2.5rem] fill-[hsl(var(--primary))]"
+                />
+              ) : (
+                <ToggleRight
+                  aria-label="이메일 결제 리마인드 미동의"
+                  className="w-[2.5rem] h-[2.5rem] fill-[hsl(var(--primary))]"
+                />
+              )}
+            </button>
           </div>
         </div>
       </div>
@@ -75,17 +115,38 @@ export default function MyPage() {
                 <ToggleRight aria-label="다크모드 버튼 아이콘" size={20} />
               ) : (
                 <ToggleLeft aria-label="라이트모드 버튼 아이콘" size={20} />
-              )} */}
-            {/* </button> */}
+              )} 
+               </button>
+               */}
           </div>
         </div>
 
         <div className="flex justify-end mt-3">
-          <Button className="bg-red-400 hover:bg-red-500">
+          <Button
+            onClick={() => setShowDeleteDialog(true)}
+            className="bg-red-400 hover:bg-red-500"
+          >
             <span>탈퇴하기</span>
           </Button>
         </div>
       </div>
+
+      {showDeleteDialog && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-md shadow-md">
+            <p className="mb-4">정말 탈퇴하시겠습니까?</p>
+            <div className="flex justify-end space-x-4">
+              <Button onClick={() => setShowDeleteDialog(false)}>아니오</Button>
+              <Button
+                onClick={handleDeleteAccount}
+                className="bg-red-400 hover:bg-red-500"
+              >
+                예
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </CardTitle>
   )
 }
