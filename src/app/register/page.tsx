@@ -8,8 +8,7 @@ import { Button } from '#components/_common/Button'
 import { ErrorMessage } from '#components/_common/ErrorMessage'
 import RegisterInputField from './RegisterInputField'
 import { registerAction } from './registerAction'
-import { useRouter } from 'next/router'
-import { RegisterUser } from '#apis/auth/RegisterUser'
+import { useRouter } from 'next/navigation'
 //import Fetcher from '#apis/common/fetcher'
 import { string } from 'zod'
 
@@ -19,13 +18,15 @@ const RegisterSuccess = dynamic(() => import('./RegisterSuccess'))
 export default function Register() {
   const [session, setSession] = useState<string>('')
   const [state, onSubmit, isPending] = useActionState(registerAction, null)
-  if (state?.data) return <RegisterSuccess nickName={state.data.nickName} />
+  if (state?.data?.nickName) {
+    return <RegisterSuccess nickName={state.data.nickName} />
+  }
 
   const router = useRouter()
   const { query } = router
 
   const [nickname, setNickname] = useState<string>(
-    (query.nickname as string) || '',
+    (query.nickName as string) || '',
   )
   const [email, setEmail] = useState<string>((query.email as string) || '')
 
@@ -79,7 +80,12 @@ export default function Register() {
                   className="w-0 grow"
                   value={nickname}
                   onChange={handleNicknameChange}
-                  // TODO 이메일에 추가
+                  // TODO
+                  // [ ] 이메일에 추가
+                  // [ ] 새로고침시 초기화 방지(쿼리사용)
+                  // [ ] 비밀번호 validation: "비밀번호는 특수문자(@&!%*?&#), 영어 소문자를 포함한 12자 이상을 입력해주세요."
+                  // [ ] 이메일 validation: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,6}$" 유효한 이메일 형식이어야 합니다.""
+                  // [ ] 닉네임 validation 없음
                   //defaultValue={formData?.get('nickname') as string}
                 />
               </div>

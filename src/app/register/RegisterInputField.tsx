@@ -1,17 +1,15 @@
 import type { Dispatch, SetStateAction } from 'react'
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
 import { z } from 'zod'
-//import { RegisterUser } from '#apis/auth/RegisterUser'
 import { useAuthStore } from '#stores/auth/useAuthStore'
-//import Fetcher from '#apis/common/fetcher'
 import { Label } from '#components/_common/Label'
 import { Input } from '#components/_common/Input'
 import { ErrorMessage } from '#components/_common/ErrorMessage'
 import { Button } from '#components/_common/Button'
 import OTPForm from '#components/_common/OTPForm'
-
-//const fetcher = new Fetcher()
 
 const emailSchema = z.object({
   email: z.string().email('유효한 이메일 주소를 입력하세요.'),
@@ -28,18 +26,33 @@ export default function RegisterInputField({
 }: RegisterInputFieldProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const buttonRef = useRef<HTMLButtonElement>(null)
+  const pathname = usePathname()
+  const router = useRouter()
+  const { query } = router
 
+  const { user, setUser } = useAuthStore()
   const [errors, setErrors] = useState<string[]>([])
   const [isOTPOpen, setIsOTPOpen] = useState<boolean>(false)
   const [otpReset, setOtpReset] = useState(0)
-  const setUser = useAuthStore((state) => state.setUser)
 
+  useEffect(() => {
+    if (query?.email) {
+      setUser({ email: query.email as string })
+    }
+  }, [query?.email, setUser])
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setUser({ email: value }) // zustand 상태 업데이트
+
+    // ✅ URL 쿼리 업데이트 (shallow 업데이트로 페이지 리로드 방지)
+    router.replace(
+      { pathname: router.pathname, query: { ...router.query, email: value } },
+      undefined,
+      { shallow: true },
+    )
+  }
   // 회원가입 과정 1. 이메일 입력 후 인증코드 요청
-
-  // TEST_EMAIL 하드코딩 값이 들어감. 사용자가 입력한 이메일(inputRef.current?.value)이 아님.
-  // 인증번호 검증시 OTP폼에서는  사용자가 입력한 이메일(inputRef.current?.value)를 넘겨주며 TEST_EMAIL을 보내는게 아님.
-  // 인증번호 발송 API와 인증번호 검증 API에서 사용되는 이메일 주소가 달라 검증이 불가능함
-
   const {
     mutate: requestEmailVerification,
     isPending: isPending,
@@ -101,7 +114,6 @@ export default function RegisterInputField({
     setUser({
       email: inputRef.current?.value || '',
       nickName: '',
-      session,
     })
     if (inputRef.current && buttonRef.current) {
       inputRef.current.readOnly = true
@@ -122,7 +134,8 @@ export default function RegisterInputField({
             name="email"
             placeholder="이메일을 입력하세요"
             className="w-0 grow read-only:opacity-50 read-only:pointer-events-none"
-            // defaultValue={defaultValue}
+            value={user.email ?? ''}
+            onChange={handleChange}
           />
         </div>
         <Button
