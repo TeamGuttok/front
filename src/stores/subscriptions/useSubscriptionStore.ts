@@ -44,7 +44,7 @@ export const useSubscriptionStore = create<SubscriptionState>((set) => ({
     subscription: '',
     paymentAmount: 0,
     paymentMethod: '',
-    paymentCycle: '주',
+    paymentCycle: 'WEEKLY',
     paymentDay: 1,
     memo: '',
   },
@@ -67,7 +67,7 @@ export const useSubscriptionStore = create<SubscriptionState>((set) => ({
         subscription: '',
         paymentAmount: 0,
         paymentMethod: '',
-        paymentCycle: '주',
+        paymentCycle: 'WEEKLY',
         paymentDay: 1,
         memo: '',
       },
@@ -79,19 +79,19 @@ export const useSubscriptionStore = create<SubscriptionState>((set) => ({
     })),
 
   paymentMethodOptions: [
-    '카드',
-    '계좌 이체',
-    '네이버페이',
-    '카카오페이',
-    '휴대폰 결제',
-    '기타',
+    'CARD',
+    'BANK_TRANSFER',
+    'NAVER_PAY',
+    'KAKAO_PAY',
+    'MOBILE_PAYMENT',
+    'OTHER',
   ],
   updatePaymentMethod: (paymentMethod) =>
     set((state) => ({
       subscriptionData: { ...state.subscriptionData, paymentMethod },
     })),
 
-  paymentCycleOptions: ['주', '월', '년'],
+  paymentCycleOptions: ['YEARLY', 'MONTHLY', 'WEEKLY'],
   updatePaymentCycle: (paymentCycle) =>
     set((state) => ({
       subscriptionData: { ...state.subscriptionData, paymentCycle },
@@ -107,4 +107,29 @@ export const useSubscriptionStore = create<SubscriptionState>((set) => ({
     set((state) => ({
       subscriptionData: { ...state.subscriptionData, memo },
     })),
+
+    subscriptionOptions: [
+      'CUSTOM_INPUT',
+      'YOUTUBE_PREMIUM',
+      'NETFLIX',
+      'SPOTIFY',
+      'APPLE_MUSIC',
+      'COUPANG_WOW',
+      'WAVVE',
+      'WATCHA',
+      'TVING',
+      'DISNEY_PLUS',
+      'APPLE_TV',
+      'LAFTEL',
+      'MELON',
+      'GENIE',
+      'FLO',
+      'AWS',
+      'GCP',
+      'CHAT_GPT',
+      'CLAUDE_AI',
+      'GEMINI',
+      'PERPLEXITY',
+      'SPOTV_NOW',
+    ],
 }))

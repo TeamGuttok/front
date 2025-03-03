@@ -1,7 +1,7 @@
 'use server'
 
 import { z } from 'zod'
-import { ForgotEmailSuccessProps } from './ForgotEmailSuccess'
+import { ForgotEmailSuccessProps } from '../password/ForgotPasswordSuccess'
 
 const forgotEmailSchema = z.object({
   nickName: z.string().min(3, '닉네임은 최소 3자 이상이어야 합니다.'),

@@ -1,12 +1,15 @@
+'use client'
+
 import Link from 'next/link'
 import { PATH } from '#app/routes'
-import { FormEvent } from 'react'
+import { FormEvent, useState, useEffect } from 'react'
 import CardTitle from '#components/_common/CardTitle'
 import { Button } from '#components/_common/Button'
 import { Input } from '#components/_common/Input'
 import { cn } from '#components/lib/utils'
 import { SelectLabel, SelectGroup } from '#components/_common/Select'
-import { useMyPageStore } from './mypageAction'
+import { useMutation } from '@tanstack/react-query'
+import { useAuthStore } from '#stores/auth/useAuthStore'
 
 export default function MyPage() {
   const groupClassName = 'flex items-start sm:items-center justify-between'
@@ -15,19 +18,141 @@ export default function MyPage() {
   const inputClassName =
     'block w-[12.5rem] sm:max-w-[12.5rem] sm:min-w-[12.5rem] pl-2 text-sm sm:text-base placeholder-[hsl(var(--muted-foreground))]'
 
-  const {
-    nickName,
-    password,
-    setnickName,
-    setPassword,
-    updateProfile,
-    message,
-    loading,
-  } = useMyPageStore()
+  const { user, setUser } = useAuthStore()
+  const [nickName, setNickName] = useState(user?.nickName || '')
+  const [password, setPassword] = useState('')
+  const [alarm, setAlarm] = useState(user?.alarm ?? true)
+
+
+// 마이페이지 정보 호출 API
+const {mutate: getProfile, isPending: profileLoading, error:profileError, data:profileData} = useMutation({
+  mutationFn: async (): Promise<{ status: string; data: any }> => {
+    const response = await fetch('http://localhost:8080/api/users', {
+      method: 'GET',
+      headers: { Accept: '*/*', 'Content-Type': 'application/json' },
+    });
+    if (!response.ok) {
+      throw new Error('프로필 정보를 불러오지 못했습니다.');
+    }
+    const data = await response.json();
+
+    if (data.status !== '100 CONTINUE') {
+      throw new Error('프로필 정보 호출 실패');
+    }
+
+    return data;
+  },
+  onSuccess: (data) => {
+    console.log('프로필 정보 호출 성공:', data);
+    setUser(data.data)
+    setNickName(data.data.nickName)
+    setAlarm(data.data.alarm)
+  },
+  onError: (error) => {
+    throw new Error('프로필 정보 호출 실패', error);
+  },
+})
+
+  // 닉네임 수정 API 
+  const {mutate: updateNickName, isPending: NickNameLoading, error:NickNameError, data:NickNameData} = useMutation ({
+    mutationFn: async () => {
+    const response = await fetch('http://localhost:8080/api/users/nickname', {
+      method: 'PATCH',
+      headers: { Accept: '*/*', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nickName }),
+    })
+    
+    if (!response.ok) {
+      const errorData = await response.json()
+      throw new Error(errorData.message || '닉네임 변경 실패')
+    }
+  
+    const data = await response.json()
+  
+    if (data.status !== '100 CONTINUE') {
+      throw new Error('닉네임 변경 실패')
+    }
+
+    return data
+  },
+  onSuccess: (data) => {
+    console.log('닉네임 변경 성공:', data)
+    setUser({ ...user, nickName }) //{nickName: nickName: nickName || data.data.nickName}
+  },
+  onError: (error) => {
+    throw new Error('닉네임 변경 실패', error)
+  },
+})
+
+// 비밀번호 호출 API 
+const {mutate: updatePassword, isPending: PasswordLoading, error: PasswordError, data:PasswordData} = useMutation ({
+  mutationFn: async () => {
+    const response = await fetch('http://localhost:8080/api/users/password', {
+      method: 'PATCH',
+      headers: { Accept: '*/*', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password }),
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json()
+      throw new Error(errorData.message || '비밀번호 변경 실패')  
+    }
+    
+    const data = await response.json()
+
+    if (data.status !== '100 CONTINUE') {
+      throw new Error('비밀번호 변경 실패')
+    }
+
+    return data
+  },
+  onSuccess: (data) => {
+    console.log('비밀번호 변경 성공:', data)
+  },
+  onError: (error) => {
+    throw new Error('비밀번호 변경 실패', error)
+  },
+})
+
+// 알림 수정 API
+const {mutate: updateAlarm, isPending: alarmLoading, error: alarmError} = useMutation ({
+  mutationFn: async () => {
+    const response = await fetch('http://localhost:8080/api/users/alarm', {
+      method: 'PATCH',
+      headers: { Accept: '*/*', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ alarm }),
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json()
+      throw new Error(errorData.message || '알림 변경 실패')
+    }
+
+    const data = await response.json()
+
+    if (data.status !== '100 CONTINUE') {
+      throw new Error('알림 변경 실패')
+    }
+
+    return data
+  },
+  onSuccess: (data) => {
+    console.log('알림 변경 성공:', data)
+    setUser({ ...user, alarm: data.data.alarm })
+  },
+  onError: (error) => {
+    throw new Error('알림 변경 실패', error)
+  },
+})
+
+useEffect(() => {
+  getProfile()
+}, [getProfile])
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    await updateProfile()
+    //updateProfile()
+    // await updateProfile()
   }
 
   return (
@@ -55,11 +180,21 @@ export default function MyPage() {
                 aria-labelledby="mypageNickname"
                 aria-describedby="mypageNickname-required"
                 value={nickName}
-                onChange={(e) => setnickName(e.target.value)}
-                placeholder="닉네임을 작성해주세요"
+                onChange={(e) => setNickName(e.target.value)}
+                placeholder="수정할 닉네임을 작성해주세요"
                 className={cn(inputClassName)}
               />
             </SelectGroup>
+            <Button
+            type="submit"
+            disabled={NickNameLoading}
+            className="w-full bg-primary text-white hover:bg-[hsl(var(--primary-hover))]"
+          >
+            <span>{NickNameLoading ? '저장 중...' : '저장하기'}</span>
+            {NickNameError && (
+            <p className="text-center text-sm text-red-500">{NickNameError.message}</p>
+          )}
+          </Button>
             <SelectGroup className={cn(groupClassName)}>
               <SelectLabel
                 aria-labelledby="mypagePassword"
@@ -75,27 +210,67 @@ export default function MyPage() {
                 aria-describedby="mypagePassword-required"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="이메일을 작성해주세요"
+                placeholder="수정할 비밀번호를 작성해주세요"
                 className={cn(inputClassName)}
               />
             </SelectGroup>
+            <Button
+            type="submit"
+            disabled={PasswordLoading}
+            className="w-full bg-primary text-white hover:bg-[hsl(var(--primary-hover))]"
+          >
+            <span>{PasswordLoading ? '저장 중...' : '저장하기'}</span>
+            {PasswordError && (
+            <p className="text-center text-sm text-red-500">{PasswordError.message}</p>
+          )}
+          </Button>
+          <SelectGroup className={cn(groupClassName)}>
+              <SelectLabel
+                aria-labelledby="mypagePassword"
+                aria-describedby="mypagePassword-required"
+                aria-required="true"
+                className={cn(labelClassName)}
+              >
+                알림{' '}
+              </SelectLabel>
+              <Input
+                type="password"
+                aria-labelledby="mypagePassword"
+                aria-describedby="mypagePassword-required"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="수정할 비밀번호를 작성해주세요"
+                className={cn(inputClassName)}
+                // input 말고 boolean 형식 
+              />
+            </SelectGroup>
+            <Button
+            type="submit"
+            disabled={PasswordLoading}
+            className="w-full bg-primary text-white hover:bg-[hsl(var(--primary-hover))]"
+          >
+            <span>{PasswordLoading ? '저장 중...' : '저장하기'}</span>
+            {PasswordError && (
+            <p className="text-center text-sm text-red-500">{PasswordError.message}</p>
+          )}
+          </Button>
           </div>
         </form>
       </div>
-      <div className="flex w-full my-5">
+      {/* <div className="flex w-full my-5">
         <Link href={PATH.mypage}>
           <Button
             type="submit"
-            disabled={loading}
+            disabled={isPending}
             className="w-full bg-primary text-white hover:bg-[hsl(var(--primary-hover))]"
           >
-            <span>{loading ? '저장 중...' : '저장하기'}</span>
-            {message && (
-              <p className="text-center text-sm text-red-500">{message}</p>
-            )}
+            <span>{isPending ? '저장 중...' : '저장하기'}</span>
+            {error && (
+            <p className="text-center text-sm text-red-500">{error.message}</p>
+          )}
           </Button>
         </Link>
-      </div>
+      </div> */}
     </CardTitle>
   )
 }

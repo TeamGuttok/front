@@ -9,30 +9,31 @@ import {
   Bell,
   User,
   LogIn,
+  LogOut,
   Moon,
   Sun,
 } from 'lucide-react'
 import { PATH } from '#app/routes'
 import { cn } from '#components/lib/utils'
-import { useActionState } from 'react'
-import { logoutAction } from '#app/(auth)/login/logoutAction'
 import * as Dialog from '@radix-ui/react-dialog'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 
 export default function SideBar({ pathname }: { pathname: string }) {
   const { theme, setTheme } = useTheme()
+  
+    const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
+    const logout = useAuthStore((state) => state.logout)
+  // const isLoggedIn = useAuthStore((state) => !!state.user?.session)
+  // const [logoutState, handleLogout, isLogoutPending] = useActionState(
+  //   logoutAction,
+  //   null,
+  // )
   const itemClassName =
     'flex items-center gap-2 p-3 text-sub hover:text-primary rounded-md'
 
-  const isLoggedIn = useAuthStore((state) => !!state.user?.session)
-  const [logoutState, handleLogout, isLogoutPending] = useActionState(
-    logoutAction,
-    null,
-  )
-
-  const handleConfirmLogout = () => {
-    handleLogout()
-  }
+  // const handleConfirmLogout = () => {
+  //   handleLogout()
+  // }
 
   return (
     <aside className="fixed flex z-50 flex-col w-56 h-screen p-5 bg-secondary shadow-sm mb-5">
@@ -120,32 +121,15 @@ export default function SideBar({ pathname }: { pathname: string }) {
               <span>마이페이지</span>
             </Link>
           </li>
-          <li>
-            {isLoggedIn ? (
-              <Link
-                href={PATH.login}
-                className={cn(
-                  itemClassName,
-                  pathname === PATH.login && 'bg-accent',
-                )}
-              >
-                <LogIn aria-label="로그인 아이콘" size={20} />
-                <span>로그인</span>
-              </Link>
-            ) : (
-              // TODO
-              // [ ] 컴포넌트 분리
-              // [ ] 모바일 마이페이지에 추가
+          {isLoggedIn ? (
+            <li>
               <Dialog.Root>
                 <Dialog.Trigger asChild>
                   <button
                     type="button"
-                    className={cn(
-                      itemClassName,
-                      pathname === PATH.login && 'bg-accent',
-                    )}
+                    className={cn(itemClassName)}
                   >
-                    <LogIn aria-label="로그아웃 아이콘" size={20} />
+                    <LogOut aria-label="로그아웃 아이콘" size={20} />
                     <span>로그아웃</span>
                   </button>
                 </Dialog.Trigger>
@@ -158,8 +142,7 @@ export default function SideBar({ pathname }: { pathname: string }) {
                     <div className="flex justify-end gap-4">
                       <button
                         type="button"
-                        onClick={handleConfirmLogout}
-                        disabled={isLogoutPending}
+                        onClick={logout}
                         className="px-4 py-2 bg-red-500 text-white rounded-md"
                       >
                         예
@@ -176,8 +159,21 @@ export default function SideBar({ pathname }: { pathname: string }) {
                   </Dialog.Content>
                 </Dialog.Portal>
               </Dialog.Root>
-            )}
-          </li>
+            </li>
+          ) : (
+            <li>
+              <Link
+                href={PATH.login}
+                className={cn(
+                  itemClassName,
+                  pathname === PATH.login && 'bg-accent',
+                )}
+              >
+                <LogIn aria-label="로그인 아이콘" size={20} />
+                <span>로그인</span>
+              </Link>
+            </li>
+          )}
         </ul>
       </nav>
     </aside>
