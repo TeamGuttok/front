@@ -6,14 +6,89 @@ import { Label } from '#components/_common/Label'
 import { Input } from '#components/_common/Input'
 import { Button } from '#components/_common/Button'
 import { ErrorMessage } from '#components/_common/ErrorMessage'
-import { loginAction } from './loginAction'
+// import { loginAction } from './loginAction'
 import { PATH } from '#app/routes'
+import { useAuthStore } from '#stores/auth/useAuthStore'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import {useMutation} from '@tanstack/react-query'
+import { z } from 'zod'
+
+export interface User {
+  email: string
+  nickName: string
+  alarm: boolean
+  password?: string
+}
+
+const loginSchema = z.object({
+  email: z.string().email('정확한 이메일을 입력해주세요.'),
+  password: z.string().min(1, '정확한 비밀번호를 입력해주세요.'),
+})
 
 export default function Login() {
-  const [state, handleSubmit, isPending] = useActionState(loginAction, null)
+  //const router = useRouter()
+  //const [state, handleSubmit, isPending] = useActionState(loginAction, null)
+  // const formData = state?.formData
+  // const errors = state?.errors
 
-  const formData = state?.formData
-  const errors = state?.errors
+  const router = useRouter()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('') 
+    const { user, setUser, isLoggedIn } = useAuthStore()
+    //const [password] = useState<string>('')
+    const [error, setError] = useState<Record<string, string[]>>({email: [], password: []})
+
+      const { mutate: loginUser, isPending} = useMutation<any, Error, {email: string, password: string}>({
+        mutationFn: async (credentials) => {
+          const response = await fetch('http://localhost:8080/api/users/signin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(credentials),
+          })
+    
+          if (!response.ok) {
+            const errorData = await response.json()
+            throw new Error(errorData.message || '로그인 요청 실패')
+          }
+    
+          const data = await response.json()
+          if (data.status !== '100 CONTINUE') {
+            throw new Error('로그인 실패. 다시 시도해주세요.')
+          }
+    
+          return data
+        },
+        onSuccess: (data) => {
+          console.log('로그인 성공:', data)
+          setUser({ email: data.data.email })
+          router.push('/')
+        },
+        onError: (error, data) => {
+          console.log('로그인 실패:', data)
+          if (error instanceof Error) {
+            setError({ general: [error.message] })
+          }
+        },
+      })
+    
+      async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault()
+        //const formData = new FormData(event.currentTarget)
+        const input = { email, password }
+        const parseResult = loginSchema.safeParse(input)
+        if (!parseResult.success) {
+          setError(parseResult.error.flatten().fieldErrors)
+          return
+        }
+        loginUser(input)
+      }
+    
+      // if (isLoggedIn) {
+      //   const router = useRouter()
+      //   router.push('/')
+      // }
+
 
   return (
     <div className="flex flex-col justify-center items-center">
@@ -22,7 +97,7 @@ export default function Login() {
       </div>
       <div className="w-full h-[1px] bg-border mt-5"></div>
 
-      <form action={handleSubmit} className="w-full max-w-lg mt-10 px-10">
+      <form onSubmit={handleSubmit} className="w-full max-w-lg mt-10 px-10">
         <div className="flex flex-col gap-1 min-h-16">
           <div className="flex items-center">
             <Label htmlFor="email" className="w-20">
@@ -33,10 +108,12 @@ export default function Login() {
               type="email"
               placeholder="이메일을 입력하세요"
               className="w-0 grow"
-              defaultValue={formData?.get('email')?.toString() ?? ''}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              //defaultValue={new FormData().get('email')?.toString() ?? ''}
             />
           </div>
-          <ErrorMessage errors={errors?.email} className="ml-20" />
+          <ErrorMessage errors={error?.email} className="ml-20" />
         </div>
 
         <div className="flex flex-col gap-1 min-h-16">
@@ -49,10 +126,12 @@ export default function Login() {
               type="password"
               placeholder="비밀번호를 입력하세요"
               className="w-0 grow"
-              defaultValue={formData?.get('password')?.toString() ?? ''}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              //defaultValue={new FormData().get('password')?.toString() ?? ''}
             />
           </div>
-          <ErrorMessage errors={errors?.password} className="ml-20" />
+          <ErrorMessage errors={error?.password} className="ml-20" />
         </div>
 
         <div className="flex justify-center items-center">
@@ -68,7 +147,7 @@ export default function Login() {
       <div className="sm:w-full h-[1px] bg-border mt-5"></div>
 
       <div className="flex justify-center items-center sm:mt-2">
-        <Link href={PATH.forgotEmail}>
+        {/* <Link href={PATH.forgotEmail}>
           <Button
             type="button"
             variant="ghost"
@@ -76,8 +155,8 @@ export default function Login() {
           >
             이메일 찾기
           </Button>
-        </Link>
-        <span className="text-xs">|</span>
+        </Link> */}
+        {/* <span className="text-xs">|</span> */}
         <Link href={PATH.forgotPassword}>
           <Button
             type="button"

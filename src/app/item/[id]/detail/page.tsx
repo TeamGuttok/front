@@ -15,7 +15,7 @@ export default async function SubscriptionDetailPage({
 
   return (
     <>
-      <div className="flex bg-white rounded-xl flex-col max-w-[30rem] sm:max-w-[42rem] p-8 sm:rounded-md sm:border sm:border-border m-auto -translate-y-8 px-10 pb-8">
+      <div className="flex dark:text-black bg-white rounded-xl flex-col max-w-[30rem] sm:max-w-[42rem] p-8 sm:rounded-md sm:border sm:border-border m-auto -translate-y-8 px-10 pb-8">
         <h1 className="text-3xl font-bold justify-center text-center">
           구독 서비스 상세 정보
         </h1>

@@ -15,6 +15,8 @@ import {
 } from '#stores/subscriptions/useSearchStore'
 import { useSearch } from '#apis/subscriptions/SearchService'
 import SearchResults from './searchResults'
+import { useMutation } from '@tanstack/react-query';
+import { useState } from 'react'
 
 export const allServices = [
   {
@@ -33,14 +35,48 @@ export const allServices = [
 
 export default function Page() {
   const { searchQuery, setSearchQuery } = useSearchStore()
-  const { handleSearch, searchMutation } = useSearch()
+  const { handleSearch } = useSearch()
   const { setSelectedService } = useServiceStore()
+  const [searchResults, setSearchResults] = useState<any[]>([]);
   const router = useRouter()
 
-  const handleCardClick = (service: Omit<ServiceStores, 'href'>) => {
-    setSelectedService(service)
-    router.push('add/detail')
-  }
+  // known service 검색 API
+  const searchMutation = useMutation({
+    mutationFn: async (searchTerm: string) => {
+      const response = await fetch(`http://localhost:8080/api/subscriptions?name=${encodeURIComponent(searchTerm)}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: searchTerm })
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`구독 서비스 검색 실패: ${errorData.message || response.statusText}`);
+      }
+      const data = await response.json();
+      if (data.status !== "100 CONTINUE") {
+        throw new Error(`검색 실패: ${data.message}`);
+      }
+      return data.data;
+    }
+  });
+
+
+  const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    searchMutation.mutate(searchQuery, {
+      onSuccess: (data) => {
+        setSearchResults(data);
+      },
+      onError: (error) => {
+        console.error(error);
+      }
+    });
+  };
+
+  const handleCardClick = (service: any) => {
+    setSelectedService(service);
+    router.push('add/detail');
+  };
 
   return (
     <div className="flex flex-col m-4 ">
@@ -70,7 +106,7 @@ export default function Page() {
       </div>
 
       {searchQuery.trim().length > 0 ? (
-        <SearchResults handleCardClick={handleCardClick} />
+        <SearchResults handleCardClick={(service: any) => handleCardClick(service)} />
       ) : (
         <div className="grid mb-4 gap-4 grid-cols-2 sm:grid-cols-2 lg:grid-cols-4">
           {allServices.map((service) => (

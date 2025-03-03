@@ -1,6 +1,7 @@
 'use client'
 
 // import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Input } from '#components/_common/Input'
 import { Button } from '#components/_common/Button'
 import { cn } from '#components/lib/utils'
@@ -15,9 +16,9 @@ import {
 import CardTitle from '#components/_common/CardTitle'
 import { useServiceStore } from '#stores/subscriptions/useServiceStore'
 import { useSubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
-import { useCreateSubscription } from '../../../../apis/subscriptions/CreateSubscriptionHook'
 
 export default function Page() {
+  const router = useRouter()
   const { selectedService } = useServiceStore()
   const { subscriptionData } = useSubscriptionStore()
 
@@ -35,10 +36,7 @@ export default function Page() {
   )
   const memo = useSubscriptionStore((state) => state.subscriptionData.memo)
 
-  const createSubscription = useCreateSubscription()
   const {
-    //subscriptionData,
-    //updateSubscription,
     setSubscriptionData,
     updatePaymentCycle,
     updatePaymentDay,
@@ -70,7 +68,7 @@ export default function Page() {
 
   return (
     <CardTitle className="flex flex-col max-w-[40rem] sm:max-w-[52rem] sm:p-8 sm:rounded-md sm:border sm:border-border m-auto -translate-y-8 px-4">
-      <h1 className="text-3xl font-bold justify-center text-center">
+      <h1 className="text-3xl font-bold justify-center text-center  ">
         구독 서비스 수정
       </h1>
       <div className="flex flex-col justify-center items-center my-8">

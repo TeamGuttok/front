@@ -1,6 +1,7 @@
 'use client'
 
-import Link from 'next/link'
+// import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Input } from '#components/_common/Input'
 import { Button } from '#components/_common/Button'
 import { cn } from '#components/lib/utils'
@@ -15,9 +16,10 @@ import {
 import CardTitle from '#components/_common/CardTitle'
 import { useServiceStore } from '#stores/subscriptions/useServiceStore'
 import { useSubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
-import { useCreateSubscription } from '../../../../apis/subscriptions/CreateSubscriptionHook'
+// import { useCreateSubscription } from '../../../../apis/subscriptions/CreateSubscriptionHook'
 
 export default function Page() {
+  const router = useRouter()
   const { selectedService } = useServiceStore()
   const { subscriptionData } = useSubscriptionStore()
 
@@ -35,7 +37,7 @@ export default function Page() {
   )
   const memo = useSubscriptionStore((state) => state.subscriptionData.memo)
 
-  const createSubscription = useCreateSubscription()
+  // const createSubscription = useCreateSubscription()
   const {
     //subscriptionData,
     //updateSubscription,
@@ -56,49 +58,77 @@ export default function Page() {
     useSubscriptionStore.getState().subscriptionData.paymentDay
   const defaultPaymentMethod =
     useSubscriptionStore.getState().subscriptionData.paymentMethod
-  const isFormValid =
-    !!subscriptionData.title &&
-    !!subscriptionData.paymentAmount &&
-    !!subscriptionData.paymentCycle &&
-    !!subscriptionData.paymentDay
+  // const isFormValid =
+  //   !!subscriptionData.title &&
+  //   !!subscriptionData.paymentAmount &&
+  //   !!subscriptionData.paymentCycle &&
+  //   !!subscriptionData.paymentDay
 
-  const isPending = createSubscription.isPending
-  const isDisabled = !isFormValid || isPending
+  // const isPending = createSubscription.isPending
+  // const isDisabled = !isFormValid || isPending
 
   const buttonBaseClass = 'w-full py-2 mt-4 text-base text-white shadow'
-  const buttonDynamicClass = isDisabled
-    ? 'bg-gray-400 cursor-not-allowed'
-    : 'primary'
+  // const buttonDynamicClass = isDisabled
+  //   ? 'bg-gray-400 cursor-not-allowed'
+  //   : 'primary'
+
+  const isFormValid = () => {
+    const { title, paymentAmount, paymentCycle, paymentDay } = subscriptionData
+    return !!(title && paymentAmount && paymentCycle && paymentDay
+
+    )
+  }
 
   // TODO
   // [ ] 자주 사용되는 클래스들 global에 정의
-
-  // const handleSubmit = (): boolean => {
-  //   const { title, paymentAmount, paymentCycle, paymentDay } = subscriptionData
-  //   return !!(title && paymentAmount && paymentCycle && paymentDay)
-  // }
-
   const groupClassName = 'flex items-start sm:items-center justify-between'
   const labelClassName =
     'block mb-1 sm:mb-0 tracking-wide text-lg font-medium text-nowrap'
   const inputClassName =
     'block w-[12.5rem] sm:max-w-[12.5rem] sm:min-w-[12.5rem] pl-2 text-sm sm:text-base placeholder-[hsl(var(--muted-foreground))]'
 
-  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-
-    // 필수 입력값 검증
-    const { title, paymentAmount, paymentCycle, paymentDay } = subscriptionData
-    const isValid = title && paymentAmount && paymentCycle && paymentDay
-    if (!isValid) return
-
-    // API 요청 실행 및 성공 시 상태 초기화
-    createSubscription.mutate(subscriptionData, {
-      onSuccess: () => {
+    const handleSave = async (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault()
+  
+      if (!isFormValid()) return
+  
+      const payload = {
+        title: subscriptionData.title,
+        subscription: subscriptionData.subscription,
+        paymentAmount: subscriptionData.paymentAmount,
+        paymentMethod: subscriptionData.paymentMethod,
+        paymentCycle: subscriptionData.paymentCycle,
+        paymentDay: subscriptionData.paymentDay,
+        memo: subscriptionData.memo,
+      }
+  
+      try {
+        const response = await fetch('http://localhost:8080/api/subscriptions', {
+          method: 'POST',
+          headers: { Accept: '*/*', 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        })
+  
+        if (!response.ok) {
+          console.error('구독 항목 생성 실패')
+          return
+        }
+  
+        const responseData = await response.json()
+  
+        if (responseData.status !== '100 CONTINUE') {
+          console.error('구독 항목 생성 실패')
+          return
+        }
+  
+        console.log('구독 항목 생성 성공:', responseData)
         resetSubscriptionData()
-      },
-    })
-  }
+        router.push('/')
+      } catch (error) {
+        console.error('저장 중 오류 발생:', error)
+      }
+    }
+
 
   return (
     <CardTitle className="flex flex-col max-w-[40rem] sm:max-w-[52rem] sm:p-8 sm:rounded-md sm:border sm:border-border m-auto -translate-y-8 px-4">
@@ -106,7 +136,7 @@ export default function Page() {
         구독 서비스 세부설정
       </h1>
       <div className="flex flex-col justify-center items-center my-8">
-        <form className="grid grid-cols-1 gap-4" onSubmit={handleFormSubmit}>
+        <form className="grid grid-cols-1 gap-4" onSubmit={handleSave}>
           <div className="grid grid-cols-1 flex-col gap-2 sm:gap-4">
             <SelectGroup className={cn(groupClassName)}>
               <SelectLabel
@@ -274,13 +304,13 @@ export default function Page() {
                 </SelectTrigger>
               </Select>
             </SelectGroup>
-            <div className="flex justify-end mb-2">
+            {/* <div className="flex justify-end mb-2">
               <Link href="item/add/detail/custom">
                 <p className="tracking-wide underline text-base">
                   색깔과 아이콘을 선택해주세요
                 </p>
               </Link>
-            </div>
+            </div> */}
             <SelectGroup className={cn(groupClassName)}>
               <SelectLabel className={cn(labelClassName)}>메모</SelectLabel>
               <textarea
@@ -295,15 +325,18 @@ export default function Page() {
             </SelectGroup>
             <Button
               type="submit"
-              disabled={isDisabled}
-              onClick={(e) => {
-                e.preventDefault()
-                createSubscription.mutate(subscriptionData)
-                resetSubscriptionData()
-              }}
-              className={`${buttonBaseClass} ${buttonDynamicClass}`}
+              disabled={!isFormValid()}
+              // onClick={(e) => {
+              //   e.preventDefault()
+              //   createSubscription.mutate(subscriptionData)
+              //   resetSubscriptionData()
+              // }}
+              className={`w-full py-2 mt-4 text-base text-white shadow ${
+                !isFormValid() ? 'bg-gray-400 cursor-not-allowed' : 'primary'
+              }`}
+              //className={`${buttonBaseClass} ${buttonDynamicClass}`}
             >
-              {createSubscription.isPending ? '저장 중...' : '저장하기'}
+              저장하기
             </Button>
           </div>
         </form>

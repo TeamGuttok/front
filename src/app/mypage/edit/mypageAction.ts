@@ -1,7 +1,9 @@
-// src/app/mypage/mypageAction.ts
 import { create } from 'zustand'
 import { z } from 'zod'
-import Fetcher from '#apis/common/fetcher'
+import { useMutation } from '@tanstack/react-query'
+import { useAuthStore } from '#stores/auth/useAuthStore'
+import { useState, FormEvent } from 'react'
+import { SelectLabel, SelectGroup } from '#components/_common/Select'
 
 const profileSchema = z.object({
   nickName: z.string().min(2, '닉네임은 최소 1자 이상이어야 합니다.'),
@@ -10,64 +12,96 @@ const profileSchema = z.object({
 
 // TODO 스토어 분리
 interface MyPageState {
-  nickName: string
-  password: string
+  // nickName: string
+  // password: string
   loading: boolean
   message: string
-  setnickName: (nickName: string) => void
-  setPassword: (password: string) => void
+  // setnickName: (nickName: string) => void
+  // setPassword: (password: string) => void
   setMessage: (message: string) => void
   setLoading: (loading: boolean) => void
-  updateProfile: () => Promise<void>
+  updateProfile: (newNickName: string) => Promise<void>
   fetchProfile: () => Promise<void>
 }
 
 export const useMyPageStore = create<MyPageState>((set, get) => ({
-  nickName: '',
-  password: '',
+  // nickName: '',
+  // password: '',
   loading: false,
   message: '',
-  setnickName: (nickName: string) => set({ nickName }),
-  setPassword: (password: string) => set({ password }),
+  // setnickName: (nickName: string) => set({ nickName }),
+  // setPassword: (password: string) => set({ password }),
   setMessage: (message: string) => set({ message }),
   setLoading: (loading: boolean) => set({ loading }),
-  updateProfile: async () => {
+  updateProfile: async (newNickName: string) => {
     set({ loading: true, message: '' })
-    const { nickName, password } = get()
-
-    const parseResult = profileSchema.safeParse({ nickName, password })
-    if (!parseResult.success) {
-      const { fieldErrors } = parseResult.error.flatten()
-      const errorMsg = Object.values(fieldErrors).flat().join(' ')
-      set({ message: errorMsg, loading: false })
-      return
-    }
-
-    const fetcher = new Fetcher()
     try {
-      await fetcher.patch('/api/users/password', { password })
-      await fetcher.patch('/api/users/nickName', { nickName: nickName })
-      set({ message: '프로필 정보가 업데이트되었습니다.' })
-    } catch (error: unknown) {
-      set({
-        message:
-          error instanceof Error
-            ? error.message
-            : '프로필 정보를 업데이트하는 중 오류가 발생했습니다.',
+      const response = await fetch('http://localhost:8080/api/users/nickname', {
+        method: 'PATCH',
+        headers: { Accept: '*/*', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nickName: newNickName }),
       })
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.message || '닉네임 변경 실패')
+      }
+      const data = await response.json()
+      if (data.status !== '100 CONTINUE') {
+        throw new Error('닉네임 변경 실패')
+      }
+      // 전역 상태 업데이트: useAuthStore의 setUser를 사용
+      useAuthStore.getState().setUser({ nickName: newNickName })
+      set({ message: '닉네임이 성공적으로 변경되었습니다.' })
+    } catch (error) {
+      set({ message: error instanceof Error ? error.message : '오류 발생' })
     } finally {
       set({ loading: false })
     }
   },
+
+
   fetchProfile: async () => {
     try {
-      const fetcher = new Fetcher()
-      const profile = await fetcher.get<{ nickName: string }>(
-        '/api/users/profile',
-      )
-      set({ nickName: profile.nickName })
+      const response = await fetch('http://localhost:8080/api/users/profile', {
+        method: 'GET',
+        headers: { Accept: '*/*', 'Content-Type': 'application/json' },
+      })
+      if (!response.ok) {
+        throw new Error('프로필 정보를 불러오지 못했습니다.')
+      }
+      const data = await response.json()
+      // API 응답이 { message, data, status } 형태라면:
+      useAuthStore.getState().setUser({
+        email: data.data.email,
+        nickName: data.data.nickName,
+        alarm: data.data.alarm,
+      })
     } catch (error) {
-      console.error('프로필 정보를 불러오지 못했습니다.', error)
+      set({ message: error instanceof Error ? error.message : '프로필 정보 호출 중 오류' })
     }
   },
 }))
+
+
+    // const { mutate: modifyingPassword } = useMutation({
+      const modifyPassword = async (password: string) => {
+      mutationFn: async () => {
+        const response = await fetch('http://localhost:8080/api/users/password', {
+          method: 'PATCH',
+          headers: { Accept: '*/*', 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password }),
+        });
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error('비밀번호 변경 실패');
+        }
+
+        const data = await response.json();
+        if (data.status !== '100 CONTINUE') {
+          throw new Error('비밀번호 변경 실패');
+        }
+      }
+    };
+
+
+    //pw: guttok012345!

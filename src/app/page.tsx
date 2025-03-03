@@ -7,28 +7,35 @@ import AuthenticatedPage from '../components/Layout/Main/AuthenticatedPage'
 import { Skeleton } from '../components/_common/Skeleton'
 
 export default function Home() {
-  // 로그인 세션 여부에 따라 다른 레이아웃 반환
-  // 로컬에서 AuthenticatedPage 반환 테스트할 때에는 개발자 도구 콘솔에서 쿠키 추가
+  // 테스트용 세션
   // document.cookie = "sessionToken=mock-token; path=/; domain=localhost; expires=Fri, 31 Dec 2025 23:59:59 GMT";
 
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
-  const checkSession = useAuthStore((state) => state.checkSession)
+  const { isLoggedIn, setUser } = useAuthStore()
 
   useEffect(() => {
-    const unsubscribe = useAuthStore.subscribe(
-      (state) => state.isLoggedIn,
-      (isLoggedIn) => {
-        console.log('로그인 성공', isLoggedIn)
-        // 로그인 후 추가 데이터 호출 api 추가
-      },
-    )
+    // 상태 구독: 상태가 변경될 때마다 콘솔에 출력
+    const unsubscribe = useAuthStore.subscribe((state) => {
+      console.log('useAuthStore 상태 변경:', state)
+    })
 
-    checkSession()
+    // localStorage에서 사용자 정보를 불러오는 기존 로직
+    const storedUser = localStorage.getItem('user')
+    if (storedUser) {
+      try {
+        const user = JSON.parse(storedUser)
+        setUser(user)
+      } catch (error) {
+        console.error('사용자 정보를 불러오지 못했습니다.', error)
+      }
+    }
 
-    return () => unsubscribe()
-  }, [])
+    return () => {
+      unsubscribe()
+    }
+  }, [setUser])
+    
 
-  if (isLoggedIn === null)
+  if (isLoggedIn === null) {
     return (
       <main className="p-6 space-y-4">
         <Skeleton className="h-12 w-3/4" />
@@ -37,13 +44,14 @@ export default function Home() {
         <Skeleton className="h-40 w-full rounded-lg" />
       </main>
     )
-
+  }
+  
   return (
     <main>
       {isLoggedIn ? (
-        <UnauthenticatedPage pathname="/" />
-      ) : (
         <AuthenticatedPage />
+      ) : (
+        <UnauthenticatedPage pathname="/" />
       )}
     </main>
   )
