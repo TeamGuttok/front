@@ -1,4 +1,14 @@
 import { create } from 'zustand'
+import {
+  serviceNameLabels,
+  paymentMethodLabels,
+  paymentCycleLabels,
+  paymentStatusLabels,
+  PaymentMethod,
+  PaymentDay,
+  PaymentCycle,
+} from '#types/subscription'
+import { KNOWN_SERVICES } from '#constants/knownServices'
 
 export type SubscriptionStore = {
   title: string
@@ -10,48 +20,22 @@ export type SubscriptionStore = {
   memo?: string
 }
 
-export type UserSubscriptionTypeInfo = SubscriptionStore & {
-  userId: number
-}
-
-type SubscriptionState = {
-  subscriptionData: SubscriptionStore
-  setSubscriptionData: (data: Partial<SubscriptionStore>) => void
-  updateSubscription: (
-    isCustom: boolean,
-    subscriptionId?: string,
-    title?: string,
-  ) => void
-  resetSubscriptionData: () => void
-
-  updatePaymentAmount: (paymentAmount: number) => void
-
-  paymentMethodOptions: string[]
-  updatePaymentMethod: (paymentMethod: string) => void
-
-  paymentCycleOptions: string[]
-  updatePaymentCycle: (paymentCycle: string) => void
-
-  paymentDayOptions: number[]
-  updatePaymentDay: (paymentDay: number) => void
-
-  updateMemo: (memo: string) => void
-}
-
-export const useSubscriptionStore = create<SubscriptionState>((set) => ({
+export const useSubscriptionStore = create((set) => ({
   subscriptionData: {
     title: '',
     subscription: '',
     paymentAmount: 0,
     paymentMethod: '',
-    paymentCycle: 'WEEKLY',
-    paymentDay: 1,
+    paymentCycle: '',
+    paymentDay: '',
     memo: '',
   },
+
   setSubscriptionData: (data) =>
     set((state) => ({
       subscriptionData: { ...state.subscriptionData, ...data },
     })),
+
   updateSubscription: (isCustom, subscriptionId) =>
     set((state) => ({
       subscriptionData: {
@@ -60,6 +44,7 @@ export const useSubscriptionStore = create<SubscriptionState>((set) => ({
         title: isCustom ? '' : '',
       },
     })),
+
   resetSubscriptionData: () =>
     set(() => ({
       subscriptionData: {
@@ -67,38 +52,51 @@ export const useSubscriptionStore = create<SubscriptionState>((set) => ({
         subscription: '',
         paymentAmount: 0,
         paymentMethod: '',
-        paymentCycle: 'WEEKLY',
-        paymentDay: 1,
+        paymentCycle: '',
+        paymentDay: '',
         memo: '',
       },
     })),
 
+  // 결제 금액
   updatePaymentAmount: (paymentAmount) =>
     set((state) => ({
       subscriptionData: { ...state.subscriptionData, paymentAmount },
     })),
 
-  paymentMethodOptions: [
-    'CARD',
-    'BANK_TRANSFER',
-    'NAVER_PAY',
-    'KAKAO_PAY',
-    'MOBILE_PAYMENT',
-    'OTHER',
-  ],
-  updatePaymentMethod: (paymentMethod) =>
+  // 결제 수단
+  paymentMethodOptions: Object.entries(paymentMethodLabels).map(
+    ([key, label]) => ({
+      value: key as PaymentMethod,
+      label,
+    }),
+  ),
+
+  updatePaymentMethod: (paymentMethod: PaymentMethod) =>
     set((state) => ({
       subscriptionData: { ...state.subscriptionData, paymentMethod },
     })),
 
-  paymentCycleOptions: ['YEARLY', 'MONTHLY', 'WEEKLY'],
-  updatePaymentCycle: (paymentCycle) =>
+  // 결제 주기
+  paymentCycleOptions: Object.entries(paymentCycleLabels).map(
+    ([key, label]) => ({
+      value: key as PaymentCycle,
+      label,
+    }),
+  ),
+
+  updatePaymentCycle: (paymentCycle: PaymentCycle) =>
     set((state) => ({
       subscriptionData: { ...state.subscriptionData, paymentCycle },
     })),
 
-  paymentDayOptions: Array.from({ length: 31 }, (_, i) => i + 1),
-  updatePaymentDay: (paymentDay) =>
+  // 결제 날짜
+  paymentDayOptions: Array.from({ length: 31 }, (_, i) => ({
+    value: i + 1,
+    label: `${i + 1}`,
+  })),
+
+  updatePaymentDay: (paymentDay: PaymentDay) =>
     set((state) => ({
       subscriptionData: { ...state.subscriptionData, paymentDay },
     })),
@@ -108,28 +106,8 @@ export const useSubscriptionStore = create<SubscriptionState>((set) => ({
       subscriptionData: { ...state.subscriptionData, memo },
     })),
 
-    subscriptionOptions: [
-      'CUSTOM_INPUT',
-      'YOUTUBE_PREMIUM',
-      'NETFLIX',
-      'SPOTIFY',
-      'APPLE_MUSIC',
-      'COUPANG_WOW',
-      'WAVVE',
-      'WATCHA',
-      'TVING',
-      'DISNEY_PLUS',
-      'APPLE_TV',
-      'LAFTEL',
-      'MELON',
-      'GENIE',
-      'FLO',
-      'AWS',
-      'GCP',
-      'CHAT_GPT',
-      'CLAUDE_AI',
-      'GEMINI',
-      'PERPLEXITY',
-      'SPOTV_NOW',
-    ],
+  subscriptionOptions: KNOWN_SERVICES.map((service) => ({
+    value: service.id,
+    label: serviceNameLabels[service.id] || service.name,
+  })),
 }))

@@ -16,56 +16,27 @@ import {
 import CardTitle from '#components/_common/CardTitle'
 import { useServiceStore } from '#stores/subscriptions/useServiceStore'
 import { useSubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
-// import { useCreateSubscription } from '../../../../apis/subscriptions/CreateSubscriptionHook'
+import { BASE_URL } from '#constants/url'
 
 export default function Page() {
   const router = useRouter()
   const { selectedService } = useServiceStore()
-  const { subscriptionData } = useSubscriptionStore()
 
-  const paymentAmount = useSubscriptionStore(
-    (state) => state.subscriptionData.paymentAmount,
-  )
-  const paymentCycle = useSubscriptionStore(
-    (state) => state.subscriptionData.paymentCycle,
-  )
-  const paymentDay = useSubscriptionStore(
-    (state) => state.subscriptionData.paymentDay,
-  )
-  const paymentMethod = useSubscriptionStore(
-    (state) => state.subscriptionData.paymentMethod,
-  )
-  const memo = useSubscriptionStore((state) => state.subscriptionData.memo)
-
-  // const createSubscription = useCreateSubscription()
   const {
-    //subscriptionData,
-    //updateSubscription,
+    subscriptionData,
     setSubscriptionData,
     updatePaymentCycle,
     updatePaymentDay,
     updatePaymentMethod,
+    updateMemo,
+    resetSubscriptionData,
     paymentMethodOptions,
     paymentCycleOptions,
     paymentDayOptions,
-    updateMemo,
-    resetSubscriptionData,
-  } = useSubscriptionStore()
-
-  const defaultPaymentCycle =
-    useSubscriptionStore.getState().subscriptionData.paymentCycle
-  const defaultPaymentDay =
-    useSubscriptionStore.getState().subscriptionData.paymentDay
-  const defaultPaymentMethod =
-    useSubscriptionStore.getState().subscriptionData.paymentMethod
-  // const isFormValid =
-  //   !!subscriptionData.title &&
-  //   !!subscriptionData.paymentAmount &&
-  //   !!subscriptionData.paymentCycle &&
-  //   !!subscriptionData.paymentDay
-
-  // const isPending = createSubscription.isPending
-  // const isDisabled = !isFormValid || isPending
+  } = useSubscriptionStore((state: any) => state);
+  
+  const { title, paymentAmount, paymentCycle, paymentDay, paymentMethod, memo } =
+    subscriptionData;
 
   const buttonBaseClass = 'w-full py-2 mt-4 text-base text-white shadow'
   // const buttonDynamicClass = isDisabled
@@ -73,62 +44,55 @@ export default function Page() {
   //   : 'primary'
 
   const isFormValid = () => {
-    const { title, paymentAmount, paymentCycle, paymentDay } = subscriptionData
-    return !!(title && paymentAmount && paymentCycle && paymentDay
-
-    )
+    return !!(title && paymentAmount && paymentCycle && paymentDay)
   }
 
-  // TODO
-  // [ ] 자주 사용되는 클래스들 global에 정의
   const groupClassName = 'flex items-start sm:items-center justify-between'
   const labelClassName =
     'block mb-1 sm:mb-0 tracking-wide text-lg font-medium text-nowrap'
   const inputClassName =
     'block w-[12.5rem] sm:max-w-[12.5rem] sm:min-w-[12.5rem] pl-2 text-sm sm:text-base placeholder-[hsl(var(--muted-foreground))]'
 
-    const handleSave = async (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault()
-  
-      if (!isFormValid()) return
-  
-      const payload = {
-        title: subscriptionData.title,
-        subscription: subscriptionData.subscription,
-        paymentAmount: subscriptionData.paymentAmount,
-        paymentMethod: subscriptionData.paymentMethod,
-        paymentCycle: subscriptionData.paymentCycle,
-        paymentDay: subscriptionData.paymentDay,
-        memo: subscriptionData.memo,
-      }
-  
-      try {
-        const response = await fetch('http://localhost:8080/api/subscriptions', {
-          method: 'POST',
-          headers: { Accept: '*/*', 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        })
-  
-        if (!response.ok) {
-          console.error('구독 항목 생성 실패')
-          return
-        }
-  
-        const responseData = await response.json()
-  
-        if (responseData.status !== '100 CONTINUE') {
-          console.error('구독 항목 생성 실패')
-          return
-        }
-  
-        console.log('구독 항목 생성 성공:', responseData)
-        resetSubscriptionData()
-        router.push('/')
-      } catch (error) {
-        console.error('저장 중 오류 발생:', error)
-      }
+  const handleSave = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    if (!isFormValid()) return
+
+    const payload = {
+      title: title,
+      paymentAmount: paymentAmount,
+      paymentMethod: paymentMethod,
+      paymentCycle: paymentCycle,
+      paymentDay: paymentDay,
+      memo: memo,
     }
 
+    try {
+      const response = await fetch(`${BASE_URL}/api/subscriptions`, {
+        method: 'POST',
+        headers: { Accept: '*/*', 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+
+      if (!response.ok) {
+        console.error('구독 항목 생성 실패')
+        return
+      }
+
+      const responseData = await response.json()
+
+      if (responseData.status !== '100 CONTINUE') {
+        console.error('구독 항목 생성 실패')
+        return
+      }
+
+      console.log('구독 항목 생성 성공:', responseData)
+      resetSubscriptionData()
+      router.push('/')
+    } catch (error) {
+      console.error('저장 중 오류 발생:', error)
+    }
+  }
 
   return (
     <CardTitle className="flex flex-col max-w-[40rem] sm:max-w-[52rem] sm:p-8 sm:rounded-md sm:border sm:border-border m-auto -translate-y-8 px-4">
@@ -157,7 +121,7 @@ export default function Page() {
                 type="text"
                 aria-labelledby="subscriptionTitle"
                 aria-describedby="subscriptionTitle-required"
-                value={subscriptionData.title}
+                value={title}
                 onChange={(e) => setSubscriptionData({ title: e.target.value })}
                 readOnly={!selectedService?.isCustom}
                 placeholder="넷플릭스, 통신비, etc"
@@ -224,16 +188,16 @@ export default function Page() {
                     aria-controls="paymentCycle-options"
                     className="flex border rounded-md px-4 sm:w-auto"
                   >
-                    {paymentCycle || defaultPaymentCycle}
+                    {paymentCycleOptions.find((option) => option.value === paymentCycle)?.label}
                     <SelectContent
                       id="paymentCycle-options"
                       className="border px-2 py-1 mr-10 rounded-md dark:text-black"
                     >
-                      {paymentCycleOptions.map((cycle) => (
-                        <SelectItem key={cycle} value={cycle}>
-                          {cycle}
-                        </SelectItem>
-                      ))}
+                      {paymentCycleOptions.map(({ value, label }) => (
+                    <SelectItem key={value} value={value}>
+                      {label}
+                    </SelectItem>
+                    ))}
                     </SelectContent>
                   </SelectTrigger>
                 </Select>
@@ -249,16 +213,17 @@ export default function Page() {
                     aria-controls="paymentDay-options"
                     className="flex border rounded-md px-4"
                   >
-                    {paymentDay || defaultPaymentDay}
+                    {paymentDayOptions.find((option) => option.value === paymentDay)?.label}
+                    {/* {paymentDayOptions.includes(paymentDay) || paymentDay} */}
                     <SelectContent
                       id="paymentDay"
                       className="border px-2 py-1 mr-10 rounded-md dark:text-black block"
                     >
-                      {paymentDayOptions.map((day) => (
-                        <SelectItem key={day} value={String(day)}>
-                          {day}
-                        </SelectItem>
-                      ))}
+                      {paymentDayOptions.map(({ value, label }) => (
+                      <SelectItem key={value} value={String(value)}>
+                        {label}
+                      </SelectItem>
+                    ))}
                     </SelectContent>
                   </SelectTrigger>
                 </Select>
@@ -290,17 +255,17 @@ export default function Page() {
                   className="w-[12.5rem] sm:max-w-[12.5rem] sm:min-w-[12.5rem] 
                 pl-2 flex tracking-wide text-lg font-medium text-nowrap"
                 >
-                  {paymentMethod || defaultPaymentMethod}
+                  {paymentMethodOptions.find((option) => option.value === paymentMethod)?.label}
                   <SelectContent
                     id="paymentMethod"
                     className="border rounded-md px-2 py-1 dark:text-black block"
                   >
-                    {paymentMethodOptions.map((method) => (
-                      <SelectItem key={method} value={method}>
-                        {method}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
+                    {paymentMethodOptions.map(({ value, label }) => (
+                    <SelectItem key={value} value={value}>
+                      {label}
+                    </SelectItem>
+                  ))}
+                  </SelectContent> 
                 </SelectTrigger>
               </Select>
             </SelectGroup>

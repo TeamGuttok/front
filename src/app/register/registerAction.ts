@@ -65,7 +65,7 @@
 //     const {mutate: RegisterUser, isPending:isPending, isSuccess: isSuccess } = useMutation({
 //       mutationFn: async ({ password, email, nickName, alarm }: { password: string, email: string, nickName: string, alarm: boolean }) => {
 //         console.log('회원가입 요청:', password, email, nickName, alarm)
-//         const response = await fetch('http://localhost:8080/api/users/register', {
+//         const response = await fetch(`${BASE_URL}/api/users/register`, {
 //           method: 'POST',
 //           headers: { 'Content-Type': 'application/json' },
 //           body: JSON.stringify({
@@ -87,7 +87,7 @@
 
 //       }
 //     },
-  
+
 //   )
 
 //     const response = await fetch('/api/users/register', {

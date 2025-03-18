@@ -20,9 +20,9 @@ import { useAuthStore } from '#stores/auth/useAuthStore'
 
 export default function SideBar({ pathname }: { pathname: string }) {
   const { theme, setTheme } = useTheme()
-  
-    const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
-    const logout = useAuthStore((state) => state.logout)
+
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
+  const logout = useAuthStore((state) => state.logout)
   // const isLoggedIn = useAuthStore((state) => !!state.user?.session)
   // const [logoutState, handleLogout, isLogoutPending] = useActionState(
   //   logoutAction,
@@ -67,7 +67,7 @@ export default function SideBar({ pathname }: { pathname: string }) {
               <span>캘린더 뷰</span>
             </Link>
           </li>
-          <li>
+          {/* <li>
             <Link
               href={PATH.group}
               className={cn(
@@ -78,7 +78,7 @@ export default function SideBar({ pathname }: { pathname: string }) {
               <Users aria-label="그룹 아이콘" size={20} />
               <span>그룹</span>
             </Link>
-          </li>
+          </li> */}
           <li>
             <Link
               href={PATH.notification}
@@ -125,10 +125,7 @@ export default function SideBar({ pathname }: { pathname: string }) {
             <li>
               <Dialog.Root>
                 <Dialog.Trigger asChild>
-                  <button
-                    type="button"
-                    className={cn(itemClassName)}
-                  >
+                  <button type="button" className={cn(itemClassName)}>
                     <LogOut aria-label="로그아웃 아이콘" size={20} />
                     <span>로그아웃</span>
                   </button>

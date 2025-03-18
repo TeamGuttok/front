@@ -11,9 +11,10 @@ import { useAuthStore } from '#stores/auth/useAuthStore'
 import useTheme from '#contexts/ThemeProvider/hook'
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
+import {BASE_URL} from '#constants/url'
 
 export default function MyPage() {
-  const { nickName, fetchProfile } = useMyPageStore()
+  const { fetchProfile } = useMyPageStore()
   const { isLoggedIn, user, setUser, logout } = useAuthStore()
   const { theme, setTheme } = useTheme()
   const router = useRouter()
@@ -24,7 +25,7 @@ export default function MyPage() {
   // 알림 설정 API
   const { mutate: toggleAlarm, isPending: isTogglingAlarm } = useMutation({
     mutationFn: async () => {
-      const response = await fetch('http://localhost:8080/api/users/alarm', {
+      const response = await fetch(`${BASE_URL}/api/users/alarm`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -42,12 +43,12 @@ export default function MyPage() {
     },
   })
 
-  // 로그아웃 API 
+  // 로그아웃 API
   const { mutate: signOut, isPending: isLoggingOut } = useMutation({
     mutationFn: async () => {
-      const response = await fetch('http://localhost:8080/api/users/signout', {
+      const response = await fetch(`${BASE_URL}/api/users/signout`, {
         method: 'POST',
-        headers: { 'Accept': '*/*' },
+        headers: { Accept: '*/*' },
       })
 
       if (!response.ok) {
@@ -72,9 +73,9 @@ export default function MyPage() {
   // 탈퇴 API
   const { mutate: deleteAccount, isPending: isDeletingAccount } = useMutation({
     mutationFn: async () => {
-      const response = await fetch('http://localhost:8080/api/users', {
+      const response = await fetch(`${BASE_URL}/api/users`, {
         method: 'DELETE',
-        headers: { 'Accept': '*/*' },
+        headers: { Accept: '*/*' },
       })
 
       if (!response.ok) {
@@ -90,7 +91,7 @@ export default function MyPage() {
     },
     onSuccess: () => {
       logout()
-      setShowDeleteDialog(false) 
+      setShowDeleteDialog(false)
     },
     onError: (error) => {
       console.error('회원 탈퇴 실패:', error)
@@ -105,7 +106,7 @@ export default function MyPage() {
     if (!isLoggedIn) {
       router.push('/login')
     }
-  },  [setUser, router, isLoggedIn, fetchProfile])
+  }, [setUser, router, isLoggedIn, fetchProfile])
 
   if (!isLoggedIn) return null
 
@@ -150,7 +151,7 @@ export default function MyPage() {
         <div className="flex justify-between mb-2">
           <p className="text-gray-600">이메일 결제 리마인드</p>
           <div>
-          <button onClick={() => toggleAlarm()} disabled={isTogglingAlarm}>
+            <button onClick={() => toggleAlarm()} disabled={isTogglingAlarm}>
               {user?.alarm ? (
                 <ToggleLeft
                   aria-label="이메일 결제 리마인드 동의"
@@ -188,9 +189,8 @@ export default function MyPage() {
           </button>
         </div>
 
-
         <div className="flex justify-end mt-3">
-        <Button
+          <Button
             onClick={() => signOut()}
             disabled={isLoggingOut}
             className="primary hover:[hsl(var(--primary-hover))]"

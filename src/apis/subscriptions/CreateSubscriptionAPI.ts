@@ -1,50 +1,48 @@
 import { SubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
 import { useMutation } from '@tanstack/react-query'
+import { BASE_URL } from '#constants/url'
 
 const useCreateSubscription = () => {
   return useMutation<{ status: string; data: any }, Error, SubscriptionStore>({
     mutationFn: async (data: SubscriptionStore) => {
       const payload = {
         title: data.title,
-        subscription: data.subscription, 
+        subscription: data.subscription,
         paymentAmount: data.paymentAmount,
         paymentMethod: data.paymentMethod,
         paymentCycle: data.paymentCycle,
         paymentDay: data.paymentDay,
         memo: data.memo,
-      };
+      }
 
-      const response = await fetch('http://localhost:8080/api/subscriptions', {
+      const response = await fetch(`${BASE_URL}/api/subscriptions`, {
         method: 'POST',
         headers: { Accept: '*/*', 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
-      });
+      })
 
       if (!response.ok) {
-        throw new Error('구독 항목 생성에 실패했습니다.');
+        throw new Error('구독 항목 생성에 실패했습니다.')
       }
-      
-      const responseData = await response.json();
+
+      const responseData = await response.json()
 
       if (responseData.status !== '100 CONTINUE') {
-        throw new Error('구독 항목 생성 실패');
+        throw new Error('구독 항목 생성 실패')
       }
-      
-      return responseData;
+
+      return responseData
     },
     onSuccess: (data) => {
-      console.log('구독 항목 생성 성공:', data);
+      console.log('구독 항목 생성 성공:', data)
     },
     onError: (error) => {
-      console.error('구독 항목 생성 실패:', error);
+      console.error('구독 항목 생성 실패:', error)
     },
-  });
-};
+  })
+}
 
-
-export default useCreateSubscription;
-
-
+export default useCreateSubscription
 
 // export type CreateSubscriptionResponse = {
 //   message: string
@@ -81,9 +79,8 @@ export default useCreateSubscription;
 //     paymentDay: data.paymentDay,
 //     memo: data.memo,
 //   }
-  // const fetcher = new Fetcher()
-  // return fetcher.post<CreateSubscriptionResponse>('/subscriptions', payload)
-
+// const fetcher = new Fetcher()
+// return fetcher.post<CreateSubscriptionResponse>('/subscriptions', payload)
 
 // import Fetcher from '#apis/fetcher'
 // import { SubscriptionStore } from '#stores/useSubscriptionStore'

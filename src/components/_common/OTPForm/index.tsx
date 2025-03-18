@@ -9,10 +9,8 @@ import {
 } from '#components/_common/InputOtp'
 import { cn } from '#components/lib/utils'
 import { Button } from '#components/_common/Button'
+import { BASE_URL } from '#constants/url'
 //import { OTPInputContext } from 'input-otp'
-// import Fetcher from '#apis/common/fetcher'
-
-// const fetcher = new Fetcher()
 
 const TIME_LIMIT_SECONDS = 10 * 60 // 10분
 
@@ -58,7 +56,7 @@ export default function OTPForm({
   className,
   resetTrigger,
 }: OTPFormProps) {
-  // TODO 스토어로 정리하기
+
   const inputRef = useRef<HTMLInputElement>(null)
   const [otp, setOtp] = useState('')
   const [timeLeft, setTimeLeft] = useState(TIME_LIMIT_SECONDS)
@@ -76,7 +74,7 @@ export default function OTPForm({
     mutationFn: async () => {
       console.log('인증번호 검증:', email, otp)
       const response = await fetch(
-        'http://localhost:8080/api/users/email-verification',
+        `${BASE_URL}/api/users/email-verification`,
         {
           method: 'POST',
           headers: {

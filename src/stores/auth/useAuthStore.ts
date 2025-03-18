@@ -1,5 +1,9 @@
 import { create } from 'zustand'
-import { subscribeWithSelector, persist, createJSONStorage } from 'zustand/middleware'
+import {
+  subscribeWithSelector,
+  persist,
+  createJSONStorage,
+} from 'zustand/middleware'
 
 interface User {
   email: string
@@ -13,58 +17,41 @@ interface AuthState {
   logout: () => void
   //setUser: (user: Partial<User> | ((user: User) => Partial<User>)) => void
   setUser: (user: Partial<User>) => void
+  verifyEmail: () => void
+  isEmailVerified: boolean
 }
 
 export const useAuthStore = create<AuthState>()(
   persist(
     subscribeWithSelector((set) => ({
-      isLoggedIn: false,
+      // isLoggedIn: false
+      isLoggedIn: true, 
+      isEmailVerified: false,
+      verifyEmail: () => set({ isEmailVerified: true }),
       user: { email: '', nickName: '', alarm: true },
       logout: () =>
-        set({ user: { email: '', nickName: '', alarm: true }, isLoggedIn: false }),
+        set({
+          user: { email: '', nickName: '', alarm: true },
+          isLoggedIn: false,
+          isEmailVerified: true,
+        }),
       setUser: (user: Partial<User>) =>
-        set((state) => {
-          const newUser: User = {
+        set((state) => ({
+          user: {
             email: user.email ?? state.user?.email ?? '',
             nickName: user.nickName ?? state.user?.nickName ?? '',
             alarm: user.alarm ?? state.user?.alarm ?? true,
-          }
-          return {
-            user: newUser,
-            isLoggedIn: Boolean(newUser.email && newUser.nickName),
-          }
-        }),
+          },
+        })),
     })),
     {
-      name: 'auth-session', // sessionStorage에 저장될 key 이름
-      storage: createJSONStorage(() => sessionStorage), // 세션스토리지를 사용
+      name: 'auth-session',
+      storage: createJSONStorage(() => sessionStorage),
       partialize: (state) => ({
         user: state.user,
         isLoggedIn: state.isLoggedIn,
+        isEmailVerified: state.isEmailVerified,
       }),
-    }
-  )
-);
-
-//   subscribeWithSelector((set) => ({
-//     isLoggedIn: false,
-//     user: { email: '', nickName: '', session: '', alarm: true },
-
-//     logout: () =>
-//       set({ user: { email: '', nickName: '', alarm: true }, isLoggedIn: false }),
-
-//     setUser: (user: Partial<User>) =>
-//   set((state) => {
-//     const newUser: User = {
-//       email: user.email ?? state.user?.email ?? '',
-//       nickName: user.nickName ?? state.user?.nickName ?? '',
-//       alarm: user.alarm ?? state.user?.alarm ?? true,
-//     }
-//     return {
-//       user: newUser,
-//       isLoggedIn: Boolean(newUser.email && newUser.nickName),
-//     }
-//   }),
-//   }))
-// );
-
+    },
+  ),
+)

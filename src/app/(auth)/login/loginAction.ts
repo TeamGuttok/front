@@ -30,7 +30,6 @@
 
 //     const {mutate:}
 
-
 // }
 
 // export function useLoginAction() {
@@ -79,8 +78,6 @@
 //     }
 //   )
 // }
-
-
 
 // export async function loginAction(
 //   prevState: State | null,
@@ -131,7 +128,7 @@
 //       user: {
 //         email: email as string,
 //         nickName: nickName as string,
-//         alarm: userData.alarm ?? true, 
+//         alarm: userData.alarm ?? true,
 //       },
 //     }
 //   } catch (error: unknown) {

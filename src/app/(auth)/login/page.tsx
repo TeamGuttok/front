@@ -11,8 +11,9 @@ import { PATH } from '#app/routes'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import {useMutation} from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { z } from 'zod'
+import { BASE_URL } from '#constants/url'
 
 export interface User {
   email: string
@@ -34,61 +35,67 @@ export default function Login() {
 
   const router = useRouter()
   const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('') 
-    const { user, setUser, isLoggedIn } = useAuthStore()
-    //const [password] = useState<string>('')
-    const [error, setError] = useState<Record<string, string[]>>({email: [], password: []})
+  const [password, setPassword] = useState('')
+  const { user, setUser, isLoggedIn } = useAuthStore()
+  //const [password] = useState<string>('')
+  const [error, setError] = useState<Record<string, string[]>>({
+    email: [],
+    password: [],
+  })
 
-      const { mutate: loginUser, isPending} = useMutation<any, Error, {email: string, password: string}>({
-        mutationFn: async (credentials) => {
-          const response = await fetch('http://localhost:8080/api/users/signin', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(credentials),
-          })
-    
-          if (!response.ok) {
-            const errorData = await response.json()
-            throw new Error(errorData.message || '로그인 요청 실패')
-          }
-    
-          const data = await response.json()
-          if (data.status !== '100 CONTINUE') {
-            throw new Error('로그인 실패. 다시 시도해주세요.')
-          }
-    
-          return data
-        },
-        onSuccess: (data) => {
-          console.log('로그인 성공:', data)
-          setUser({ email: data.data.email })
-          router.push('/')
-        },
-        onError: (error, data) => {
-          console.log('로그인 실패:', data)
-          if (error instanceof Error) {
-            setError({ general: [error.message] })
-          }
-        },
+  const { mutate: loginUser, isPending } = useMutation<
+    any,
+    Error,
+    { email: string; password: string }
+  >({
+    mutationFn: async (credentials) => {
+      const response = await fetch(`${BASE_URL}/api/users/signin`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(credentials),
       })
-    
-      async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-        event.preventDefault()
-        //const formData = new FormData(event.currentTarget)
-        const input = { email, password }
-        const parseResult = loginSchema.safeParse(input)
-        if (!parseResult.success) {
-          setError(parseResult.error.flatten().fieldErrors)
-          return
-        }
-        loginUser(input)
-      }
-    
-      // if (isLoggedIn) {
-      //   const router = useRouter()
-      //   router.push('/')
-      // }
 
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.message || '로그인 요청 실패')
+      }
+
+      const data = await response.json()
+      if (data.status !== '100 CONTINUE') {
+        throw new Error('로그인 실패. 다시 시도해주세요.')
+      }
+
+      return data
+    },
+    onSuccess: (data) => {
+      console.log('로그인 성공:', data)
+      setUser({ email: data.data.email })
+      router.push('/')
+    },
+    onError: (error, data) => {
+      console.log('로그인 실패:', data)
+      if (error instanceof Error) {
+        setError({ general: [error.message] })
+      }
+    },
+  })
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    //const formData = new FormData(event.currentTarget)
+    const input = { email, password }
+    const parseResult = loginSchema.safeParse(input)
+    if (!parseResult.success) {
+      setError(parseResult.error.flatten().fieldErrors)
+      return
+    }
+    loginUser(input)
+  }
+
+  // if (isLoggedIn) {
+  //   const router = useRouter()
+  //   router.push('/')
+  // }
 
   return (
     <div className="flex flex-col justify-center items-center">
