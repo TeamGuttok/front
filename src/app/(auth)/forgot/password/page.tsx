@@ -9,6 +9,7 @@ import OTPForm from '#components/_common/OTPForm'
 import { useMutation } from '@tanstack/react-query'
 import { forgotPasswordAction } from './forgotPasswordAction'
 import ForgotPasswordSuccess from './ForgotPasswordSuccess'
+import { BASE_URL } from '#constants/url'
 
 export default function ForgotPassword() {
   // const [email, setEmail] = useState('')
@@ -20,49 +21,60 @@ export default function ForgotPassword() {
   //   null,
   // )
 
-    // 서버 액션: 이메일 입력 후 인증번호 발송 요청
-    const [state, handleSubmit, isPending] = useActionState(forgotPasswordAction, null)
-    const { isSuccess, errors: actionErrors, formData } = state ?? {}
-  
-    // 로컬 상태: OTP 검증 결과 및 에러 관리
-    const [otpErrors, setOtpErrors] = useState<Record<string, string[]> | null>(null)
-    const [isVerified, setIsVerified] = useState(false)
-    const [otpReset, setOtpReset] = useState(0)
+  // 서버 액션: 이메일 입력 후 인증번호 발송 요청
+  const [state, handleSubmit, isPending] = useActionState(
+    forgotPasswordAction,
+    null,
+  )
+  const { isSuccess, errors: actionErrors, formData } = state ?? {}
 
-    const email =  (formData?.get('email') as string) ?? ''
+  // 로컬 상태: OTP 검증 결과 및 에러 관리
+  const [otpErrors, setOtpErrors] = useState<Record<string, string[]> | null>(
+    null,
+  )
+  const [isVerified, setIsVerified] = useState(false)
+  const [otpReset, setOtpReset] = useState(0)
+
+  const email = (formData?.get('email') as string) ?? ''
 
   // 비밀번호 찾기 버튼 클릭 -> 이메일 입력 -> 인증번호 받기 클릭하면 `/api/mail/certification` api 호출 && otp 입력 호출
   // 메일에 인증번호 발송 -> 인증번호를 otp에 입력 후 검증 버튼 클릭 -> `api/users/certification-number` api 호출 -> validation
   // const formData = state?.formData
 
-
   // 인증번호 검증 api
-  const { mutate: verifyCertificationNumber, status: verifyStatus } = useMutation({
-    mutationFn: async (data: { certificationNumber: string; email: string }) => {
-      const response = await fetch('http://localhost:8080/api/users/certification-number', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      })
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(JSON.stringify(errorData.errors || {}))
-      }
-      return response.json()
-    },
-    onSuccess: () => {
-      setIsVerified(true)
-      setOtpErrors(null)
-    },
-    onError: (error: any) => {
-      try {
-        const parsedErrors = JSON.parse(error.message)
-        setOtpErrors(parsedErrors)
-      } catch {
-        setOtpErrors({ certificationNumber: [error.message] })
-      }
-    },
-  })
+  const { mutate: verifyCertificationNumber, status: verifyStatus } =
+    useMutation({
+      mutationFn: async (data: {
+        certificationNumber: string
+        email: string
+      }) => {
+        const response = await fetch(
+          `${BASE_URL}/api/users/certification-number`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          },
+        )
+        if (!response.ok) {
+          const errorData = await response.json()
+          throw new Error(JSON.stringify(errorData.errors || {}))
+        }
+        return response.json()
+      },
+      onSuccess: () => {
+        setIsVerified(true)
+        setOtpErrors(null)
+      },
+      onError: (error: any) => {
+        try {
+          const parsedErrors = JSON.parse(error.message)
+          setOtpErrors(parsedErrors)
+        } catch {
+          setOtpErrors({ certificationNumber: [error.message] })
+        }
+      },
+    })
 
   const isVerifyLoading = verifyStatus === 'pending'
 
@@ -89,7 +101,10 @@ export default function ForgotPassword() {
           className="mt-2 mb-3 space-y-4"
         />
         {otpErrors?.certificationNumber && (
-          <ErrorMessage errors={otpErrors.certificationNumber} className="ml-20" />
+          <ErrorMessage
+            errors={otpErrors.certificationNumber}
+            className="ml-20"
+          />
         )}
       </div>
     )
@@ -116,8 +131,8 @@ export default function ForgotPassword() {
               />
             </div>
             {actionErrors?.email && (
-            <ErrorMessage errors={actionErrors.email} className="ml-20" />
-          )}
+              <ErrorMessage errors={actionErrors.email} className="ml-20" />
+            )}
           </div>
           <Button
             type="submit"
@@ -135,11 +150,13 @@ export default function ForgotPassword() {
             isLoading={isVerifyLoading}
           />
           {errors?.certificationNumber && (
-            <ErrorMessage errors={errors.certificationNumber} className="ml-20" />
+            <ErrorMessage
+              errors={errors.certificationNumber}
+              className="ml-20"
+            />
           )}
         </div>
       )}
     </div>
   )
 }
-

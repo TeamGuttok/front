@@ -2,13 +2,14 @@
 
 import { z } from 'zod'
 import prisma from '#/lib/prisma'
+import { BASE_URL } from '#constants/url'
 
 const emailSchema = z.object({
   email: z.string().email('이메일 주소를 정확하게 입력하세요.'),
 })
 
 async function sendCertificationMail(email: string) {
-  const response = await fetch('http://localhost:8080/api/mail/certification', {
+  const response = await fetch(`${BASE_URL}/api/mail/certification`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email }),
@@ -24,7 +25,10 @@ async function sendCertificationMail(email: string) {
 //   formData?: FormData
 // }
 
-export async function forgotPasswordAction(_prevState: any, formData: FormData) {
+export async function forgotPasswordAction(
+  _prevState: any,
+  formData: FormData,
+) {
   const emailValue = formData.get('email')
   if (typeof emailValue !== 'string') {
     return {

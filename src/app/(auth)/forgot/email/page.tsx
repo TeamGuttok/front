@@ -8,7 +8,9 @@ import { ErrorMessage } from '#components/_common/ErrorMessage'
 import { Button } from '#components/_common/Button'
 import { forgotEmailAction } from './forgotEmailAction'
 
-const ForgotEmailSuccess = dynamic(() => import('../password/ForgotPasswordSuccess'))
+const ForgotEmailSuccess = dynamic(
+  () => import('../password/ForgotPasswordSuccess'),
+)
 
 export default function ForgotEmail() {
   const [state, handleSubmit, isPending] = useActionState(

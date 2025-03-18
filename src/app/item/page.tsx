@@ -2,8 +2,11 @@ import Link from 'next/link'
 import { PATH } from '#app/routes'
 import { Card } from '#components/_common/Card'
 import { cn } from '#components/lib/utils'
+import { useQuery } from '@tanstack/react-query'
+import {BASE_URL} from '#constants/url'
+import { SubscriptionContents } from '#types/subscription'
 
-const subscriptions = [
+export const subscriptions = [
   {
     id: 1,
     name: '넷플릭스',
@@ -31,6 +34,31 @@ const subscriptions = [
 ]
 
 export default function ItemList() {
+  const { data, isLoading, error } = useQuery<{ contents: SubscriptionContents[]; size: number; hasNext: boolean }>({
+    queryKey: ['subscriptions'],
+    queryFn: async () => {
+      const response = await fetch(`${BASE_URL}/api/subscriptions/user`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      })
+
+      if (!response.ok) {
+        throw new Error(`구독 목록을 가져오는데 실패했습니다: ${response.statusText}`)
+      }
+
+      return response.json()
+    },
+  })
+
+  if (isLoading) {
+    return <p className="text-center text-gray-500">📦 구독 정보를 불러오는 중...</p>
+  }
+
+  if (error) {
+    return <p className="text-center text-red-500">⚠️ 구독 정보를 가져오는 중 오류 발생</p>
+  }
+
+
   return (
     <div className="grid grid-cols-1 gap-3">
       {subscriptions.map((sub) => (

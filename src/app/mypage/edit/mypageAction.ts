@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import { useState, FormEvent } from 'react'
 import { SelectLabel, SelectGroup } from '#components/_common/Select'
+import { BASE_URL } from '#constants/url'
 
 const profileSchema = z.object({
   nickName: z.string().min(2, '닉네임은 최소 1자 이상이어야 합니다.'),
@@ -36,7 +37,7 @@ export const useMyPageStore = create<MyPageState>((set, get) => ({
   updateProfile: async (newNickName: string) => {
     set({ loading: true, message: '' })
     try {
-      const response = await fetch('http://localhost:8080/api/users/nickname', {
+      const response = await fetch(`${BASE_URL}/api/users/nickname`, {
         method: 'PATCH',
         headers: { Accept: '*/*', 'Content-Type': 'application/json' },
         body: JSON.stringify({ nickName: newNickName }),
@@ -59,10 +60,9 @@ export const useMyPageStore = create<MyPageState>((set, get) => ({
     }
   },
 
-
   fetchProfile: async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/users/profile', {
+      const response = await fetch(`${BASE_URL}/api/users/profile`, {
         method: 'GET',
         headers: { Accept: '*/*', 'Content-Type': 'application/json' },
       })
@@ -77,31 +77,32 @@ export const useMyPageStore = create<MyPageState>((set, get) => ({
         alarm: data.data.alarm,
       })
     } catch (error) {
-      set({ message: error instanceof Error ? error.message : '프로필 정보 호출 중 오류' })
+      set({
+        message:
+          error instanceof Error ? error.message : '프로필 정보 호출 중 오류',
+      })
     }
   },
 }))
 
+// const { mutate: modifyingPassword } = useMutation({
+const modifyPassword = async (password: string) => {
+  mutationFn: async () => {
+    const response = await fetch(`${BASE_URL}/api/users/password`, {
+      method: 'PATCH',
+      headers: { Accept: '*/*', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password }),
+    })
+    if (!response.ok) {
+      const errorData = await response.json()
+      throw new Error('비밀번호 변경 실패')
+    }
 
-    // const { mutate: modifyingPassword } = useMutation({
-      const modifyPassword = async (password: string) => {
-      mutationFn: async () => {
-        const response = await fetch('http://localhost:8080/api/users/password', {
-          method: 'PATCH',
-          headers: { Accept: '*/*', 'Content-Type': 'application/json' },
-          body: JSON.stringify({ password }),
-        });
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error('비밀번호 변경 실패');
-        }
+    const data = await response.json()
+    if (data.status !== '100 CONTINUE') {
+      throw new Error('비밀번호 변경 실패')
+    }
+  }
+}
 
-        const data = await response.json();
-        if (data.status !== '100 CONTINUE') {
-          throw new Error('비밀번호 변경 실패');
-        }
-      }
-    };
-
-
-    //pw: guttok012345!
+//pw: guttok012345!

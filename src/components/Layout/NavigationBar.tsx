@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { House, User, Users } from 'lucide-react'
+import { House, User, Users, Bell } from 'lucide-react'
 import { PATH } from '#app/routes'
 import { cn } from '#components/lib/utils'
 
@@ -12,6 +12,18 @@ export default function NavigationBar({ pathname }: { pathname: string }) {
         <ul className="flex justify-evenly items-center h-full">
           <li>
             <Link
+              href={PATH.notification}
+              className={cn(
+                itemClassName,
+                pathname === PATH.notification && 'bg-accent',
+              )}
+            >
+              <Bell aria-label="알림 아이콘" size={20} />
+              <span>알림</span>
+            </Link>
+          </li>
+          {/* <li>
+            <Link
               href={PATH.group}
               className={cn(
                 itemClassName,
@@ -21,7 +33,7 @@ export default function NavigationBar({ pathname }: { pathname: string }) {
               <Users aria-label="그룹 아이콘" />
               <span>그룹</span>
             </Link>
-          </li>
+          </li> */}
           <li>
             <Link
               href="/"

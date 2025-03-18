@@ -10,35 +10,50 @@ import { ErrorMessage } from '#components/_common/ErrorMessage'
 import RegisterInputField from './RegisterInputField'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import { z } from 'zod'
+import {BASE_URL} from '#constants/url'
 
 const RegisterSuccess = dynamic(() => import('./RegisterSuccess'))
 
-const registerSchema = z.object({
-  nickName: z.string().min(1, '최소 1자 이상 입력해주세요.'),
-  email: z.string().email('유효한 이메일 주소를 입력하세요.'),
-  password: z
-    .string()
-    .min(12, '특수문자(@&!%*?&#), 영어 소문자를 포함한 12자 이상을 입력해주세요.')
-    .regex(/^(?=.*[a-z])(?=.*[@$!%*?&#]).{12,}$/, '특수문자(@$!%*?&#), 영어 소문자를 포함해주세요.'),
-})
+const registerSchema = z
+  .object({
+    nickName: z.string().min(1, '최소 1자 이상 입력해주세요.'),
+    email: z.string().email('유효한 이메일 주소를 입력하세요.'),
+    password: z
+      .string()
+      .min(
+        12,
+        '특수문자(@&!%*?&#), 영어 소문자를 포함한 12자 이상을 입력해주세요.',
+      )
+      .regex(
+        /^(?=.*[a-z])(?=.*[@$!%*?&#]).{12,}$/,
+        '특수문자(@$!%*?&#), 영어 소문자를 포함해주세요.',
+      ),
+    passwordConfirm: z.string(),
+  })
+  .refine((data) => data.passwordConfirm.length > 0, {
+    message: '비밀번호가 일치하지 않습니다.',
+    path: ['passwordConfirm'],
+  })
 
 export default function Register() {
-  const { user, setUser, isLoggedIn } = useAuthStore()
-  const [nickName, setNickName] = useState('');
+  const { user, setUser } = useAuthStore()
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
+  const [nickName, setNickName] = useState('')
   const [password, setPassword] = useState<string>('')
   const [passwordConfirm, setPasswordConfirm] = useState<string>('')
   const [error, setError] = useState<Record<string, string[]>>({})
 
   const { mutate: registerUser, isPending: isRegistering } = useMutation({
+    //
     mutationFn: async () => {
-      const response = await fetch('http:localhost:8080/api/users/signup', {
+      const response = await fetch(`${BASE_URL}/api/users/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({
-          email: user?.email || '',
           password: password,
+          email: user?.email,
           nickName: nickName,
-          //nickName: user?.nickName || '',
           alarm: true,
         }),
       })
@@ -57,7 +72,15 @@ export default function Register() {
     },
     onSuccess: (data) => {
       console.log('회원가입 성공:', data)
-      setUser({ email: data.data.email, nickName: nickName || data.data.nickName || 'defaultNickname', alarm: true  })
+      setUser({
+        email: data.data.email,
+        nickName: data.data.nickName,
+        alarm: true,
+      })
+
+      useAuthStore.setState({ isLoggedIn: true })
+      console.log('useAuthStore 변경 후:', useAuthStore.getState())
+      // setUser({ email: data.data.email, nickName: nickName || data.data.nickName, alarm: true  })
     },
     onError: (error) => {
       if (error instanceof Error) {
@@ -69,22 +92,25 @@ export default function Register() {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     console.log('useAuthStore:', useAuthStore.getState())
+    console.log('비밀번호:', password)
+    console.log('비밀번호 확인:', passwordConfirm)
+    console.log('닉네임', nickName)
 
     const input = {
-      email: user?.email || '',
-      password,
-      nickName,
+      email: user?.email ?? '',
+      password: password ?? '',
+      passwordConfirm: passwordConfirm ?? '',
+      nickName: nickName,
+      alarm: true,
     }
+
+    console.log('검증할 데이터:', input)
 
     const parseResult = registerSchema.safeParse(input)
 
     if (!parseResult.success) {
+      console.log('유효성 검사 실패:', parseResult.error.flatten().fieldErrors)
       setError(parseResult.error.flatten().fieldErrors)
-      return
-    }
-
-    if (password !== passwordConfirm) {
-      setError({ passwordConfirm: ['비밀번호가 일치하지 않습니다.'] })
       return
     }
 
@@ -92,11 +118,11 @@ export default function Register() {
   }
 
   if (isLoggedIn) {
-    return <RegisterSuccess nickName={user?.nickName || ''} />
+    return <RegisterSuccess nickName={user?.nickName} />
   }
 
   return (
-        <div className="flex flex-col items-center sm:m-auto sm:-translate-y-12">
+    <div className="flex flex-col items-center sm:m-auto sm:-translate-y-12">
       <div className="w-full sm:w-[60vw] sm:max-w-[832px] sm:p-8 sm:rounded-md sm:border sm:border-border">
         <div className="flex flex-col justify-center items-center">
           <div className="flex flex-col items-center w-full mt-5">
@@ -117,16 +143,17 @@ export default function Register() {
                   name="nickname"
                   placeholder="닉네임을 입력하세요"
                   className="w-0 grow"
-                  //value={nickName}
-                  onChange={(e) => setUser({ nickName: e.target.value })}
+                  value={nickName}
+                  //onChange={(e) => setUser({ nickName: e.target.value })}
+                  onChange={(e) => setNickName(e.target.value)}
                 />
               </div>
-              <ErrorMessage errors={error?.nickname || []} className="ml-20" />
+              <ErrorMessage errors={error?.nickname} className="ml-20" />
             </div>
 
             <RegisterInputField
-              
-              // defaultValue={formData?.get('email')?.toString() ?? ''}
+
+            // defaultValue={formData?.get('email')?.toString() ?? ''}
             />
 
             <div className="flex flex-col gap-1 min-h-16">
@@ -145,7 +172,7 @@ export default function Register() {
                   autoComplete="new-password"
                 />
               </div>
-              <ErrorMessage errors={error?.password || []} className="ml-20" />
+              <ErrorMessage errors={error?.password} className="ml-20" />
             </div>
 
             <div className="flex flex-col gap-1 min-h-16">
@@ -174,15 +201,14 @@ export default function Register() {
                 className="ml-20"
               />
             </div>
-            <ErrorMessage errors={error?.passwordConfirm || []} />
-            <ErrorMessage errors={error?.session || []} />
+            {/* <ErrorMessage errors={error?.passwordConfirm || []} /> */}
             <Button
               type="submit"
               className="flex justify-self-center w-full h-10 text-md rounded-lg mt-10"
               // disabled={isRegistering || isCheckingSession}
               disabled={isRegistering}
-            >회원가입
-              {/* {isCheckingSession ? '이메일 검증 여부 확인' : isRegistering ? '회원가입 중...' : '회원가입'} */}
+            >
+              회원가입
             </Button>
           </form>
         </div>

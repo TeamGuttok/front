@@ -1,5 +1,4 @@
 import CalendarClientPage from '#app/calendar/CalendarClientPage'
-
 import { SubscriptionContents } from '#types/subscription'
 
 function getInitialData() {
@@ -14,8 +13,8 @@ function getInitialData() {
         paymentStatus: 'PENDING',
         paymentCycle: 'MONTHLY',
         paymentDay: 27,
-        registerDate: '2025-01-27T00:00:00',
-        updateDate: '2025-01-27T00:00:00',
+        // registerDate: '2025-01-27T00:00:00',
+        // updateDate: '2025-01-27T00:00:00',
       },
       {
         id: 2,
@@ -26,8 +25,8 @@ function getInitialData() {
         paymentStatus: 'COMPLETED',
         paymentCycle: 'MONTHLY',
         paymentDay: 15,
-        registerDate: '2025-01-15T00:00:00',
-        updateDate: '2025-01-15T00:00:00',
+        // registerDate: '2025-01-15T00:00:00',
+        // updateDate: '2025-01-15T00:00:00',
       },
       {
         id: 3,
@@ -38,8 +37,8 @@ function getInitialData() {
         paymentStatus: 'COMPLETED',
         paymentCycle: 'MONTHLY',
         paymentDay: 15,
-        registerDate: '2025-01-15T00:00:00',
-        updateDate: '2025-01-15T00:00:00',
+        // registerDate: '2025-01-15T00:00:00',
+        // updateDate: '2025-01-15T00:00:00',
       },
     ] as SubscriptionContents[],
     hasNext: true,
@@ -47,7 +46,7 @@ function getInitialData() {
 }
 
 export default async function CalendarPage() {
-  const initialData = getInitialData()
-
-  return <CalendarClientPage initialData={initialData} />
+  // const initialData = getInitialData()
+  return <CalendarClientPage  />
+  //return <CalendarClientPage initialData={{ contents: [], hasNext: false }} />
 }

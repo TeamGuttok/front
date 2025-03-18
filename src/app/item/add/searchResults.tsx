@@ -1,11 +1,12 @@
 import { useSearchStore } from '#stores/subscriptions/useSearchStore'
+import { KNOWN_SERVICES } from '#constants/knownServices'
 import Link from 'next/link'
 import clsx from 'clsx'
 
 export default function SearchResults({
   handleCardClick,
 }: {
-  handleCardClick: (service: unknown[]) => void
+  handleCardClick: (service: (typeof KNOWN_SERVICES)[0]) => void
 }) {
   const { searchResults } = useSearchStore()
 
@@ -17,7 +18,7 @@ export default function SearchResults({
 
   return (
     <div className="grid mb-4 gap-4 grid-cols-2 sm:grid-cols-2 lg:grid-cols-4">
-      {searchResults.map((service) => (
+      {searchResults.map((service: ServiceStores) => (
         <div
           key={service.id}
           onClick={() => handleCardClick(service)}

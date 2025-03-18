@@ -6,9 +6,14 @@ import Link from 'next/link'
 import ItemList from '../../../app/item/page'
 import { getHours } from 'date-fns'
 import { CalendarDays, Plus } from 'lucide-react'
+import { useAuthStore } from '#stores/auth/useAuthStore'
+import { useState, useEffect } from 'react'
 
 export default function Page() {
   const currentHour = getHours(new Date())
+
+  const { user, setUser } = useAuthStore()
+  const [nickName, setNickName] = useState(user?.nickName || '')
 
   const getGreeting = () => {
     if (currentHour >= 5 && currentHour < 12) return <p>좋은 아침입니다,</p>
@@ -24,7 +29,7 @@ export default function Page() {
             {getGreeting()}
             <span>&nbsp;</span>
             <p>
-              <span>사용자</span> 님.
+              <span>{user?.nickName}</span> 님.
             </p>
           </h1>
           <h2>

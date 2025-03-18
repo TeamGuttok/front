@@ -33,7 +33,6 @@ export default function Home() {
       unsubscribe()
     }
   }, [setUser])
-    
 
   if (isLoggedIn === null) {
     return (
@@ -45,7 +44,7 @@ export default function Home() {
       </main>
     )
   }
-  
+
   return (
     <main>
       {isLoggedIn ? (
