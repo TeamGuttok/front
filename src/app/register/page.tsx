@@ -44,7 +44,6 @@ export default function Register() {
   const [error, setError] = useState<Record<string, string[]>>({})
 
   const { mutate: registerUser, isPending: isRegistering } = useMutation({
-    //
     mutationFn: async () => {
       const response = await fetch(`${BASE_URL}/api/users/signup`, {
         method: 'POST',
@@ -72,6 +71,7 @@ export default function Register() {
     },
     onSuccess: (data) => {
       console.log('회원가입 성공:', data)
+
       setUser({
         email: data.data.email,
         nickName: data.data.nickName,

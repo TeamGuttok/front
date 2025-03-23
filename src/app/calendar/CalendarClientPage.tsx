@@ -11,13 +11,13 @@ import {subscriptions} from '#app/item/page'
 
 const dummy: SubscriptionContents[] = subscriptions
 
-interface CalendarClientPageProps {
-  initialData: {
-    contents: SubscriptionContents[]
-    lastId?: string
-    hasNext: boolean
-  }
-}
+// interface CalendarClientPageProps {
+//   initialData: {
+//     contents: SubscriptionContents[]
+//     lastId?: string
+//     hasNext: boolean
+//   }
+// }
 
 // export default function CalendarClientPage({ initialData }: CalendarClientPageProps) {
 //   useSyncDateWithSearchParams()

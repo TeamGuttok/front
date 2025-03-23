@@ -2,10 +2,12 @@ import Link from 'next/link'
 import { PATH } from '#app/routes'
 import { Card } from '#components/_common/Card'
 import { cn } from '#components/lib/utils'
-import { useQuery } from '@tanstack/react-query'
-import {BASE_URL} from '#constants/url'
-import { SubscriptionContents } from '#types/subscription'
+import type { SubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
+// import { useQuery } from '@tanstack/react-query'
+// import {BASE_URL} from '#constants/url'
+// import { SubscriptionContents } from '#types/subscription'
 
+// dummy
 export const subscriptions = [
   {
     id: 1,
@@ -34,29 +36,29 @@ export const subscriptions = [
 ]
 
 export default function ItemList() {
-  const { data, isLoading, error } = useQuery<{ contents: SubscriptionContents[]; size: number; hasNext: boolean }>({
-    queryKey: ['subscriptions'],
-    queryFn: async () => {
-      const response = await fetch(`${BASE_URL}/api/subscriptions/user`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      })
+  // const { data, isLoading, error } = useQuery<{ contents: SubscriptionContents[]; size: number; hasNext: boolean }>({
+  //   queryKey: ['subscriptions'],
+  //   queryFn: async () => {
+  //     const response = await fetch(`${BASE_URL}/api/subscriptions/user`, {
+  //       method: 'GET',
+  //       headers: { 'Content-Type': 'application/json' },
+  //     })
 
-      if (!response.ok) {
-        throw new Error(`구독 목록을 가져오는데 실패했습니다: ${response.statusText}`)
-      }
+  //     if (!response.ok) {
+  //       throw new Error(`구독 목록을 가져오는데 실패했습니다: ${response.statusText}`)
+  //     }
 
-      return response.json()
-    },
-  })
+  //     return response.json()
+  //   },
+  // })
 
-  if (isLoading) {
-    return <p className="text-center text-gray-500">📦 구독 정보를 불러오는 중...</p>
-  }
+  // if (isLoading) {
+  //   return <p className="text-center text-gray-500">📦 구독 정보를 불러오는 중...</p>
+  // }
 
-  if (error) {
-    return <p className="text-center text-red-500">⚠️ 구독 정보를 가져오는 중 오류 발생</p>
-  }
+  // if (error) {
+  //   return <p className="text-center text-red-500">⚠️ 구독 정보를 가져오는 중 오류 발생</p>
+  // }
 
 
   return (

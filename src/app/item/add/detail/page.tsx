@@ -16,11 +16,12 @@ import {
 import CardTitle from '#components/_common/CardTitle'
 import { useServiceStore } from '#stores/subscriptions/useServiceStore'
 import { useSubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
-import { BASE_URL } from '#constants/url'
+import useCreateSubscription from '#apis/subscriptions/CreateSubscriptionAPI'
 
 export default function Page() {
   const router = useRouter()
   const { selectedService } = useServiceStore()
+  const createSubscription = useCreateSubscription()
 
   const {
     subscriptionData,
@@ -58,40 +59,25 @@ export default function Page() {
 
     if (!isFormValid()) return
 
-    const payload = {
-      title: title,
-      paymentAmount: paymentAmount,
-      paymentMethod: paymentMethod,
-      paymentCycle: paymentCycle,
-      paymentDay: paymentDay,
-      memo: memo,
-    }
+    // const payload = {
+    //   title: title,
+    //   paymentAmount: paymentAmount,
+    //   paymentMethod: paymentMethod,
+    //   paymentCycle: paymentCycle,
+    //   paymentDay: paymentDay,
+    //   memo: memo,
+    // }
 
-    try {
-      const response = await fetch(`${BASE_URL}/api/subscriptions`, {
-        method: 'POST',
-        headers: { Accept: '*/*', 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      })
-
-      if (!response.ok) {
-        console.error('구독 항목 생성 실패')
-        return
-      }
-
-      const responseData = await response.json()
-
-      if (responseData.status !== '100 CONTINUE') {
-        console.error('구독 항목 생성 실패')
-        return
-      }
-
-      console.log('구독 항목 생성 성공:', responseData)
-      resetSubscriptionData()
-      router.push('/')
-    } catch (error) {
-      console.error('저장 중 오류 발생:', error)
-    }
+    createSubscription.mutate(subscriptionData, {
+      onSuccess: (data) => {
+        console.log('구독 항목 생성 성공:', data)
+        resetSubscriptionData()
+        router.push('/')
+      },
+      onError: (error) => {
+        console.error('구독 항목 생성 실패:', error)
+      },
+    })
   }
 
   return (

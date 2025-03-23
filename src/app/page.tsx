@@ -7,9 +7,7 @@ import AuthenticatedPage from '../components/Layout/Main/AuthenticatedPage'
 import { Skeleton } from '../components/_common/Skeleton'
 
 export default function Home() {
-  // 테스트용 세션
-  // document.cookie = "sessionToken=mock-token; path=/; domain=localhost; expires=Fri, 31 Dec 2025 23:59:59 GMT";
-
+  
   const { isLoggedIn, setUser } = useAuthStore()
 
   useEffect(() => {

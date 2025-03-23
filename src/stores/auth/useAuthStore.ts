@@ -24,8 +24,7 @@ interface AuthState {
 export const useAuthStore = create<AuthState>()(
   persist(
     subscribeWithSelector((set) => ({
-      // isLoggedIn: false
-      isLoggedIn: true, 
+      isLoggedIn: false, 
       isEmailVerified: false,
       verifyEmail: () => set({ isEmailVerified: true }),
       user: { email: '', nickName: '', alarm: true },
@@ -42,6 +41,16 @@ export const useAuthStore = create<AuthState>()(
             nickName: user.nickName ?? state.user?.nickName ?? '',
             alarm: user.alarm ?? state.user?.alarm ?? true,
           },
+          isLoggedIn: true,
+        })),
+      login: (user: Partial<User>) =>
+        set (()=> ({
+          user: {
+            email: user.email ?? '',
+            nickName: user.nickName ?? '',
+            alarm: user.alarm ?? true,
+          },
+          isLoggedIn: true,
         })),
     })),
     {
