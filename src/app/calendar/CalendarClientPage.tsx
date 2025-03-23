@@ -7,7 +7,7 @@ import CalendarSideBar from '#components/Layout/Calendar/CalendarSideBar'
 import type { SubscriptionContents } from '#types/subscription'
 import { BASE_URL } from '#constants/url'
 import { useQuery } from '@tanstack/react-query'
-import {subscriptions} from '#app/item/page'
+import { subscriptions } from '#app/item/page'
 
 const dummy: SubscriptionContents[] = subscriptions
 
@@ -57,15 +57,14 @@ export default function CalendarClientPage() {
   // 📌 API 대신 더미 데이터 사용
   const allEvents = dummy
 
+  // export default function CalendarClientPage({
+  //   initialData,
+  // }: CalendarClientPageProps) {
+  //   useSyncDateWithSearchParams()
 
-// export default function CalendarClientPage({
-//   initialData,
-// }: CalendarClientPageProps) {
-//   useSyncDateWithSearchParams()
-
-//   // temporary pseudo code for react query
-//   const allEvents = initialData.contents
-//   const fetchNextData = () => {}
+  //   // temporary pseudo code for react query
+  //   const allEvents = initialData.contents
+  //   const fetchNextData = () => {}
 
   return (
     <div className="flex flex-col lg:w-[calc(100%-224px)] h-full">

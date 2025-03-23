@@ -75,13 +75,13 @@ export const useSubscriptionStore = create((set) => ({
       label,
     }),
   ),
-  
+
   updatePaymentMethod: (paymentMethod: PaymentMethod) =>
     set((state) => ({
       subscriptionData: { ...state.subscriptionData, paymentMethod },
     })),
 
-  // 결제 상태 
+  // 결제 상태
   paymentStatusOption: (paymentStatus: paymentStatus) =>
     set((state) => ({
       subscriptionData: { ...state.subscriptionData, paymentStatus },

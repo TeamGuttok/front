@@ -10,7 +10,7 @@ import { ErrorMessage } from '#components/_common/ErrorMessage'
 import RegisterInputField from './RegisterInputField'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import { z } from 'zod'
-import {BASE_URL} from '#constants/url'
+import { BASE_URL } from '#constants/url'
 
 const RegisterSuccess = dynamic(() => import('./RegisterSuccess'))
 

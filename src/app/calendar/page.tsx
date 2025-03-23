@@ -47,6 +47,6 @@ function getInitialData() {
 
 export default async function CalendarPage() {
   // const initialData = getInitialData()
-  return <CalendarClientPage  />
+  return <CalendarClientPage />
   //return <CalendarClientPage initialData={{ contents: [], hasNext: false }} />
 }

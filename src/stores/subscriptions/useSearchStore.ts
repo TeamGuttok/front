@@ -1,6 +1,5 @@
 import { create } from 'zustand'
 
-// TODO  [ ] useServiceStore에서 import하기
 export type ServiceStores = {
   id: string
   name: string

@@ -56,7 +56,6 @@ export default function OTPForm({
   className,
   resetTrigger,
 }: OTPFormProps) {
-
   const inputRef = useRef<HTMLInputElement>(null)
   const [otp, setOtp] = useState('')
   const [timeLeft, setTimeLeft] = useState(TIME_LIMIT_SECONDS)
@@ -73,19 +72,16 @@ export default function OTPForm({
   } = useMutation({
     mutationFn: async () => {
       console.log('인증번호 검증:', email, otp)
-      const response = await fetch(
-        `${BASE_URL}/api/users/email-verification`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: email,
-            certificationNumber: otp,
-          }),
+      const response = await fetch(`${BASE_URL}/api/users/email-verification`, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json',
         },
-      )
+        body: JSON.stringify({
+          email: email,
+          certificationNumber: otp,
+        }),
+      })
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)

@@ -7,7 +7,6 @@ import AuthenticatedPage from '../components/Layout/Main/AuthenticatedPage'
 import { Skeleton } from '../components/_common/Skeleton'
 
 export default function Home() {
-  
   const { isLoggedIn, setUser } = useAuthStore()
 
   useEffect(() => {

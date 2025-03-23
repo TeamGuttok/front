@@ -9,9 +9,7 @@ import { Plus, Search } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import clsx from 'clsx'
 import { useServiceStore } from '#stores/subscriptions/useServiceStore'
-import {
-  useSearchStore,
-} from '#stores/subscriptions/useSearchStore'
+import { useSearchStore } from '#stores/subscriptions/useSearchStore'
 import { useSearch } from '#apis/subscriptions/SearchService'
 import SearchResults from './searchResults'
 
@@ -48,7 +46,10 @@ export default function Page() {
           구독 서비스 선택
         </h1>
         <div className="w-full max-w-lg">
-          <form className="mt-5 flex flex-row" onSubmit={(e) => handleSearch(e, searchQuery)}>
+          <form
+            className="mt-5 flex flex-row"
+            onSubmit={(e) => handleSearch(e, searchQuery)}
+          >
             <Input
               name="search"
               type="search"
@@ -57,10 +58,7 @@ export default function Page() {
               placeholder="사용 중인 구독 서비스 검색"
               className="py-1.5 w-full"
             />
-            <Button
-              type="submit"
-              className="ml-2"
-            >
+            <Button type="submit" className="ml-2">
               <Search />
             </Button>
           </form>

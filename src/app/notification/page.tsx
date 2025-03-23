@@ -32,11 +32,13 @@ export default function NotificationList() {
   const queryClient = useQueryClient()
 
   // 알림 리스트 조회 API . 데이터 가져오는 작업에 useQuery가 적합
-  const { data: notiData, isLoading: notiLoading, error: notiError } = useQuery<
-    NotificationResponse
-  >({
+  const {
+    data: notiData,
+    isLoading: notiLoading,
+    error: notiError,
+  } = useQuery<NotificationResponse>({
     queryKey: ['notifications'],
-    // 더미 
+    // 더미
     queryFn: async () => {
       return new Promise((resolve) => {
         setTimeout(() => {
@@ -62,9 +64,9 @@ export default function NotificationList() {
             size: 2,
             hasNext: false,
             status: '100 CONTINUE',
-          });
-        }, 500); // 0.5초 후에 데이터 반환
-      });
+          })
+        }, 500) // 0.5초 후에 데이터 반환
+      })
     },
     // queryFn: async () => {
     //   const response = await fetch(`${BASE_URL}/api/notifications`, {
@@ -122,10 +124,7 @@ export default function NotificationList() {
   // })
 
   // 알림 읽음 처리 API
-  const {
-    mutate: readNoti,
-    error: readNotiError
-  } = useMutation({
+  const { mutate: readNoti, error: readNotiError } = useMutation({
     mutationFn: async (id: number) => {
       const response = await fetch(`${BASE_URL}/api/notifications/${id}`, {
         method: 'PUT',
@@ -155,9 +154,7 @@ export default function NotificationList() {
   })
 
   // 알림 삭제 API
-  const {
-    mutate: deleteNoti
-  } = useMutation({
+  const { mutate: deleteNoti } = useMutation({
     mutationFn: async (id: number) => {
       const response = await fetch(`${BASE_URL}/api/notifications/${id}`, {
         method: 'DELETE',
@@ -186,13 +183,24 @@ export default function NotificationList() {
     },
   })
 
-  if (notiLoading) return <p className="text-center text-gray-500 mt-10">📭 알림을 불러오는 중...</p>
-  if (notiError) return <p className="text-center text-red-500 mt-10">⚠️ 알림을 불러오는 중 오류 발생</p>
+  if (notiLoading)
+    return (
+      <p className="text-center text-gray-500 mt-10">
+        📭 알림을 불러오는 중...
+      </p>
+    )
+  if (notiError)
+    return (
+      <p className="text-center text-red-500 mt-10">
+        ⚠️ 알림을 불러오는 중 오류 발생
+      </p>
+    )
   if (!notiData || notiData.contents.length === 0) {
     return <p className="text-center text-gray-500 mt-10">📭 알림이 없습니다</p>
   }
 
-  const unreadCount = notiData?.contents?.filter((n) => n.status === 'UNREAD').length || 0
+  const unreadCount =
+    notiData?.contents?.filter((n) => n.status === 'UNREAD').length || 0
 
   return (
     <CardTitle className="mx-auto p-5 flex flex-col min-h-[calc(100vh-4.5rem)] pb-[3rem]">
@@ -201,7 +209,7 @@ export default function NotificationList() {
       </div>
       <div className="w-full h-[1px] bg-border mt-5">
         <div className="relative">
-            {/* {unreadCount > 0 && (
+          {/* {unreadCount > 0 && (
               <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
                 {unreadCount}
               </span>
@@ -223,11 +231,12 @@ export default function NotificationList() {
               <Card
                 className={cn(
                   'flex justify-between items-center p-4 rounded-lg shadow-md dark:bg-gray-800 bg-white hover:bg-slate-200 hover:dark:bg-gray-700',
-                  notification.status === 'UNREAD' ? 'bg-yellow-100' : 'bg-white hover:bg-slate-200'
+                  notification.status === 'UNREAD'
+                    ? 'bg-yellow-100'
+                    : 'bg-white hover:bg-slate-200',
                 )}
               >
                 <div className="flex items-center gap-3">
-                  
                   <div>
                     <h3 className="font-medium">{notification.message}</h3>
                     <p className="text-xs dark:text-gray-500">
@@ -235,22 +244,22 @@ export default function NotificationList() {
                     </p>
                   </div>
                   <div className="text-right">
-                  {notification.status !== 'READ' && (
-                    <span className="text-xs font-semibold text-red-500">
-                      읽지 않음
-                    </span>
-                  )}
-                </div>
+                    {notification.status !== 'READ' && (
+                      <span className="text-xs font-semibold text-red-500">
+                        읽지 않음
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <button
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      deleteNoti(notification.id)
-                    }}
-                    className="text-gray-600 hover:text-red-500"
-                  >
-                    <Trash2 size={20} />
-                  </button>
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    deleteNoti(notification.id)
+                  }}
+                  className="text-gray-600 hover:text-red-500"
+                >
+                  <Trash2 size={20} />
+                </button>
               </Card>
             </div>
           ))}

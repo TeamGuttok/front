@@ -44,16 +44,13 @@ export default function RegisterInputField() {
   } = useMutation({
     mutationFn: async (email: string) => {
       console.log('인증번호 이메일로 발송:', email)
-      const response = await fetch(
-        `${BASE_URL}/api/mail/certification`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email }),
+      const response = await fetch(`${BASE_URL}/api/mail/certification`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      )
+        body: JSON.stringify({ email }),
+      })
 
       if (!response.ok) {
         throw new Error(`HTTP 에러: ${response.status}`)
