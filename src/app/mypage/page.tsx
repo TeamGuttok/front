@@ -11,7 +11,7 @@ import { useAuthStore } from '#stores/auth/useAuthStore'
 import useTheme from '#contexts/ThemeProvider/hook'
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
-import {BASE_URL} from '#constants/url'
+import { BASE_URL } from '#constants/url'
 
 export default function MyPage() {
   const { fetchProfile } = useMyPageStore()
@@ -27,7 +27,7 @@ export default function MyPage() {
     mutationFn: async () => {
       const response = await fetch(`${BASE_URL}/api/users/alarm`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { Accept: '*/*' },
         credentials: 'include',
       })
       if (!response.ok) {
@@ -48,6 +48,7 @@ export default function MyPage() {
     mutationFn: async () => {
       const response = await fetch(`${BASE_URL}/api/users/signout`, {
         method: 'POST',
+        credentials: 'include',
         headers: { Accept: '*/*' },
       })
 
@@ -75,6 +76,7 @@ export default function MyPage() {
     mutationFn: async () => {
       const response = await fetch(`${BASE_URL}/api/users`, {
         method: 'DELETE',
+        credentials: 'include',
         headers: { Accept: '*/*' },
       })
 

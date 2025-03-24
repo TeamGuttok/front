@@ -16,11 +16,12 @@ import {
 import CardTitle from '#components/_common/CardTitle'
 import { useServiceStore } from '#stores/subscriptions/useServiceStore'
 import { useSubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
-import { BASE_URL } from '#constants/url'
+import useCreateSubscription from '#apis/subscriptions/CreateSubscriptionAPI'
 
 export default function Page() {
   const router = useRouter()
   const { selectedService } = useServiceStore()
+  const createSubscription = useCreateSubscription()
 
   const {
     subscriptionData,
@@ -33,10 +34,16 @@ export default function Page() {
     paymentMethodOptions,
     paymentCycleOptions,
     paymentDayOptions,
-  } = useSubscriptionStore((state: any) => state);
-  
-  const { title, paymentAmount, paymentCycle, paymentDay, paymentMethod, memo } =
-    subscriptionData;
+  } = useSubscriptionStore((state: any) => state)
+
+  const {
+    title,
+    paymentAmount,
+    paymentCycle,
+    paymentDay,
+    paymentMethod,
+    memo,
+  } = subscriptionData
 
   const buttonBaseClass = 'w-full py-2 mt-4 text-base text-white shadow'
   // const buttonDynamicClass = isDisabled
@@ -58,40 +65,25 @@ export default function Page() {
 
     if (!isFormValid()) return
 
-    const payload = {
-      title: title,
-      paymentAmount: paymentAmount,
-      paymentMethod: paymentMethod,
-      paymentCycle: paymentCycle,
-      paymentDay: paymentDay,
-      memo: memo,
-    }
+    // const payload = {
+    //   title: title,
+    //   paymentAmount: paymentAmount,
+    //   paymentMethod: paymentMethod,
+    //   paymentCycle: paymentCycle,
+    //   paymentDay: paymentDay,
+    //   memo: memo,
+    // }
 
-    try {
-      const response = await fetch(`${BASE_URL}/api/subscriptions`, {
-        method: 'POST',
-        headers: { Accept: '*/*', 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      })
-
-      if (!response.ok) {
-        console.error('구독 항목 생성 실패')
-        return
-      }
-
-      const responseData = await response.json()
-
-      if (responseData.status !== '100 CONTINUE') {
-        console.error('구독 항목 생성 실패')
-        return
-      }
-
-      console.log('구독 항목 생성 성공:', responseData)
-      resetSubscriptionData()
-      router.push('/')
-    } catch (error) {
-      console.error('저장 중 오류 발생:', error)
-    }
+    createSubscription.mutate(subscriptionData, {
+      onSuccess: (data) => {
+        console.log('구독 항목 생성 성공:', data)
+        resetSubscriptionData()
+        router.push('/')
+      },
+      onError: (error) => {
+        console.error('구독 항목 생성 실패:', error)
+      },
+    })
   }
 
   return (
@@ -188,16 +180,20 @@ export default function Page() {
                     aria-controls="paymentCycle-options"
                     className="flex border rounded-md px-4 sm:w-auto"
                   >
-                    {paymentCycleOptions.find((option) => option.value === paymentCycle)?.label}
+                    {
+                      paymentCycleOptions.find(
+                        (option) => option.value === paymentCycle,
+                      )?.label
+                    }
                     <SelectContent
                       id="paymentCycle-options"
                       className="border px-2 py-1 mr-10 rounded-md dark:text-black"
                     >
                       {paymentCycleOptions.map(({ value, label }) => (
-                    <SelectItem key={value} value={value}>
-                      {label}
-                    </SelectItem>
-                    ))}
+                        <SelectItem key={value} value={value}>
+                          {label}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </SelectTrigger>
                 </Select>
@@ -213,17 +209,21 @@ export default function Page() {
                     aria-controls="paymentDay-options"
                     className="flex border rounded-md px-4"
                   >
-                    {paymentDayOptions.find((option) => option.value === paymentDay)?.label}
+                    {
+                      paymentDayOptions.find(
+                        (option) => option.value === paymentDay,
+                      )?.label
+                    }
                     {/* {paymentDayOptions.includes(paymentDay) || paymentDay} */}
                     <SelectContent
                       id="paymentDay"
                       className="border px-2 py-1 mr-10 rounded-md dark:text-black block"
                     >
                       {paymentDayOptions.map(({ value, label }) => (
-                      <SelectItem key={value} value={String(value)}>
-                        {label}
-                      </SelectItem>
-                    ))}
+                        <SelectItem key={value} value={String(value)}>
+                          {label}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </SelectTrigger>
                 </Select>
@@ -255,17 +255,21 @@ export default function Page() {
                   className="w-[12.5rem] sm:max-w-[12.5rem] sm:min-w-[12.5rem] 
                 pl-2 flex tracking-wide text-lg font-medium text-nowrap"
                 >
-                  {paymentMethodOptions.find((option) => option.value === paymentMethod)?.label}
+                  {
+                    paymentMethodOptions.find(
+                      (option) => option.value === paymentMethod,
+                    )?.label
+                  }
                   <SelectContent
                     id="paymentMethod"
                     className="border rounded-md px-2 py-1 dark:text-black block"
                   >
                     {paymentMethodOptions.map(({ value, label }) => (
-                    <SelectItem key={value} value={value}>
-                      {label}
-                    </SelectItem>
-                  ))}
-                  </SelectContent> 
+                      <SelectItem key={value} value={value}>
+                        {label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
                 </SelectTrigger>
               </Select>
             </SelectGroup>

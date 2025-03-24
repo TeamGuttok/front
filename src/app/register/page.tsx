@@ -10,7 +10,7 @@ import { ErrorMessage } from '#components/_common/ErrorMessage'
 import RegisterInputField from './RegisterInputField'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import { z } from 'zod'
-import {BASE_URL} from '#constants/url'
+import { BASE_URL } from '#constants/url'
 
 const RegisterSuccess = dynamic(() => import('./RegisterSuccess'))
 
@@ -44,7 +44,6 @@ export default function Register() {
   const [error, setError] = useState<Record<string, string[]>>({})
 
   const { mutate: registerUser, isPending: isRegistering } = useMutation({
-    //
     mutationFn: async () => {
       const response = await fetch(`${BASE_URL}/api/users/signup`, {
         method: 'POST',
@@ -72,6 +71,7 @@ export default function Register() {
     },
     onSuccess: (data) => {
       console.log('회원가입 성공:', data)
+
       setUser({
         email: data.data.email,
         nickName: data.data.nickName,
@@ -91,10 +91,10 @@ export default function Register() {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    console.log('useAuthStore:', useAuthStore.getState())
-    console.log('비밀번호:', password)
-    console.log('비밀번호 확인:', passwordConfirm)
-    console.log('닉네임', nickName)
+    // console.log('useAuthStore:', useAuthStore.getState())
+    // console.log('비밀번호:', password)
+    // console.log('비밀번호 확인:', passwordConfirm)
+    // console.log('닉네임', nickName)
 
     const input = {
       email: user?.email ?? '',

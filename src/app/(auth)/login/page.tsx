@@ -1,12 +1,10 @@
 'use client'
 
 import Link from 'next/link'
-import { useActionState } from 'react'
 import { Label } from '#components/_common/Label'
 import { Input } from '#components/_common/Input'
 import { Button } from '#components/_common/Button'
 import { ErrorMessage } from '#components/_common/ErrorMessage'
-// import { loginAction } from './loginAction'
 import { PATH } from '#app/routes'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import { useRouter } from 'next/navigation'
@@ -28,16 +26,10 @@ const loginSchema = z.object({
 })
 
 export default function Login() {
-  //const router = useRouter()
-  //const [state, handleSubmit, isPending] = useActionState(loginAction, null)
-  // const formData = state?.formData
-  // const errors = state?.errors
-
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const { user, setUser, isLoggedIn } = useAuthStore()
-  //const [password] = useState<string>('')
+  const { setUser, isLoggedIn } = useAuthStore()
   const [error, setError] = useState<Record<string, string[]>>({
     email: [],
     password: [],
@@ -61,7 +53,7 @@ export default function Login() {
       }
 
       const data = await response.json()
-      if (data.status !== '100 CONTINUE') {
+      if (data.status !== 'OK') {
         throw new Error('로그인 실패. 다시 시도해주세요.')
       }
 
@@ -82,7 +74,6 @@ export default function Login() {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    //const formData = new FormData(event.currentTarget)
     const input = { email, password }
     const parseResult = loginSchema.safeParse(input)
     if (!parseResult.success) {
@@ -92,10 +83,12 @@ export default function Login() {
     loginUser(input)
   }
 
-  // if (isLoggedIn) {
-  //   const router = useRouter()
-  //   router.push('/')
-  // }
+  // 로그인한 뒤에 login 페이지 접근 시, 메인 페이지로 이동
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.replace('/')
+    }
+  }, [isLoggedIn, router])
 
   return (
     <div className="flex flex-col justify-center items-center">
@@ -117,7 +110,6 @@ export default function Login() {
               className="w-0 grow"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              //defaultValue={new FormData().get('email')?.toString() ?? ''}
             />
           </div>
           <ErrorMessage errors={error?.email} className="ml-20" />
@@ -135,7 +127,6 @@ export default function Login() {
               className="w-0 grow"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              //defaultValue={new FormData().get('password')?.toString() ?? ''}
             />
           </div>
           <ErrorMessage errors={error?.password} className="ml-20" />

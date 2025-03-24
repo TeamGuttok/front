@@ -7,6 +7,7 @@ import {
   PaymentMethod,
   PaymentDay,
   PaymentCycle,
+  paymentStatus,
 } from '#types/subscription'
 import { KNOWN_SERVICES } from '#constants/knownServices'
 
@@ -15,6 +16,7 @@ export type SubscriptionStore = {
   subscription: string
   paymentAmount: number
   paymentMethod?: string
+  paymentStatus?: string
   paymentCycle: string
   paymentDay: number
   memo?: string
@@ -26,6 +28,7 @@ export const useSubscriptionStore = create((set) => ({
     subscription: '',
     paymentAmount: 0,
     paymentMethod: '',
+    paymentStatus: '',
     paymentCycle: '',
     paymentDay: '',
     memo: '',
@@ -52,6 +55,7 @@ export const useSubscriptionStore = create((set) => ({
         subscription: '',
         paymentAmount: 0,
         paymentMethod: '',
+        paymentStatus: '',
         paymentCycle: '',
         paymentDay: '',
         memo: '',
@@ -76,6 +80,19 @@ export const useSubscriptionStore = create((set) => ({
     set((state) => ({
       subscriptionData: { ...state.subscriptionData, paymentMethod },
     })),
+
+  // 결제 상태
+  paymentStatusOption: (paymentStatus: paymentStatus) =>
+    set((state) => ({
+      subscriptionData: { ...state.subscriptionData, paymentStatus },
+    })),
+
+  paymentStatusOptions: Object.entries(paymentStatusLabels).map(
+    ([key, label]) => ({
+      value: key as paymentStatus,
+      label,
+    }),
+  ),
 
   // 결제 주기
   paymentCycleOptions: Object.entries(paymentCycleLabels).map(

@@ -39,6 +39,7 @@ export const useMyPageStore = create<MyPageState>((set, get) => ({
     try {
       const response = await fetch(`${BASE_URL}/api/users/nickname`, {
         method: 'PATCH',
+        credentials: 'include',
         headers: { Accept: '*/*', 'Content-Type': 'application/json' },
         body: JSON.stringify({ nickName: newNickName }),
       })
@@ -62,15 +63,15 @@ export const useMyPageStore = create<MyPageState>((set, get) => ({
 
   fetchProfile: async () => {
     try {
-      const response = await fetch(`${BASE_URL}/api/users/profile`, {
+      const response = await fetch(`${BASE_URL}/api/users`, {
         method: 'GET',
+        credentials: 'include',
         headers: { Accept: '*/*', 'Content-Type': 'application/json' },
       })
       if (!response.ok) {
         throw new Error('프로필 정보를 불러오지 못했습니다.')
       }
       const data = await response.json()
-      // API 응답이 { message, data, status } 형태라면:
       useAuthStore.getState().setUser({
         email: data.data.email,
         nickName: data.data.nickName,
@@ -90,6 +91,7 @@ const modifyPassword = async (password: string) => {
   mutationFn: async () => {
     const response = await fetch(`${BASE_URL}/api/users/password`, {
       method: 'PATCH',
+      credentials: 'include',
       headers: { Accept: '*/*', 'Content-Type': 'application/json' },
       body: JSON.stringify({ password }),
     })

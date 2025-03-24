@@ -35,18 +35,21 @@ export type PaymentMethod =
   | 'KAKAO_PAY'
   | 'OTHER'
 
-  export const paymentMethodLabels: Record<PaymentMethod, string> = {
-    CARD: '카드',
-    BANK_TRANSFER: '계좌이체',
-    NAVER_PAY: '네이버페이',
-    KAKAO_PAY: '카카오페이',
-    MOBILE_PAYMENT: '휴대폰 결제',
-    OTHER: '기타',
-  }
+export const paymentMethodLabels: Record<PaymentMethod, string> = {
+  CARD: '카드',
+  BANK_TRANSFER: '계좌이체',
+  NAVER_PAY: '네이버페이',
+  KAKAO_PAY: '카카오페이',
+  MOBILE_PAYMENT: '휴대폰 결제',
+  OTHER: '기타',
+}
 
-export const paymentDayLabels: number[] = Array.from({ length: 31 }, (_, i) => i + 1)
+export const paymentDayLabels: number[] = Array.from(
+  { length: 31 },
+  (_, i) => i + 1,
+)
 
-export type PaymentDay = typeof paymentDayLabels[number]
+export type PaymentDay = (typeof paymentDayLabels)[number]
 
 export type PaymentCycle = 'YEARLY' | 'MONTHLY' | 'WEEKLY'
 

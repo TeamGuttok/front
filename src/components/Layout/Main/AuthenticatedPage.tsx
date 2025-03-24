@@ -3,17 +3,16 @@
 import { Button } from '#components/_common/Button'
 import { PATH } from '#app/routes'
 import Link from 'next/link'
-import ItemList from '../../../app/item/page'
+import ItemList from '#components/Layout/ItemList'
 import { getHours } from 'date-fns'
-import { CalendarDays, Plus } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { useAuthStore } from '#stores/auth/useAuthStore'
-import { useState, useEffect } from 'react'
+import { useItemStore } from '#stores/subscriptions/useItemStore'
 
 export default function Page() {
   const currentHour = getHours(new Date())
-
-  const { user, setUser } = useAuthStore()
-  const [nickName, setNickName] = useState(user?.nickName || '')
+  const { user } = useAuthStore()
+  const total = useItemStore((state) => state.getTotalPaymentAmount)
 
   const getGreeting = () => {
     if (currentHour >= 5 && currentHour < 12) return <p>좋은 아침입니다,</p>
@@ -29,14 +28,14 @@ export default function Page() {
             {getGreeting()}
             <span>&nbsp;</span>
             <p>
-              <span>{user?.nickName}</span> 님.
+              <span>{user.nickName}</span> 님.
             </p>
           </h1>
           <h2>
-            이번 달 지출은 <span className="font-bold">₩24,400</span> 입니다.
+            이번 달 지출은 <span className="font-bold">₩{useItemStore.getState().getTotalPaymentAmount().toLocaleString()}</span> 입니다.
           </h2>
         </div>
-        <Link
+        {/* <Link
           href={PATH.calendarView}
           aria-label="캘린더 페이지로 이동"
           className="sm:hidden flex items-center"
@@ -44,7 +43,7 @@ export default function Page() {
           <Button className="w-11 h-11">
             <CalendarDays size={35} />
           </Button>
-        </Link>
+        </Link> */}
       </div>
 
       <div className="flex-1 overflow-auto">

@@ -11,7 +11,7 @@
 
 // class Fetcher {
 //     private baseUrl: string
-    
+
 //     constructor(baseUrl: string = '') {
 //     this.baseUrl = BASE_URL + baseUrl
 // }
@@ -22,7 +22,6 @@
 
 //     const controller = new AbortController()
 //     const timeoutId = setTimeout(() => controller.abort(), 10000) // 10초 타임아웃
-
 
 //     try {
 //       const response = await fetch(`${this.baseUrl}${url}`, {
