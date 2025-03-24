@@ -1,9 +1,11 @@
 import { create } from 'zustand'
 import { SubscriptionStore } from './useSubscriptionStore'
 import { persist } from 'zustand/middleware'
+import { isSameDay, getDate, getMonth, getYear } from 'date-fns'
 
 export type SubscriptionItem = SubscriptionStore & {
   useId: string
+  createdAt?: string
 }
 
 export type ItemState = {
@@ -19,7 +21,10 @@ export const useItemStore = create<ItemState>()(
   persist(
     (set, get) => ({
       items: [],
-      addItem: (item) => set((state) => ({ items: [...state.items, item] })),
+      addItem: (item) =>
+        set((state) => ({
+          items: [...state.items, { ...item, createdAt: new Date().toISOString() }],
+        })),
       getItemById: (id) => get().items.find((item) => item.useId === id),
       updateItem: (id, updatedItem) =>
         set((state) => ({
@@ -34,17 +39,28 @@ export const useItemStore = create<ItemState>()(
         getTotalPaymentAmount: () => {
           const { items } = get()
           const today = new Date()
-          const currentDay = today.getDate()
-  
+
           return items
             .filter((item) => {
-              if (item.paymentCycle === 'MONTHLY') return true
-              if (item.paymentCycle === 'YEARLY')
-                return item.paymentDay === currentDay
-              return false
-            })
-            .reduce((sum, item) => sum + item.paymentAmount, 0)
-        },
+              if (item.paymentStatus === 'COMPLETED') return false
+
+              if (item.paymentCycle === 'MONTHLY') {
+                return item.paymentDay === getDate(today)
+              }
+
+              if (item.paymentCycle === 'YEARLY') {
+                const createdAt = item.createdAt ? new Date(item.createdAt) : null
+                return (
+                  createdAt &&
+                  getDate(createdAt) === getDate(today) && 
+                  getMonth(createdAt) === getMonth(today)
+                )
+              }
+
+      return false
+    })
+    .reduce((sum, item) => sum + item.paymentAmount, 0)
+}
       }),
       {
         name: 'subscription-items',

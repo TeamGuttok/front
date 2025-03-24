@@ -4,7 +4,7 @@ import useTheme from '#contexts/ThemeProvider/hook'
 import Link from 'next/link'
 import {
   Menu,
-  Calendar,
+  // Calendar,
   Users,
   Bell,
   User,
@@ -52,10 +52,10 @@ export default function SideBar({ pathname }: { pathname: string }) {
               )}
             >
               <Menu aria-label="리스트 뷰 아이콘" size={20} />
-              <span>리스트 뷰</span>
+              <span>목록</span>
             </Link>
           </li>
-          <li>
+          {/* <li>
             <Link
               href={PATH.calendarView}
               className={cn(
@@ -66,7 +66,7 @@ export default function SideBar({ pathname }: { pathname: string }) {
               <Calendar aria-label="캘린더 뷰 아이콘" size={20} />
               <span>캘린더 뷰</span>
             </Link>
-          </li>
+          </li> */}
           {/* <li>
             <Link
               href={PATH.group}

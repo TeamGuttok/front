@@ -91,10 +91,10 @@ export default function Register() {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    console.log('useAuthStore:', useAuthStore.getState())
-    console.log('비밀번호:', password)
-    console.log('비밀번호 확인:', passwordConfirm)
-    console.log('닉네임', nickName)
+    // console.log('useAuthStore:', useAuthStore.getState())
+    // console.log('비밀번호:', password)
+    // console.log('비밀번호 확인:', passwordConfirm)
+    // console.log('닉네임', nickName)
 
     const input = {
       email: user?.email ?? '',

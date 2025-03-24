@@ -4,7 +4,7 @@ import { BASE_URL } from '#constants/url'
 
 export const fetchSearchResults = async (searchTerm: string) => {
   const response = await fetch(
-    `${BASE_URL}/api/subscriptions?name=${encodeURIComponent(searchTerm)}`,
+    `${BASE_URL}/api/subscriptions`,
     {
       method: 'GET',
       credentials: 'include',

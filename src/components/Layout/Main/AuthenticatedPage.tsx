@@ -5,7 +5,7 @@ import { PATH } from '#app/routes'
 import Link from 'next/link'
 import ItemList from '#components/Layout/ItemList'
 import { getHours } from 'date-fns'
-import { CalendarDays, Plus } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import { useItemStore } from '#stores/subscriptions/useItemStore'
 
@@ -32,10 +32,10 @@ export default function Page() {
             </p>
           </h1>
           <h2>
-            이번 달 지출은 <span className="font-bold">₩{total.toLocaleString()}</span> 입니다.
+            이번 달 지출은 <span className="font-bold">₩{useItemStore.getState().getTotalPaymentAmount().toLocaleString()}</span> 입니다.
           </h2>
         </div>
-        <Link
+        {/* <Link
           href={PATH.calendarView}
           aria-label="캘린더 페이지로 이동"
           className="sm:hidden flex items-center"
@@ -43,7 +43,7 @@ export default function Page() {
           <Button className="w-11 h-11">
             <CalendarDays size={35} />
           </Button>
-        </Link>
+        </Link> */}
       </div>
 
       <div className="flex-1 overflow-auto">
