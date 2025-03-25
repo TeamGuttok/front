@@ -10,8 +10,13 @@ import { useRouter } from 'next/navigation'
 import clsx from 'clsx'
 import { useServiceStore } from '#stores/subscriptions/useServiceStore'
 import { useSearchStore } from '#stores/subscriptions/useSearchStore'
-import { useSearch } from '#apis/subscriptions/SearchService'
+//import { useSearch } from '#apis/subscriptions/SearchService'
 import SearchResults from './searchResults'
+import { useState } from 'react'
+//import { useSearchService } from '#apis/subscriptions/SearchService'
+import { serviceNameLabels } from '#/types/subscription'
+import { useQuery } from '@tanstack/react-query'
+import { BASE_URL } from '#constants/url'
 
 export const allServices = [
   {
@@ -28,9 +33,20 @@ export const allServices = [
   })),
 ]
 
+type SearchValue = {
+  message: string
+  name: typeof serviceNameLabels
+}
+
 export default function Page() {
-  const { searchQuery, setSearchQuery } = useSearchStore()
-  const { handleSearch } = useSearch()
+  const {
+    searchQuery,
+    setSearchQuery,
+    searchResults,
+    isSearching,
+  } = useSearchStore()
+  const useSearchService(searchQuery)
+
   const { setSelectedService } = useServiceStore()
   const router = useRouter()
 
@@ -48,7 +64,13 @@ export default function Page() {
         <div className="w-full max-w-lg">
           <form
             className="mt-5 flex flex-row"
-            onSubmit={(e) => handleSearch(e, searchQuery)}
+            onSubmit={(e) => {
+              e.preventDefault();
+              const form = e.target as HTMLFormElement
+              const input = form.search as HTMLInputElement
+              setSearchQuery(input.value.trim())
+              //setKeyword((e.target as HTMLInputElement).value);
+            }}
           >
             <Input
               name="search"
@@ -58,7 +80,7 @@ export default function Page() {
               placeholder="사용 중인 구독 서비스 검색"
               className="py-1.5 w-full"
             />
-            <Button type="submit" className="ml-2">
+            <Button type="submit" className="ml-2" disabled={isLoading} aria-label="검색 버튼">
               <Search />
             </Button>
           </form>
