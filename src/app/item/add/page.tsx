@@ -8,15 +8,12 @@ import { Button } from '#components/_common/Button'
 import { Plus, Search } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import clsx from 'clsx'
-import { useServiceStore } from '#stores/subscriptions/useServiceStore'
 import { useSearchStore } from '#stores/subscriptions/useSearchStore'
-//import { useSearch } from '#apis/subscriptions/SearchService'
 import SearchResults from './searchResults'
-import { useState } from 'react'
-//import { useSearchService } from '#apis/subscriptions/SearchService'
 import { serviceNameLabels } from '#/types/subscription'
-import { useQuery } from '@tanstack/react-query'
-import { BASE_URL } from '#constants/url'
+import { useQuery, useMutation } from '@tanstack/react-query'
+import { searchService } from '#apis/common/api'
+import { useServiceStore } from '#stores/subscriptions/useServiceStore'
 
 export const allServices = [
   {
@@ -33,22 +30,30 @@ export const allServices = [
   })),
 ]
 
-type SearchValue = {
-  message: string
-  name: typeof serviceNameLabels
-}
-
-export default function Page() {
+export default function Page () {
+  const { setSelectedService } = useServiceStore()
   const {
     searchQuery,
     setSearchQuery,
-    searchResults,
-    isSearching,
+    setSearchResults,
+    setIsSearching,
   } = useSearchStore()
-  const useSearchService(searchQuery)
-
-  const { setSelectedService } = useServiceStore()
   const router = useRouter()
+
+  const {mutate, data, isPending, isError, error } = useMutation({
+    mutationFn: searchService,
+    onSuccess: (res) => {
+      if (res.data) {
+        setSearchResults(res.data);
+        console.log('성공')
+      }
+    },
+    onError: (error) => {
+      setSearchResults([])
+      setIsSearching(false)
+      console.error('Error fetching search results:', error)
+    },
+  })
 
   const handleCardClick = (service: any) => {
     setSelectedService(service)
@@ -66,10 +71,9 @@ export default function Page() {
             className="mt-5 flex flex-row"
             onSubmit={(e) => {
               e.preventDefault();
-              const form = e.target as HTMLFormElement
-              const input = form.search as HTMLInputElement
-              setSearchQuery(input.value.trim())
-              //setKeyword((e.target as HTMLInputElement).value);
+              if (searchQuery.trim().length > 0) {
+                mutate(searchQuery);
+              }
             }}
           >
             <Input
@@ -80,7 +84,7 @@ export default function Page() {
               placeholder="사용 중인 구독 서비스 검색"
               className="py-1.5 w-full"
             />
-            <Button type="submit" className="ml-2" disabled={isLoading} aria-label="검색 버튼">
+            <Button type="submit" className="ml-2" aria-label="검색 버튼">
               <Search />
             </Button>
           </form>

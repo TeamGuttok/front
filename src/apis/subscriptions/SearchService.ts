@@ -3,46 +3,55 @@ import { useSearchStore } from '#stores/subscriptions/useSearchStore'
 import { BASE_URL } from '#constants/url'
 import { serviceNameLabels } from '#/types/subscription';
 import { KNOWN_SERVICES } from '#/constants/knownServices';
+import { searchService } from '#apis/common/api';
 
-const getServiceList = async (searchQuery: string) => {
-  const { setSearchResults, setIsSearching } = useSearchStore.getState()
-  setIsSearching(true)
+// const getServiceList = async (searchQuery: string) => {
+//   const { setSearchResults, setIsSearching } = useSearchStore.getState()
+//   setIsSearching(true)
 
-  try {
-    const query = new URLSearchParams({ name: searchQuery })
+//   const { data, isError, isLoading } = useQuery({
+//     queryKey: ['searchService', searchQuery],
+//     queryFn: () => fetch(`${BASE_URL}/api/subscriptions?'name'=${query.toString}`, {
+//       method: 'GET',
+      
+//     }
+//   })
 
-    const res = await fetch(`/api/subscriptions?${query.toString()}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        name: searchQuery, // ✅ Header에 name 추가
-      },
-    })
+  
+//   try {
+//     const query = new URLSearchParams({ name: searchQuery })
 
-    if (!res.ok) {
-      throw new Error('API 요청 실패')
-    }
+//     const res = await fetch(`/api/subscriptions?"name"=${query.toString()}`, {
+//       method: 'GET',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         "name": searchQuery, 
+//       },
+//     })
 
-    const json = await res.json()
-    setSearchResults(json.data || [])
-    return json.data
-  } catch (err) {
-    setSearchResults([])
-    throw err
-  } finally {
-    setIsSearching(false)
-  }
-}
+//     if (!res.ok) {
+//       throw new Error('API 요청 실패')
+//     }
 
-// ✅ 2. useQuery 훅
-export const useSearchService = (searchQuery: string) => {
-  return useQuery({
-    queryKey: ['searchService', searchQuery],
-    queryFn: () => getServiceList(searchQuery),
-    enabled: !!searchQuery.trim(),
-    retry: false,
-  })
-}
+//     const json = await res.json()
+//     setSearchResults(json.data || [])
+//     return json.data
+//   } catch (err) {
+//     setSearchResults([])
+//     throw err
+//   } finally {
+//     setIsSearching(false)
+//   }
+// }
+
+// export const useSearchService = (searchQuery: string) => {
+//   return useQuery({
+//     queryKey: ['searchService', searchQuery],
+//     queryFn: () => getServiceList(searchQuery),
+//     enabled: !!searchQuery.trim(),
+//     retry: false,
+//   })
+// }
 
 // const koreanToEnglishNameMap: Record<string, string> = {}
 // Object.entries(serviceNameLabels).forEach(([id, koreanName]) => {

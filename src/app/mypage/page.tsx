@@ -9,9 +9,9 @@ import { useEffect, useState } from 'react'
 import { useMyPageStore } from './edit/mypageAction'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import useTheme from '#contexts/ThemeProvider/hook'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
-import { BASE_URL } from '#constants/url'
+import { BASE_URL, getMypage} from '#apis/common/api'
 
 export default function MyPage() {
   const { fetchProfile } = useMyPageStore()
@@ -21,6 +21,18 @@ export default function MyPage() {
 
   const email = user?.email
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false)
+
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ['userProfile'],
+    queryFn: getMypage,
+    
+  })
+  if (isLoading) {
+    console.log(data)
+  }
+  if (isError) {
+    console.log(error)
+  }
 
   // 알림 설정 API
   const { mutate: toggleAlarm, isPending: isTogglingAlarm } = useMutation({
@@ -138,11 +150,11 @@ export default function MyPage() {
         </div>
         <div className="flex justify-between mb-2">
           <p className="text-gray-600">닉네임</p>
-          <div>{user?.nickName}</div>
+          <div>{user.nickName}</div>
         </div>
         <div className="flex justify-between mb-2">
           <p className="text-gray-600">이메일</p>
-          <div>{email}</div>
+          <div>{user.email}</div>
         </div>
       </div>
       <hr />
@@ -154,7 +166,7 @@ export default function MyPage() {
           <p className="text-gray-600">이메일 결제 리마인드</p>
           <div>
             <button onClick={() => toggleAlarm()} disabled={isTogglingAlarm}>
-              {user?.alarm ? (
+              {user.alarm ? (
                 <ToggleLeft
                   aria-label="이메일 결제 리마인드 동의"
                   className="w-[3rem] h-[3rem] fill-[hsl(var(--primary))] strokeWidth={0} stroke-[hsl(var(--background))]"
