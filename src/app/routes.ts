@@ -16,9 +16,9 @@ export const PATH = {
   itemDetail: (itemId: number) => `/item/${itemId}/detail`,
   itemEdit: (itemId: number) => `/item/${itemId}/edit`,
 
-  group: '/group',
-  groupAdd: '/group/add',
-  groupDetail: (groupId: number) => `/group/${groupId}`,
-  groupEdit: (groupId: number) => `/group/${groupId}/edit`,
-  groupMember: (groupId: number) => `/group/${groupId}/member`,
+  // group: '/group',
+  // groupAdd: '/group/add',
+  // groupDetail: (groupId: number) => `/group/${groupId}`,
+  // groupEdit: (groupId: number) => `/group/${groupId}/edit`,
+  // groupMember: (groupId: number) => `/group/${groupId}/member`,
 }

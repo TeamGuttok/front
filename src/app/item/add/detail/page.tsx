@@ -16,12 +16,13 @@ import {
 import CardTitle from '#components/_common/CardTitle'
 import { useServiceStore } from '#stores/subscriptions/useServiceStore'
 import { useSubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
-import useCreateSubscription from '#apis/subscriptions/CreateSubscriptionAPI'
+import { useCreateSubscription } from '#apis/common/api'
 
 export default function Page() {
   const router = useRouter()
   const { selectedService } = useServiceStore()
-  const createSubscription = useCreateSubscription()
+  //const createSubscription = createSubscription()
+  const mutation = useCreateSubscription()
 
   const {
     subscriptionData,
@@ -38,21 +39,20 @@ export default function Page() {
 
   const {
     title,
+    subscription,
     paymentAmount,
     paymentCycle,
     paymentDay,
     paymentMethod,
     memo,
   } = subscriptionData
+  const isCustomInput = subscription === 'CUSTOM_INPUT'
+  const computedTitle = isCustomInput ? title : subscription
 
   const buttonBaseClass = 'w-full py-2 mt-4 text-base text-white shadow'
   // const buttonDynamicClass = isDisabled
   //   ? 'bg-gray-400 cursor-not-allowed'
   //   : 'primary'
-
-  const isFormValid = () => {
-    return !!(title && paymentAmount && paymentCycle && paymentDay)
-  }
 
   const groupClassName = 'flex items-start sm:items-center justify-between'
   const labelClassName =
@@ -60,31 +60,52 @@ export default function Page() {
   const inputClassName =
     'block w-[12.5rem] sm:max-w-[12.5rem] sm:min-w-[12.5rem] pl-2 text-sm sm:text-base placeholder-[hsl(var(--muted-foreground))]'
 
-  const handleSave = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-
-    if (!isFormValid()) return
-
-    // const payload = {
-    //   title: title,
-    //   paymentAmount: paymentAmount,
-    //   paymentMethod: paymentMethod,
-    //   paymentCycle: paymentCycle,
-    //   paymentDay: paymentDay,
-    //   memo: memo,
-    // }
-
-    createSubscription.mutate(subscriptionData, {
-      onSuccess: (data) => {
-        console.log('구독 항목 생성 성공:', data)
-        resetSubscriptionData()
-        router.push('/')
-      },
-      onError: (error) => {
-        console.error('구독 항목 생성 실패:', error)
-      },
-    })
+  const isFormValid = () => {
+    return !!(title && paymentAmount && paymentCycle && paymentDay)
   }
+
+    const handleSave = (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault()
+    
+      if (!isFormValid()) {
+        console.log('입력값이 유효하지 않음:', subscriptionData)
+        return
+      }
+    
+      mutation.mutate(undefined, {
+        onSuccess: (data) => {
+          console.log('구독 항목 생성 성공:', data)
+          resetSubscriptionData()
+          router.push('/')
+        },
+        onError: (error) => {
+          console.error('구독 항목 생성 실패:', error)
+        },
+      })
+    }
+
+
+
+  // const handleSave = async (event: React.FormEvent<HTMLFormElement>) => {
+  //   const mutation = await useCreateSubscription()
+  //   event.preventDefault()
+
+  //   if (!isFormValid()) {
+  //     console.log('validation 실패:', subscriptionData)
+  //     return
+  //   }
+
+  //   mutation.mutate(undefined, {
+  //     onSuccess: (data) => {
+  //       console.log('구독 항목 생성 성공:', data)
+  //       resetSubscriptionData()
+  //       router.push('/')
+  //     },
+  //     onError: (error) => {
+  //       console.error('구독 항목 생성 실패:', error)
+  //     },
+  //   })
+  // }
 
   return (
     <CardTitle className="flex flex-col max-w-[40rem] sm:max-w-[52rem] sm:p-8 sm:rounded-md sm:border sm:border-border m-auto -translate-y-8 px-4">
@@ -113,9 +134,15 @@ export default function Page() {
                 type="text"
                 aria-labelledby="subscriptionTitle"
                 aria-describedby="subscriptionTitle-required"
-                value={title}
-                onChange={(e) => setSubscriptionData({ title: e.target.value })}
-                readOnly={!selectedService?.isCustom}
+                value={computedTitle}
+                onChange={(e) => {
+                  if (isCustomInput) {
+                    setSubscriptionData({ title: e.target.value })
+                  }
+                }}
+                //readOnly={!isCustomInput}
+                //onChange={(e) => setSubscriptionData({ title: e.target.value })}
+                //readOnly={!selectedService?.isCustom}
                 placeholder="넷플릭스, 통신비, etc"
                 className={cn(inputClassName)}
               />
@@ -292,14 +319,13 @@ export default function Page() {
                 rows={2}
               />
             </SelectGroup>
-            <Button
+            
+          </div>
+          <Button
               type="submit"
+              aria-label="saveSubscription"
+              aria-labelledby="saveSubscription" 
               disabled={!isFormValid()}
-              // onClick={(e) => {
-              //   e.preventDefault()
-              //   createSubscription.mutate(subscriptionData)
-              //   resetSubscriptionData()
-              // }}
               className={`w-full py-2 mt-4 text-base text-white shadow ${
                 !isFormValid() ? 'bg-gray-400 cursor-not-allowed' : 'primary'
               }`}
@@ -307,7 +333,6 @@ export default function Page() {
             >
               저장하기
             </Button>
-          </div>
         </form>
       </div>
     </CardTitle>

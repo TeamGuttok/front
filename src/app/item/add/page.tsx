@@ -8,10 +8,12 @@ import { Button } from '#components/_common/Button'
 import { Plus, Search } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import clsx from 'clsx'
-import { useServiceStore } from '#stores/subscriptions/useServiceStore'
 import { useSearchStore } from '#stores/subscriptions/useSearchStore'
-import { useSearch } from '#apis/subscriptions/SearchService'
 import SearchResults from './searchResults'
+import { serviceNameLabels } from '#/types/subscription'
+import { useQuery, useMutation } from '@tanstack/react-query'
+import { searchService } from '#apis/common/api'
+import { useServiceStore } from '#stores/subscriptions/useServiceStore'
 
 export const allServices = [
   {
@@ -28,11 +30,30 @@ export const allServices = [
   })),
 ]
 
-export default function Page() {
-  const { searchQuery, setSearchQuery } = useSearchStore()
-  const { handleSearch } = useSearch()
+export default function Page () {
   const { setSelectedService } = useServiceStore()
+  const {
+    searchQuery,
+    setSearchQuery,
+    setSearchResults,
+    setIsSearching,
+  } = useSearchStore()
   const router = useRouter()
+
+  const {mutate, data, isPending, isError, error } = useMutation({
+    mutationFn: searchService,
+    onSuccess: (res) => {
+      if (res.data) {
+        setSearchResults(res.data);
+        console.log('성공')
+      }
+    },
+    onError: (error) => {
+      setSearchResults([])
+      setIsSearching(false)
+      console.error('Error fetching search results:', error)
+    },
+  })
 
   const handleCardClick = (service: any) => {
     setSelectedService(service)
@@ -48,7 +69,12 @@ export default function Page() {
         <div className="w-full max-w-lg">
           <form
             className="mt-5 flex flex-row"
-            onSubmit={(e) => handleSearch(e, searchQuery)}
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (searchQuery.trim().length > 0) {
+                mutate(searchQuery);
+              }
+            }}
           >
             <Input
               name="search"
@@ -58,7 +84,7 @@ export default function Page() {
               placeholder="사용 중인 구독 서비스 검색"
               className="py-1.5 w-full"
             />
-            <Button type="submit" className="ml-2">
+            <Button type="submit" className="ml-2" aria-label="검색 버튼">
               <Search />
             </Button>
           </form>
