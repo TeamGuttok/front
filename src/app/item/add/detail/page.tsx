@@ -64,48 +64,25 @@ export default function Page() {
     return !!(title && paymentAmount && paymentCycle && paymentDay)
   }
 
-    const handleSave = (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault()
-    
-      if (!isFormValid()) {
-        console.log('입력값이 유효하지 않음:', subscriptionData)
-        return
-      }
-    
-      mutation.mutate(undefined, {
-        onSuccess: (data) => {
-          console.log('구독 항목 생성 성공:', data)
-          resetSubscriptionData()
-          router.push('/')
-        },
-        onError: (error) => {
-          console.error('구독 항목 생성 실패:', error)
-        },
-      })
+  const handleSave = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    if (!isFormValid()) {
+      console.log('입력값이 유효하지 않음:', subscriptionData)
+      return
     }
 
-
-
-  // const handleSave = async (event: React.FormEvent<HTMLFormElement>) => {
-  //   const mutation = await useCreateSubscription()
-  //   event.preventDefault()
-
-  //   if (!isFormValid()) {
-  //     console.log('validation 실패:', subscriptionData)
-  //     return
-  //   }
-
-  //   mutation.mutate(undefined, {
-  //     onSuccess: (data) => {
-  //       console.log('구독 항목 생성 성공:', data)
-  //       resetSubscriptionData()
-  //       router.push('/')
-  //     },
-  //     onError: (error) => {
-  //       console.error('구독 항목 생성 실패:', error)
-  //     },
-  //   })
-  // }
+    mutation.mutate(undefined, {
+      onSuccess: (data) => {
+        console.log('구독 항목 생성 성공:', data)
+        resetSubscriptionData()
+        router.push('/')
+      },
+      onError: (error) => {
+        console.error('구독 항목 생성 실패:', error)
+      },
+    })
+  }
 
   return (
     <CardTitle className="flex flex-col max-w-[40rem] sm:max-w-[52rem] sm:p-8 sm:rounded-md sm:border sm:border-border m-auto -translate-y-8 px-4">
@@ -319,20 +296,19 @@ export default function Page() {
                 rows={2}
               />
             </SelectGroup>
-            
           </div>
           <Button
-              type="submit"
-              aria-label="saveSubscription"
-              aria-labelledby="saveSubscription" 
-              disabled={!isFormValid()}
-              className={`w-full py-2 mt-4 text-base text-white shadow ${
-                !isFormValid() ? 'bg-gray-400 cursor-not-allowed' : 'primary'
-              }`}
-              //className={`${buttonBaseClass} ${buttonDynamicClass}`}
-            >
-              저장하기
-            </Button>
+            type="submit"
+            aria-label="saveSubscription"
+            aria-labelledby="saveSubscription"
+            disabled={!isFormValid()}
+            className={`w-full py-2 mt-4 text-base text-white shadow ${
+              !isFormValid() ? 'bg-gray-400 cursor-not-allowed' : 'primary'
+            }`}
+            //className={`${buttonBaseClass} ${buttonDynamicClass}`}
+          >
+            저장하기
+          </Button>
         </form>
       </div>
     </CardTitle>

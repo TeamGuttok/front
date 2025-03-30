@@ -32,7 +32,12 @@ export default function Page() {
             </p>
           </h1>
           <h2>
-            이번 달 지출은 <span className="font-bold">₩{useItemStore.getState().getTotalPaymentAmount().toLocaleString()}</span> 입니다.
+            이번 달 지출은{' '}
+            <span className="font-bold">
+              ₩
+              {useItemStore.getState().getTotalPaymentAmount().toLocaleString()}
+            </span>{' '}
+            입니다.
           </h2>
         </div>
         {/* <Link

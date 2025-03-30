@@ -35,7 +35,7 @@ interface NotificationResponse {
 export default function NotificationList() {
   const queryClient = useQueryClient()
   const { notifications, addNotification, markAsRead, removeNotification } =
-  useNotificationStore()
+    useNotificationStore()
 
   //알림 GET API
   const {
@@ -72,47 +72,47 @@ export default function NotificationList() {
     },
   })
   // 더미
-    // queryFn: async () => {
-    //   return new Promise((resolve) => {
-    //     setTimeout(() => {
-    //       resolve({
-    //         contents: [
-    //           {
-    //             id: 1,
-    //             category: 'subscriptions',
-    //             message: '넷플릭스',
-    //             status: 'UNREAD',
-    //             registerDate: new Date().toISOString(),
-    //             updateDate: new Date().toISOString(),
-    //           },
-    //           {
-    //             id: 2,
-    //             category: '알림',
-    //             message: 'test',
-    //             status: 'READ',
-    //             registerDate: new Date().toISOString(),
-    //             updateDate: new Date().toISOString(),
-    //           },
-    //         ],
-    //         size: 2,
-    //         hasNext: false,
-    //         status: '100 CONTINUE',
-    //       })
-    //     }, 500) // 0.5초 후에 데이터 반환
-    //   })
-    // },
-    // queryFn: async () => {
-    //   const response = await fetch(`${BASE_URL}/api/notifications`, {
-    //     method: 'GET',
-    //     headers: { 'Content-Type': 'application/json' },
-    //   })
+  // queryFn: async () => {
+  //   return new Promise((resolve) => {
+  //     setTimeout(() => {
+  //       resolve({
+  //         contents: [
+  //           {
+  //             id: 1,
+  //             category: 'subscriptions',
+  //             message: '넷플릭스',
+  //             status: 'UNREAD',
+  //             registerDate: new Date().toISOString(),
+  //             updateDate: new Date().toISOString(),
+  //           },
+  //           {
+  //             id: 2,
+  //             category: '알림',
+  //             message: 'test',
+  //             status: 'READ',
+  //             registerDate: new Date().toISOString(),
+  //             updateDate: new Date().toISOString(),
+  //           },
+  //         ],
+  //         size: 2,
+  //         hasNext: false,
+  //         status: '100 CONTINUE',
+  //       })
+  //     }, 500) // 0.5초 후에 데이터 반환
+  //   })
+  // },
+  // queryFn: async () => {
+  //   const response = await fetch(`${BASE_URL}/api/notifications`, {
+  //     method: 'GET',
+  //     headers: { 'Content-Type': 'application/json' },
+  //   })
 
-    //   if (!response.ok) {
-    //     throw new Error(`알림 리스트 가져오기 실패: ${response.statusText}`)
-    //   }
+  //   if (!response.ok) {
+  //     throw new Error(`알림 리스트 가져오기 실패: ${response.statusText}`)
+  //   }
 
-    //   return response.json()
-    // },
+  //   return response.json()
+  // },
   //})
 
   // 알림 읽음 처리 PUT API
@@ -144,12 +144,19 @@ export default function NotificationList() {
   })
 
   if (notiLoading)
-    return <p className="text-center text-gray-500 mt-10">📭 알림을 불러오는 중...</p>
+    return (
+      <p className="text-center text-gray-500 mt-10">
+        📭 알림을 불러오는 중...
+      </p>
+    )
   if (notiError)
-    return <p className="text-center text-red-500 mt-10">⚠️ 알림을 불러오는 중 오류 발생</p>
+    return (
+      <p className="text-center text-red-500 mt-10">
+        ⚠️ 알림을 불러오는 중 오류 발생
+      </p>
+    )
   if (!notifications.length)
     return <p className="text-center text-gray-500 mt-10">📭 알림이 없습니다</p>
-
 
   return (
     <CardTitle className="mx-auto p-5 flex flex-col min-h-[calc(100vh-4.5rem)] pb-[3rem]">
@@ -168,7 +175,7 @@ export default function NotificationList() {
 
       <div className="flex-1 overflow-auto">
         <div className="grid grid-cols-1 gap-3">
-        {notifications.map((n) => (
+          {notifications.map((n) => (
             <Card
               key={n.id}
               className={cn(
@@ -179,33 +186,34 @@ export default function NotificationList() {
                 if (!n.isRead) markAsReadAPI(n.id)
               }}
             >
-                <div className="flex items-center gap-3">
-                  <div>
-                    <h3 className="font-medium">{n.title}</h3>
-                    <p className="text-xs text-gray-600">
-                      {n.paymentCycle} {n.paymentDay}일 결제 예정
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    {!n.isRead && (
-                      <span className="text-xs font-semibold text-red-500">
-                        읽지 않음
-                      </span>
-                    )}
-                  </div>
+              <div className="flex items-center gap-3">
+                <div>
+                  <h3 className="font-medium">{n.title}</h3>
+                  <p className="text-xs text-gray-600">
+                    {n.paymentCycle} {n.paymentDay}일 결제 예정
+                  </p>
                 </div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    deleteAPI(n.id)
-                  }}
-                  className="text-gray-600 hover:text-red-500"
-                >
-                  <Trash2 size={20} />
-                </button>
-              </Card>
+                <div className="text-right">
+                  {!n.isRead && (
+                    <span className="text-xs font-semibold text-red-500">
+                      읽지 않음
+                    </span>
+                  )}
+                </div>
+              </div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  deleteAPI(n.id)
+                }}
+                className="text-gray-600 hover:text-red-500"
+              >
+                <Trash2 size={20} />
+              </button>
+            </Card>
           ))}
         </div>
       </div>
-  </CardTitle>
-)}
+    </CardTitle>
+  )
+}
