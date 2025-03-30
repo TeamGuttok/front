@@ -30,28 +30,30 @@ export const allServices = [
   })),
 ]
 
-export default function Page () {
+export default function Page() {
   const { setSelectedService } = useServiceStore()
-  const {
-    searchQuery,
-    setSearchQuery,
-    setSearchResults,
-    setIsSearching,
-  } = useSearchStore()
+  const { searchQuery, setSearchQuery, setSearchResults, setIsSearching } =
+    useSearchStore()
   const router = useRouter()
 
-  const {mutate, data, isPending, isError, error } = useMutation({
+  const {
+    mutate: searchMutate,
+    data,
+    isPending,
+    isError,
+    error,
+  } = useMutation({
     mutationFn: searchService,
     onSuccess: (res) => {
       if (res.data) {
-        setSearchResults(res.data);
-        console.log('성공')
+        setSearchResults(res.data)
+        console.log('검색 성공')
       }
     },
     onError: (error) => {
       setSearchResults([])
       setIsSearching(false)
-      console.error('Error fetching search results:', error)
+      console.error('검색 실패', error)
     },
   })
 
@@ -70,9 +72,10 @@ export default function Page () {
           <form
             className="mt-5 flex flex-row"
             onSubmit={(e) => {
-              e.preventDefault();
+              e.preventDefault()
               if (searchQuery.trim().length > 0) {
-                mutate(searchQuery);
+                searchMutate(searchQuery)
+                setIsSearching(true)
               }
             }}
           >

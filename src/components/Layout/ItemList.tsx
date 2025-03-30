@@ -10,13 +10,19 @@ export default function ItemList() {
   const { items } = useItemStore()
 
   if (!items.length) {
-    return <p className="text-center text-gray-500">저장된 구독 항목이 없습니다.</p>
+    return (
+      <p className="text-center text-gray-500">저장된 구독 항목이 없습니다.</p>
+    )
   }
 
   return (
     <div className="grid grid-cols-1 gap-3">
       {items.map((item) => (
-        <Link key={item.useId} href={PATH.itemDetail(Number(item.useId))} passHref>
+        <Link
+          key={item.useId}
+          href={PATH.itemDetail(Number(item.useId))}
+          passHref
+        >
           <Card
             className={cn(
               'flex justify-between items-center p-4 rounded-lg shadow-md dark:bg-gray-800 bg-white hover:bg-slate-200 hover:dark:bg-gray-700',
@@ -24,12 +30,7 @@ export default function ItemList() {
             )}
           >
             <div className="flex items-center gap-3">
-              <div
-                className={cn(
-                  'w-8 h-8 rounded-full',
-                  'bg-gray-300',
-                )}
-              />
+              <div className={cn('w-8 h-8 rounded-full', 'bg-gray-300')} />
               <div>
                 <h3 className="font-medium">{item.title}</h3>
                 <p className="text-xs dark:text-gray-500">

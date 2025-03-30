@@ -23,7 +23,10 @@ export const useItemStore = create<ItemState>()(
       items: [],
       addItem: (item) =>
         set((state) => ({
-          items: [...state.items, { ...item, createdAt: new Date().toISOString() }],
+          items: [
+            ...state.items,
+            { ...item, createdAt: new Date().toISOString() },
+          ],
         })),
       getItemById: (id) => get().items.find((item) => item.useId === id),
       updateItem: (id, updatedItem) =>
@@ -36,34 +39,34 @@ export const useItemStore = create<ItemState>()(
         set((state) => ({
           items: state.items.filter((item) => item.useId !== id),
         })),
-        getTotalPaymentAmount: () => {
-          const { items } = get()
-          const today = new Date()
+      getTotalPaymentAmount: () => {
+        const { items } = get()
+        const today = new Date()
 
-          return items
-            .filter((item) => {
-              if (item.paymentStatus === 'COMPLETED') return false
+        return items
+          .filter((item) => {
+            if (item.paymentStatus === 'COMPLETED') return false
 
-              if (item.paymentCycle === 'MONTHLY') {
-                return item.paymentDay === getDate(today)
-              }
+            if (item.paymentCycle === 'MONTHLY') {
+              return item.paymentDay === getDate(today)
+            }
 
-              if (item.paymentCycle === 'YEARLY') {
-                const createdAt = item.createdAt ? new Date(item.createdAt) : null
-                return (
-                  createdAt &&
-                  getDate(createdAt) === getDate(today) && 
-                  getMonth(createdAt) === getMonth(today)
-                )
-              }
+            if (item.paymentCycle === 'YEARLY') {
+              const createdAt = item.createdAt ? new Date(item.createdAt) : null
+              return (
+                createdAt &&
+                getDate(createdAt) === getDate(today) &&
+                getMonth(createdAt) === getMonth(today)
+              )
+            }
 
-      return false
-    })
-    .reduce((sum, item) => sum + item.paymentAmount, 0)
-}
-      }),
-      {
-        name: 'subscription-items',
+            return false
+          })
+          .reduce((sum, item) => sum + item.paymentAmount, 0)
       },
-    ),
-  )
+    }),
+    {
+      name: 'subscription-items',
+    },
+  ),
+)
