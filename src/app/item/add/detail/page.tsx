@@ -17,6 +17,7 @@ import CardTitle from '#components/_common/CardTitle'
 import { useServiceStore } from '#stores/subscriptions/useServiceStore'
 import { useSubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
 import { useCreateSubscription } from '#apis/common/api'
+import { SubscriptionRequest } from '#types/subscription'
 
 export default function Page() {
   const router = useRouter()
@@ -46,6 +47,17 @@ export default function Page() {
     paymentMethod,
     memo,
   } = subscriptionData
+
+  const payload: SubscriptionRequest = {
+    title,
+    subscription,
+    paymentAmount,
+    paymentCycle,
+    paymentDay,
+    paymentMethod,
+    memo,
+  }
+
   const isCustomInput = subscription === 'CUSTOM_INPUT'
   const computedTitle = isCustomInput ? title : subscription
 
@@ -72,7 +84,30 @@ export default function Page() {
       return
     }
 
-    mutation.mutate(undefined, {
+    const {
+      title,
+      subscription,
+      paymentAmount,
+      paymentCycle,
+      paymentDay,
+      paymentMethod,
+      memo,
+    } = subscriptionData
+
+    const isCustom = subscription === 'CUSTOM_INPUT'
+    const computedTitle = isCustom ? title : ''
+
+    const payload: SubscriptionRequest = {
+      title: computedTitle,
+      subscription,
+      paymentAmount,
+      paymentCycle,
+      paymentDay,
+      paymentMethod,
+      memo,
+    }
+
+    mutation.mutate(payload, {
       onSuccess: (data) => {
         console.log('구독 항목 생성 성공:', data)
         resetSubscriptionData()

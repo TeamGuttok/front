@@ -1,8 +1,9 @@
 import { create } from 'zustand'
+import { ServiceItem } from '#types/subscription'
 
 interface SearchStore {
   searchQuery: string
-  searchResults: any[]
+  searchResults: ServiceItem[]
   isSearching: boolean
   setSearchQuery: (query: string) => void
   setSearchResults: (results: any[]) => void
