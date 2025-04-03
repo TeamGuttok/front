@@ -18,6 +18,8 @@ import { useServiceStore } from '#stores/subscriptions/useServiceStore'
 import { useSubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
 import { useCreateSubscription } from '#apis/common/api'
 import { SubscriptionRequest } from '#types/subscription'
+import { useItemStore } from '#stores/subscriptions/useItemStore'
+import { serviceNameLabels } from '#types/subscription'
 
 export default function Page() {
   const router = useRouter()
@@ -95,10 +97,33 @@ export default function Page() {
     } = subscriptionData
 
     const isCustom = subscription === 'CUSTOM_INPUT'
-    const computedTitle = isCustom ? title : ''
+    const computedTitle = isCustom
+      ? title
+      : (serviceNameLabels[subscription] ?? subscription)
+
+    // const generateId = () => `mock-${Date.now()}`
+
+    const mockItem = {
+      useId: `mock-${Date.now()}`, // 유니크 ID
+      title: computedTitle,
+      subscription,
+      paymentAmount,
+      paymentCycle,
+      paymentDay,
+      paymentMethod,
+      memo,
+      paymentStatus: 'ACTIVE', // 테스트용 상태 값도 설정 가능
+    }
+
+    if (process.env.NODE_ENV !== 'production') {
+      useItemStore.getState().addItem(mockItem)
+      resetSubscriptionData()
+      router.push('/')
+      return
+    }
 
     const payload: SubscriptionRequest = {
-      title: computedTitle,
+      title: isCustom ? title : '',
       subscription,
       paymentAmount,
       paymentCycle,

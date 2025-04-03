@@ -10,7 +10,6 @@ import { useRouter } from 'next/navigation'
 import clsx from 'clsx'
 import { useSearchStore } from '#stores/subscriptions/useSearchStore'
 import SearchResults from './searchResults'
-import { serviceNameLabels } from '#/types/subscription'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { searchService } from '#apis/common/api'
 import { useServiceStore } from '#stores/subscriptions/useServiceStore'
@@ -55,7 +54,7 @@ export default function Page() {
   const handleCardClick = (service: ServiceItem) => {
     const selectedService = {
       ...service,
-      iconUrl: service.iconUrl ?? '', // 빈 문자열로 fallback
+      iconUrl: service.iconUrl ?? '',
     }
     setSelectedService(selectedService)
     //setSelectedService(service)

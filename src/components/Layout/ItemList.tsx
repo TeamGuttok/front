@@ -30,7 +30,7 @@ export default function ItemList() {
             )}
           >
             <div className="flex items-center gap-3">
-              <div className={cn('w-8 h-8 rounded-full', 'bg-gray-300')} />
+              {/* <div className={cn('w-8 h-8 rounded-full', 'bg-gray-300')} /> */}
               <div>
                 <h3 className="font-medium">{item.title}</h3>
                 <p className="text-xs dark:text-gray-500">
