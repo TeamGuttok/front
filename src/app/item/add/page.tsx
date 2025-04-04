@@ -10,12 +10,12 @@ import { useRouter } from 'next/navigation'
 import clsx from 'clsx'
 import { useSearchStore } from '#stores/subscriptions/useSearchStore'
 import SearchResults from './searchResults'
-import { serviceNameLabels } from '#/types/subscription'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { searchService } from '#apis/common/api'
 import { useServiceStore } from '#stores/subscriptions/useServiceStore'
+import { ServiceItem } from '#types/subscription'
 
-export const allServices = [
+export const allServices: ServiceItem[] = [
   {
     id: 'custom',
     name: '직접 입력하기',
@@ -36,31 +36,31 @@ export default function Page() {
     useSearchStore()
   const router = useRouter()
 
-  const {
-    mutate: searchMutate,
-    data,
-    isPending,
-    isError,
-    error,
-  } = useMutation({
-    mutationFn: searchService,
+  const searchMutation = useMutation({
+    mutationFn: (serviceName: string) => searchService(serviceName),
     onSuccess: (res) => {
       if (res.data) {
         setSearchResults(res.data)
-        console.log('검색 성공')
+        setIsSearching(false)
       }
     },
     onError: (error) => {
+      console.error('검색 실패', error)
       setSearchResults([])
       setIsSearching(false)
-      console.error('검색 실패', error)
     },
   })
 
-  const handleCardClick = (service: any) => {
-    setSelectedService(service)
+  const handleCardClick = (service: ServiceItem) => {
+    const selectedService = {
+      ...service,
+      iconUrl: service.iconUrl ?? '',
+    }
+    setSelectedService(selectedService)
+    //setSelectedService(service)
     router.push('add/detail')
   }
+  // TODO KnownService title 가져오기
 
   return (
     <div className="flex flex-col m-4 ">
@@ -68,14 +68,14 @@ export default function Page() {
         <h1 className="flex flex-row mt-8 mb-1 text-3xl font-bold text-center ">
           구독 서비스 선택
         </h1>
-        <div className="w-full max-w-lg">
+        <div className="w-full max-w-lg" onClick={() => searchMutation.reset()}>
           <form
             className="mt-5 flex flex-row"
             onSubmit={(e) => {
               e.preventDefault()
               if (searchQuery.trim().length > 0) {
-                searchMutate(searchQuery)
                 setIsSearching(true)
+                searchMutation.mutate(searchQuery)
               }
             }}
           >
@@ -96,6 +96,7 @@ export default function Page() {
 
       {searchQuery.trim().length > 0 ? (
         <SearchResults
+          // searchMutation={searchMutation}
           handleCardClick={(service: any) => handleCardClick(service)}
         />
       ) : (

@@ -8,6 +8,9 @@ import { getHours } from 'date-fns'
 import { Plus } from 'lucide-react'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import { useItemStore } from '#stores/subscriptions/useItemStore'
+// 배포 후 주석 해제
+// import { getSubscriptions } from '#apis/common/api'
+// import { useQuery } from '@tanstack/react-query'
 
 export default function Page() {
   const currentHour = getHours(new Date())
@@ -19,6 +22,15 @@ export default function Page() {
     if (currentHour >= 12 && currentHour < 18) return <p>좋은 점심입니다,</p>
     return <p>좋은 저녁입니다, </p>
   }
+
+  // const { setItems } = useItemStore()
+
+  // const { data, isLoading, error } = useQuery({
+  //   queryKey: ['user-subscriptions'],
+  //   queryFn: () => getSubscriptions(0, 20),
+  // })
+
+  // data ?? setItems(data.contents)
 
   return (
     <div className="mx-auto p-5 flex flex-col min-h-[calc(100vh-4.5rem)] pb-[3rem]">

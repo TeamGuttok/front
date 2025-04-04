@@ -2,6 +2,13 @@ import { KNOWN_SERVICES } from '#constants/knownServices'
 
 export type ServiceId = (typeof KNOWN_SERVICES)[number]['id'] | 'CUSTOM_INPUT'
 
+export interface ServiceItem {
+  id: string
+  name: string
+  iconUrl?: string
+  isCustom: boolean
+}
+
 export const serviceNameLabels: Record<ServiceId, string> = {
   CUSTOM_INPUT: '직접 입력',
   YOUTUBE_PREMIUM: '유튜브 프리미엄',
@@ -75,4 +82,14 @@ export interface SubscriptionContents {
   paymentStatus: paymentStatus
   paymentCycle: PaymentCycle
   paymentDay: number
+}
+
+export interface SubscriptionRequest {
+  title: string
+  subscription: ServiceId
+  paymentAmount: number
+  paymentMethod?: PaymentMethod
+  paymentCycle: PaymentCycle
+  paymentDay: number
+  memo?: string
 }

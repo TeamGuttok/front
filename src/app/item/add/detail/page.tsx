@@ -17,6 +17,10 @@ import CardTitle from '#components/_common/CardTitle'
 import { useServiceStore } from '#stores/subscriptions/useServiceStore'
 import { useSubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
 import { useCreateSubscription } from '#apis/common/api'
+import { paymentStatusLabels, SubscriptionRequest } from '#types/subscription'
+import { useItemStore } from '#stores/subscriptions/useItemStore'
+import { serviceNameLabels } from '#types/subscription'
+import { KNOWN_SERVICES } from '#constants/knownServices'
 
 export default function Page() {
   const router = useRouter()
@@ -46,6 +50,17 @@ export default function Page() {
     paymentMethod,
     memo,
   } = subscriptionData
+
+  const payload: SubscriptionRequest = {
+    title,
+    subscription,
+    paymentAmount,
+    paymentCycle,
+    paymentDay,
+    paymentMethod,
+    memo,
+  }
+
   const isCustomInput = subscription === 'CUSTOM_INPUT'
   const computedTitle = isCustomInput ? title : subscription
 
@@ -72,7 +87,58 @@ export default function Page() {
       return
     }
 
-    mutation.mutate(undefined, {
+    const {
+      title,
+      subscription,
+      paymentAmount,
+      paymentCycle,
+      paymentDay,
+      paymentMethod,
+      memo,
+    } = subscriptionData
+
+    const isCustom = subscription === 'CUSTOM_INPUT'
+    const computedTitle = isCustom
+      ? title
+      : (serviceNameLabels[subscription] ?? subscription)
+
+    const iconUrl = isCustom
+      ? ''
+      : (KNOWN_SERVICES.find((s) => s.id === subscription)?.iconUrl ?? '')
+    // const generateId = () => `mock-${Date.now()}`
+
+    const mockItem = {
+      id: 1,
+      useId: `mock-${Date.now()}`,
+      title: computedTitle,
+      subscription,
+      paymentAmount,
+      paymentCycle,
+      paymentDay,
+      paymentMethod,
+      memo,
+      paymentStatus: 'ACTIVE',
+      iconUrl,
+    }
+
+    if (process.env.NODE_ENV !== 'production') {
+      useItemStore.getState().addItem(mockItem)
+      resetSubscriptionData()
+      router.push('/')
+      return
+    }
+
+    const payload: SubscriptionRequest = {
+      title: subscription === 'CUSTOM_INPUT' ? title : '',
+      subscription,
+      paymentAmount,
+      paymentCycle,
+      paymentDay,
+      paymentMethod,
+      memo,
+    }
+
+    mutation.mutate(payload, {
       onSuccess: (data) => {
         console.log('구독 항목 생성 성공:', data)
         resetSubscriptionData()

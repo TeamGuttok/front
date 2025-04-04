@@ -22,7 +22,24 @@ export type SubscriptionStore = {
   memo?: string
 }
 
-export const useSubscriptionStore = create((set) => ({
+export type SubscriptionState = {
+  subscriptionData: SubscriptionStore
+  setSubscriptionData: (data: Partial<SubscriptionStore>) => void
+  updateSubscription: (isCustom: boolean, subscriptionId: string) => void
+  resetSubscriptionData: () => void
+  updatePaymentAmount: (amount: number) => void
+  updatePaymentMethod: (method: string) => void
+  updatePaymentDay: (day: number) => void
+  updatePaymentCycle: (cycle: string) => void
+  updateMemo: (memo: string) => void
+  paymentMethodOptions: { value: string; label: string }[]
+  paymentStatusOptions: { value: string; label: string }[]
+  paymentCycleOptions: { value: string; label: string }[]
+  paymentDayOptions: { value: number; label: string }[]
+  subscriptionOptions: { value: string; label: string }[]
+}
+
+export const useSubscriptionStore = create<SubscriptionState>((set) => ({
   subscriptionData: {
     title: '',
     subscription: '',
@@ -30,7 +47,7 @@ export const useSubscriptionStore = create((set) => ({
     paymentMethod: '',
     paymentStatus: '',
     paymentCycle: '',
-    paymentDay: '',
+    paymentDay: 1,
     memo: '',
   },
 
@@ -40,15 +57,36 @@ export const useSubscriptionStore = create((set) => ({
     })),
 
   updateSubscription: (isCustom, subscriptionId) =>
-    set((state) => ({
-      subscriptionData: {
-        ...state.subscriptionData,
-        subscription: isCustom
-          ? 'CUSTOM_INPUT'
-          : subscriptionId || KNOWN_SERVICES[0].id,
-        title: isCustom ? state.subscriptionData.title : subscriptionId || '',
-      },
-    })),
+    set((state) => {
+      const isKnownService = !isCustom && subscriptionId
+      const knownServiceName = isKnownService
+        ? (serviceNameLabels[subscriptionId] ?? subscriptionId)
+        : ''
+
+      return {
+        subscriptionData: {
+          ...state.subscriptionData,
+          subscription: isCustom ? 'CUSTOM_INPUT' : subscriptionId,
+          title: isCustom ? state.subscriptionData.title : knownServiceName,
+          iconUrl: isKnownService
+            ? (KNOWN_SERVICES.find((s) => s.id === subscriptionId)?.iconUrl ??
+              '')
+            : '',
+        },
+      }
+    }),
+  // set((state) => ({
+
+  //   subscriptionData: {
+
+  //     ...state.subscriptionData,
+  //     subscription: isCustom
+  //       ? 'CUSTOM_INPUT'
+  //       : subscriptionId,
+  //       // || KNOWN_SERVICES[0].id
+  //     title: isCustom ? state.subscriptionData.title : knownServiceName,
+  //   },
+  // })),
 
   resetSubscriptionData: () =>
     set(() => ({
@@ -59,7 +97,7 @@ export const useSubscriptionStore = create((set) => ({
         paymentMethod: '',
         paymentStatus: '',
         paymentCycle: '',
-        paymentDay: '',
+        paymentDay: 1,
         memo: '',
       },
     })),

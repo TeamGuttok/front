@@ -2,11 +2,15 @@ import { useSearchStore } from '#stores/subscriptions/useSearchStore'
 import { KNOWN_SERVICES } from '#constants/knownServices'
 import Link from 'next/link'
 import clsx from 'clsx'
+import { allServices } from './page'
+
+type ServiceItem = (typeof allServices)[number]
 
 export default function SearchResults({
   handleCardClick,
 }: {
-  handleCardClick: (service: (typeof KNOWN_SERVICES)[0]) => void
+  handleCardClick: (service: ServiceItem) => void
+  //handleCardClick: (service: (typeof KNOWN_SERVICES)[0]) => void
 }) {
   const { searchResults } = useSearchStore()
 
@@ -18,7 +22,7 @@ export default function SearchResults({
 
   return (
     <div className="grid mb-4 gap-4 grid-cols-2 sm:grid-cols-2 lg:grid-cols-4">
-      {searchResults.map((service: ServiceStores) => (
+      {searchResults.map((service: ServiceItem) => (
         <div
           key={service.id}
           onClick={() => handleCardClick(service)}
@@ -27,13 +31,10 @@ export default function SearchResults({
         >
           <Link href="add/detail">
             <div className="flex flex-col items-center">
-              {service.iconUrl && (
+              {service.iconUrl ? (
                 <div
                   className={clsx(
-                    'mb-2 flex items-center justify-center w-[2rem] h-[3rem]',
-                    {
-                      'bg-gray-300': !service.iconUrl,
-                    },
+                    'mb-2 flex items-center justify-center w-[0.5rem] h-[0.5rem]',
                   )}
                   style={{
                     backgroundImage: `url(${service.iconUrl})`,
@@ -42,7 +43,7 @@ export default function SearchResults({
                     backgroundPosition: 'center',
                   }}
                 />
-              )}
+              ) : null}
 
               <h2 className="text-center text-sm dark:text-white items-center font-medium whitespace-nowrap">
                 {service.name}
