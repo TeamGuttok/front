@@ -13,8 +13,10 @@ export const PATH = {
   itemAdd: '/item/add',
   addDetail: '/item/add/detail',
   //addCustom: '/item/add/detail/custom',
-  itemDetail: (itemId: number) => `/item/${itemId}/detail`,
-  itemEdit: (itemId: number) => `/item/${itemId}/edit`,
+  itemDetail: (id: string | number) => `/item/${id}/detail`,
+  itemEdit: (id: string | number) => `/item/${id}/edit`,
+  // itemDetail: (itemId: number) => `/item/${itemId}/detail`,
+  // itemEdit: (itemId: number) => `/item/${itemId}/edit`,
 
   // group: '/group',
   // groupAdd: '/group/add',

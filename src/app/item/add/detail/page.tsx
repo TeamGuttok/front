@@ -17,9 +17,10 @@ import CardTitle from '#components/_common/CardTitle'
 import { useServiceStore } from '#stores/subscriptions/useServiceStore'
 import { useSubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
 import { useCreateSubscription } from '#apis/common/api'
-import { SubscriptionRequest } from '#types/subscription'
+import { paymentStatusLabels, SubscriptionRequest } from '#types/subscription'
 import { useItemStore } from '#stores/subscriptions/useItemStore'
 import { serviceNameLabels } from '#types/subscription'
+import { KNOWN_SERVICES } from '#constants/knownServices'
 
 export default function Page() {
   const router = useRouter()
@@ -101,10 +102,14 @@ export default function Page() {
       ? title
       : (serviceNameLabels[subscription] ?? subscription)
 
+    const iconUrl = isCustom
+      ? ''
+      : (KNOWN_SERVICES.find((s) => s.id === subscription)?.iconUrl ?? '')
     // const generateId = () => `mock-${Date.now()}`
 
     const mockItem = {
-      useId: `mock-${Date.now()}`, // 유니크 ID
+      id: 1,
+      useId: `mock-${Date.now()}`,
       title: computedTitle,
       subscription,
       paymentAmount,
@@ -112,7 +117,8 @@ export default function Page() {
       paymentDay,
       paymentMethod,
       memo,
-      paymentStatus: 'ACTIVE', // 테스트용 상태 값도 설정 가능
+      paymentStatus: 'ACTIVE',
+      iconUrl,
     }
 
     if (process.env.NODE_ENV !== 'production') {
@@ -123,7 +129,7 @@ export default function Page() {
     }
 
     const payload: SubscriptionRequest = {
-      title: isCustom ? title : '',
+      title: subscription === 'CUSTOM_INPUT' ? title : '',
       subscription,
       paymentAmount,
       paymentCycle,

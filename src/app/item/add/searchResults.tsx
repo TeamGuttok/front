@@ -31,13 +31,10 @@ export default function SearchResults({
         >
           <Link href="add/detail">
             <div className="flex flex-col items-center">
-              {service.iconUrl && (
+              {service.iconUrl ? (
                 <div
                   className={clsx(
-                    'mb-2 flex items-center justify-center w-[2rem] h-[3rem]',
-                    {
-                      'bg-gray-300': !service.iconUrl,
-                    },
+                    'mb-2 flex items-center justify-center w-[0.5rem] h-[0.5rem]',
                   )}
                   style={{
                     backgroundImage: `url(${service.iconUrl})`,
@@ -46,7 +43,7 @@ export default function SearchResults({
                     backgroundPosition: 'center',
                   }}
                 />
-              )}
+              ) : null}
 
               <h2 className="text-center text-sm dark:text-white items-center font-medium whitespace-nowrap">
                 {service.name}

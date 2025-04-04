@@ -1,7 +1,7 @@
 'use client'
 
-// import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { PATH } from '#app/routes'
+import { useRouter, useParams } from 'next/navigation'
 import { Input } from '#components/_common/Input'
 import { Button } from '#components/_common/Button'
 import { cn } from '#components/lib/utils'
@@ -16,9 +16,22 @@ import {
 import CardTitle from '#components/_common/CardTitle'
 import { useServiceStore } from '#stores/subscriptions/useServiceStore'
 import { useSubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
+import {
+  SubscriptionContents,
+  ServiceId,
+  PaymentMethod,
+  PaymentCycle,
+  paymentStatus,
+} from '#types/subscription'
+import { usePatchSubscription } from '#apis/common/api'
 
 export default function Page() {
+  const params = useParams()
+  const subscriptionId = Number(params.id)
   const router = useRouter()
+
+  const patchMutation = usePatchSubscription()
+
   const { selectedService } = useServiceStore()
   const { subscriptionData } = useSubscriptionStore()
 
@@ -45,6 +58,7 @@ export default function Page() {
     paymentCycleOptions,
     paymentDayOptions,
     updateMemo,
+    paymentStatusOptions,
     resetSubscriptionData,
   } = useSubscriptionStore()
 
@@ -54,6 +68,8 @@ export default function Page() {
     useSubscriptionStore.getState().subscriptionData.paymentDay
   const defaultPaymentMethod =
     useSubscriptionStore.getState().subscriptionData.paymentMethod
+  const defaultPaymentStatus =
+    useSubscriptionStore.getState().subscriptionData.paymentStatus
 
   const handleSubmit = (): boolean => {
     const { title, paymentAmount, paymentCycle, paymentDay } = subscriptionData
@@ -166,8 +182,8 @@ export default function Page() {
                       className="border px-2 py-1 mr-10 rounded-md dark:text-black"
                     >
                       {paymentCycleOptions.map((cycle) => (
-                        <SelectItem key={cycle} value={cycle}>
-                          {cycle}
+                        <SelectItem key={cycle.value} value={cycle.value}>
+                          {cycle.toString()}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -191,8 +207,11 @@ export default function Page() {
                       className="border px-2 py-1 mr-10 rounded-md dark:text-black block"
                     >
                       {paymentDayOptions.map((day) => (
-                        <SelectItem key={day} value={String(day)}>
-                          {day}
+                        <SelectItem
+                          key={String(day.value)}
+                          value={String(day.value)}
+                        >
+                          {day.label}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -232,8 +251,11 @@ export default function Page() {
                     className="border rounded-md px-2 py-1 dark:text-black block"
                   >
                     {paymentMethodOptions.map((method) => (
-                      <SelectItem key={method} value={method}>
-                        {method}
+                      <SelectItem
+                        key={String(method.value)}
+                        value={String(method.value)}
+                      >
+                        {method.label}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -263,8 +285,31 @@ export default function Page() {
               type="submit"
               onClick={(e) => {
                 e.preventDefault()
-                createSubscription.mutate(subscriptionData)
-                resetSubscriptionData()
+                patchMutation.mutate(
+                  {
+                    id: subscriptionId,
+                    payload: {
+                      ...subscriptionData,
+                      subscription: selectedService?.id as ServiceId,
+                      id: subscriptionId,
+                      paymentMethod:
+                        subscriptionData.paymentMethod as PaymentMethod,
+                      paymentCycle:
+                        subscriptionData.paymentCycle as PaymentCycle,
+                      paymentStatus:
+                        subscriptionData.paymentStatus as paymentStatus,
+                    },
+                  },
+                  {
+                    onSuccess: () => {
+                      resetSubscriptionData()
+                      router.push(PATH.itemDetail(subscriptionId))
+                    },
+                    onError: (err) => {
+                      console.error('Error updating subscription:', err)
+                    },
+                  },
+                )
               }}
               disabled={!handleSubmit()}
               className={`w-full py-2 mt-4 text-base text-white shadow ${
