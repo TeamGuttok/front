@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation'
 import clsx from 'clsx'
 import { useSearchStore } from '#stores/subscriptions/useSearchStore'
 import SearchResults from './searchResults'
-import { useQuery, useMutation } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { searchService } from '#apis/common/api'
 import { useServiceStore } from '#stores/subscriptions/useServiceStore'
 import { ServiceItem } from '#types/subscription'
@@ -97,7 +97,7 @@ export default function Page() {
       {searchQuery.trim().length > 0 ? (
         <SearchResults
           // searchMutation={searchMutation}
-          handleCardClick={(service: any) => handleCardClick(service)}
+          handleCardClick={(service: ServiceItem) => handleCardClick(service)}
         />
       ) : (
         <div className="grid mb-4 gap-4 grid-cols-2 sm:grid-cols-2 lg:grid-cols-4">

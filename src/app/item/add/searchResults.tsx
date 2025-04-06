@@ -1,5 +1,4 @@
 import { useSearchStore } from '#stores/subscriptions/useSearchStore'
-import { KNOWN_SERVICES } from '#constants/knownServices'
 import Link from 'next/link'
 import clsx from 'clsx'
 import { allServices } from './page'

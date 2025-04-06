@@ -9,7 +9,7 @@ import { paymentCycleLabels, paymentMethodLabels } from '#types/subscription'
 import { useRouter } from 'next/navigation'
 import { useDeleteSubscription } from '#apis/common/api'
 
-export default async function SubscriptionDetailPage({
+export default function SubscriptionDetailPage({
   params,
 }: {
   params: { id: string }

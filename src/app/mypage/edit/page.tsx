@@ -1,7 +1,7 @@
 'use client'
 
-import Link from 'next/link'
-import { PATH } from '#app/routes'
+// import Link from 'next/link'
+// import { PATH } from '#app/routes'
 import { FormEvent, useState, useEffect } from 'react'
 import CardTitle from '#components/_common/CardTitle'
 import { Button } from '#components/_common/Button'
@@ -25,74 +25,74 @@ export default function MyPage() {
   const [alarm, setAlarm] = useState(user?.alarm ?? true)
 
   // 마이페이지 정보 호출 API
-  const {
-    mutate: getProfile,
-    isPending: profileLoading,
-    error: profileError,
-    data: profileData,
-  } = useMutation({
-    mutationFn: async (): Promise<{ status: string; data: any }> => {
-      const response = await fetch(`${BASE_URL}/api/users`, {
-        method: 'GET',
-        headers: { Accept: '*/*', 'Content-Type': 'application/json' },
-      })
-      if (!response.ok) {
-        throw new Error('프로필 정보를 불러오지 못했습니다.')
-      }
-      const data = await response.json()
+  // const {
+  //   mutate: getProfile,
+  //   isPending: profileLoading,
+  //   error: profileError,
+  //   data: profileData,
+  // } = useMutation({
+  //   mutationFn: async (): Promise<{ status: string; data: any }> => {
+  //     const response = await fetch(`${BASE_URL}/api/users`, {
+  //       method: 'GET',
+  //       headers: { Accept: '*/*', 'Content-Type': 'application/json' },
+  //     })
+  //     if (!response.ok) {
+  //       throw new Error('프로필 정보를 불러오지 못했습니다.')
+  //     }
+  //     const data = await response.json()
 
-      if (data.status !== '100 CONTINUE') {
-        throw new Error('프로필 정보 호출 실패')
-      }
+  //     if (data.status !== '100 CONTINUE') {
+  //       throw new Error('프로필 정보 호출 실패')
+  //     }
 
-      return data
-    },
-    onSuccess: (data) => {
-      console.log('프로필 정보 호출 성공:', data)
-      setUser(data.data)
-      setNickName(data.data.nickName)
-      setAlarm(data.data.alarm)
-    },
-    onError: (error) => {
-      throw new Error('프로필 정보 호출 실패', error)
-    },
-  })
+  //     return data
+  //   },
+  //   onSuccess: (data) => {
+  //     console.log('프로필 정보 호출 성공:', data)
+  //     setUser(data.data)
+  //     setNickName(data.data.nickName)
+  //     setAlarm(data.data.alarm)
+  //   },
+  //   onError: (error) => {
+  //     throw new Error('프로필 정보 호출 실패', error)
+  //   },
+  // })
 
   // 닉네임 수정 API
-  const {
-    mutate: updateNickName,
-    isPending: NickNameLoading,
-    error: NickNameError,
-    data: NickNameData,
-  } = useMutation({
-    mutationFn: async () => {
-      const response = await fetch(`${BASE_URL}/api/users/nickname`, {
-        method: 'PATCH',
-        headers: { Accept: '*/*', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nickName }),
-      })
+  // const {
+  //   mutate: updateNickName,
+  //   isPending: NickNameLoading,
+  //   error: NickNameError,
+  //   data: NickNameData,
+  // } = useMutation({
+  //   mutationFn: async () => {
+  //     const response = await fetch(`${BASE_URL}/api/users/nickname`, {
+  //       method: 'PATCH',
+  //       headers: { Accept: '*/*', 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ nickName }),
+  //     })
 
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.message || '닉네임 변경 실패')
-      }
+  //     if (!response.ok) {
+  //       const errorData = await response.json()
+  //       throw new Error(errorData.message || '닉네임 변경 실패')
+  //     }
 
-      const data = await response.json()
+  //     const data = await response.json()
 
-      if (data.status !== '100 CONTINUE') {
-        throw new Error('닉네임 변경 실패')
-      }
+  //     if (data.status !== '100 CONTINUE') {
+  //       throw new Error('닉네임 변경 실패')
+  //     }
 
-      return data
-    },
-    onSuccess: (data) => {
-      console.log('닉네임 변경 성공:', data)
-      setUser({ ...user, nickName }) //{nickName: nickName: nickName || data.data.nickName}
-    },
-    onError: (error) => {
-      throw new Error('닉네임 변경 실패', error)
-    },
-  })
+  //     return data
+  //   },
+  //   onSuccess: (data) => {
+  //     console.log('닉네임 변경 성공:', data)
+  //     setUser({ ...user, nickName }) //{nickName: nickName: nickName || data.data.nickName}
+  //   },
+  //   onError: (error) => {
+  //     throw new Error('닉네임 변경 실패', error)
+  //   },
+  // })
 
   // 비밀번호 호출 API
   const {

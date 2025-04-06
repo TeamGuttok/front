@@ -17,7 +17,7 @@ import CardTitle from '#components/_common/CardTitle'
 import { useServiceStore } from '#stores/subscriptions/useServiceStore'
 import { useSubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
 import {
-  SubscriptionContents,
+  //SubscriptionContents,
   ServiceId,
   PaymentMethod,
   PaymentCycle,
@@ -58,7 +58,7 @@ export default function Page() {
     paymentCycleOptions,
     paymentDayOptions,
     updateMemo,
-    paymentStatusOptions,
+    //paymentStatusOptions,
     resetSubscriptionData,
   } = useSubscriptionStore()
 
@@ -68,8 +68,8 @@ export default function Page() {
     useSubscriptionStore.getState().subscriptionData.paymentDay
   const defaultPaymentMethod =
     useSubscriptionStore.getState().subscriptionData.paymentMethod
-  const defaultPaymentStatus =
-    useSubscriptionStore.getState().subscriptionData.paymentStatus
+  //const defaultPaymentStatus =
+  //useSubscriptionStore.getState().subscriptionData.paymentStatus
 
   const handleSubmit = (): boolean => {
     const { title, paymentAmount, paymentCycle, paymentDay } = subscriptionData
