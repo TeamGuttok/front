@@ -1,3 +1,7 @@
+export default function ForgotPasswordPage() {
+  return <div>비밀번호 찾기 페이지</div>
+}
+
 // import { User } from 'lucide-react'
 // import { Button } from '#components/_common/Button'
 // import InviteInput from './InviteInput'

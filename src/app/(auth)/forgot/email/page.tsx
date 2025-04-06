@@ -1,4 +1,8 @@
-// 'use client'
+//'use client'
+
+export default function ForgotEmailPage() {
+  return <div>이메일 찾기 페이지</div>
+}
 
 // import dynamic from 'next/dynamic'
 // import { useActionState } from 'react'
