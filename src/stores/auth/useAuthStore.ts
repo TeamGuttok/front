@@ -34,7 +34,7 @@ export const useAuthStore = create<AuthState>()(
         set({
           user: { email: '', nickName: '', alarm: true },
           isLoggedIn: false,
-          isEmailVerified: true,
+          isEmailVerified: false,
         }),
       setUser: (user: Partial<User>) =>
         set((state) => ({
