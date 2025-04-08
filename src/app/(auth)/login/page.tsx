@@ -36,7 +36,7 @@ export default function Login() {
   })
 
   const { mutate: loginUser, isPending } = useMutation<
-    any,
+    { status: string; data: User } | undefined,
     Error,
     { email: string; password: string }
   >({

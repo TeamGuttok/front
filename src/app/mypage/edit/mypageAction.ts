@@ -1,15 +1,15 @@
 import { create } from 'zustand'
-import { z } from 'zod'
-import { useMutation } from '@tanstack/react-query'
+//import { z } from 'zod'
+// import { useMutation } from '@tanstack/react-query'
 import { useAuthStore } from '#stores/auth/useAuthStore'
-import { useState, FormEvent } from 'react'
-import { SelectLabel, SelectGroup } from '#components/_common/Select'
+// import { useState, FormEvent } from 'react'
+// import { SelectLabel, SelectGroup } from '#components/_common/Select'
 import { BASE_URL } from '#constants/url'
 
-const profileSchema = z.object({
-  nickName: z.string().min(2, '닉네임은 최소 1자 이상이어야 합니다.'),
-  password: z.string().min(6, '비밀번호는 최소 8자 이상이어야 합니다.'),
-})
+// const profileSchema = z.object({
+//   nickName: z.string().min(2, '닉네임은 최소 1자 이상이어야 합니다.'),
+//   password: z.string().min(6, '비밀번호는 최소 8자 이상이어야 합니다.'),
+// })
 
 // TODO 스토어 분리
 interface MyPageState {
@@ -25,7 +25,7 @@ interface MyPageState {
   fetchProfile: () => Promise<void>
 }
 
-export const useMyPageStore = create<MyPageState>((set, get) => ({
+export const useMyPageStore = create<MyPageState>((set) => ({
   // nickName: '',
   // password: '',
   loading: false,
@@ -87,24 +87,24 @@ export const useMyPageStore = create<MyPageState>((set, get) => ({
 }))
 
 // const { mutate: modifyingPassword } = useMutation({
-const modifyPassword = async (password: string) => {
-  mutationFn: async () => {
-    const response = await fetch(`${BASE_URL}/api/users/password`, {
-      method: 'PATCH',
-      credentials: 'include',
-      headers: { Accept: '*/*', 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password }),
-    })
-    if (!response.ok) {
-      const errorData = await response.json()
-      throw new Error('비밀번호 변경 실패')
-    }
+// const modifyPassword = async (password: string) => {
+//   mutationFn: async () => {
+//     const response = await fetch(`${BASE_URL}/api/users/password`, {
+//       method: 'PATCH',
+//       credentials: 'include',
+//       headers: { Accept: '*/*', 'Content-Type': 'application/json' },
+//       body: JSON.stringify({ password }),
+//     })
+//     if (!response.ok) {
+//       const errorData = await response.json()
+//       throw new Error('비밀번호 변경 실패')
+//     }
 
-    const data = await response.json()
-    if (data.status !== '100 CONTINUE') {
-      throw new Error('비밀번호 변경 실패')
-    }
-  }
-}
+//     const data = await response.json()
+//     if (data.status !== '100 CONTINUE') {
+//       throw new Error('비밀번호 변경 실패')
+//     }
+//   }
+// }
 
 //pw: guttok012345!

@@ -9,13 +9,14 @@ import { paymentCycleLabels, paymentMethodLabels } from '#types/subscription'
 import { useRouter } from 'next/navigation'
 import { useDeleteSubscription } from '#apis/common/api'
 
-export default async function SubscriptionDetailPage({
-  params,
-}: {
-  params: { id: string }
-}) {
+export default function SubscriptionDetailPage(props: any) {
+  //   params,
+  // }: {
+  //   params: { id: string }
+  // }) {
   const router = useRouter()
-  const itemId = params.id
+  //const itemId = params.id
+  const itemId = props.params.id
   const item = useItemStore.getState().items.find((i) => i.useId === itemId)
   //const item = useItemStore.getState().getItemById(itemId)
 

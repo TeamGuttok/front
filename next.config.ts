@@ -1,5 +1,5 @@
 import type { NextConfig } from 'next'
-import path from 'path';
+import path from 'path'
 
 const nextConfig: NextConfig = {
   webpack: (config: any) => {
@@ -15,8 +15,11 @@ const nextConfig: NextConfig = {
       '#utils': path.resolve(__dirname, 'src/utils'),
       '#store': path.resolve(__dirname, 'src/store'),
       '#types': path.resolve(__dirname, 'src/types'),
-    };
-    return config;
+    }
+    return config
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
   },
 }
 

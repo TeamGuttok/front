@@ -2,7 +2,7 @@ import type { Config } from 'tailwindcss'
 import type { PluginAPI } from 'tailwindcss/types/config'
 
 export default {
-  darkMode: ['class'],
+  darkMode: 'class',
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',

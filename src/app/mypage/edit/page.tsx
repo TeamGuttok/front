@@ -1,7 +1,7 @@
 'use client'
 
-import Link from 'next/link'
-import { PATH } from '#app/routes'
+// import Link from 'next/link'
+// import { PATH } from '#app/routes'
 import { FormEvent, useState, useEffect } from 'react'
 import CardTitle from '#components/_common/CardTitle'
 import { Button } from '#components/_common/Button'
@@ -11,6 +11,10 @@ import { SelectLabel, SelectGroup } from '#components/_common/Select'
 import { useMutation } from '@tanstack/react-query'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import { BASE_URL } from '#constants/url'
+
+// export function mypageEdit() {
+//   return <p>마이페이지 수정</p>
+// }
 
 export default function MyPage() {
   const groupClassName = 'flex items-start sm:items-center justify-between'

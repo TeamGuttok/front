@@ -1,7 +1,7 @@
 // import { BASE_URL } from '#constants/url'
-import { useSearchStore } from '#stores/subscriptions/useSearchStore'
-import { useSubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
-import { SubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
+// import { useSearchStore } from '#stores/subscriptions/useSearchStore'
+// import { useSubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
+// import { SubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { SubscriptionRequest, SubscriptionContents } from '#types/subscription'
 
@@ -171,20 +171,20 @@ export const useDeleteSubscription = () => {
 //   })
 // }
 
-// // 마이페이지 조회
-// export async function getMypage() {
-//   const url = `${BASE_URL}/api/users`
+// 마이페이지 조회
+export async function getMypage() {
+  const url = `${BASE_URL}/api/users`
 
-//   const res = await fetch(url, {
-//     method: 'GET',
-//     credentials: 'include',
-//     headers: {
-//       'Content-Type': 'application/json',
-//     },
-//   })
+  const res = await fetch(url, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
 
-//   if (!res.ok) {
-//     throw new Error('마이페이지 조회 실패')
-//   }
-//   return res.json()
-// }
+  if (!res.ok) {
+    throw new Error('마이페이지 조회 실패')
+  }
+  return res.json()
+}

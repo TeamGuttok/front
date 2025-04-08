@@ -1,8 +1,7 @@
 import { useSearchStore } from '#stores/subscriptions/useSearchStore'
-import { KNOWN_SERVICES } from '#constants/knownServices'
 import Link from 'next/link'
 import clsx from 'clsx'
-import { allServices } from './page'
+import { allServices } from '#types/subscription'
 
 type ServiceItem = (typeof allServices)[number]
 
