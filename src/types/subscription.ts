@@ -9,6 +9,21 @@ export interface ServiceItem {
   isCustom: boolean
 }
 
+export const allServices: ServiceItem[] = [
+  {
+    id: 'custom',
+    name: '직접 입력하기',
+    iconUrl: '',
+    isCustom: true,
+  },
+  ...KNOWN_SERVICES.map((service) => ({
+    id: service.id,
+    name: service.name,
+    iconUrl: service.iconUrl,
+    isCustom: false,
+  })),
+]
+
 export const serviceNameLabels: Record<ServiceId, string> = {
   CUSTOM_INPUT: '직접 입력',
   YOUTUBE_PREMIUM: '유튜브 프리미엄',
