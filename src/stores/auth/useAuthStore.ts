@@ -13,21 +13,23 @@ interface User {
 
 interface AuthState {
   isLoggedIn: boolean
+  isEmailVerified: boolean
   user: User | null
   logout: () => void
-  //setUser: (user: Partial<User> | ((user: User) => Partial<User>)) => void
   setUser: (user: Partial<User>) => void
   verifyEmail: () => void
-  isEmailVerified: boolean
+  login: (user: Partial<User>) => void
 }
 
 export const useAuthStore = create<AuthState>()(
   persist(
     subscribeWithSelector((set) => ({
       isLoggedIn: false,
-      isEmailVerified: false,
       verifyEmail: () => set({ isEmailVerified: true }),
+      isEmailVerified: false,
+      resetEmailVerification: () => set({ isEmailVerified: false }),
       user: { email: '', nickName: '', alarm: true },
+
       logout: () =>
         set({
           user: { email: '', nickName: '', alarm: true },
@@ -41,8 +43,8 @@ export const useAuthStore = create<AuthState>()(
             nickName: user.nickName ?? state.user?.nickName ?? '',
             alarm: user.alarm ?? state.user?.alarm ?? true,
           },
-          isLoggedIn: true,
         })),
+      
       login: (user: Partial<User>) =>
         set(() => ({
           user: {
