@@ -11,24 +11,9 @@ import clsx from 'clsx'
 import { useSearchStore } from '#stores/subscriptions/useSearchStore'
 import SearchResults from './searchResults'
 import { useMutation } from '@tanstack/react-query'
-import { searchService } from '#apis/common/api'
+import { searchService } from '#apis/subscriptiponAPI'
 import { useServiceStore } from '#stores/subscriptions/useServiceStore'
 import { ServiceItem, allServices } from '#types/subscription'
-
-// export const allServices: ServiceItem[] = [
-//   {
-//     id: 'custom',
-//     name: '직접 입력하기',
-//     iconUrl: '',
-//     isCustom: true,
-//   },
-//   ...KNOWN_SERVICES.map((service) => ({
-//     id: service.id,
-//     name: service.name,
-//     iconUrl: service.iconUrl,
-//     isCustom: false,
-//   })),
-// ]
 
 export default function Page() {
   const { setSelectedService } = useServiceStore()

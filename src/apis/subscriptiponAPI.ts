@@ -1,3 +1,5 @@
+// knownServices 구독 서비스 리스트 / 구독 항목 생성, 삭제, 수정, 조회
+
 // import { BASE_URL } from '#constants/url'
 // import { useSearchStore } from '#stores/subscriptions/useSearchStore'
 // import { useSubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'

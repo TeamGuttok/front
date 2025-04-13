@@ -1,3 +1,5 @@
+// 알림 리스트 조회, 알림 읽음 처리, 알림 삭제
+
 import { BASE_URL } from '#constants/url'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 

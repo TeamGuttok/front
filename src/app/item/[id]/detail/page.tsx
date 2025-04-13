@@ -7,7 +7,7 @@ import { Settings, Trash2 } from 'lucide-react'
 import { useItemStore } from '#stores/subscriptions/useItemStore'
 import { paymentCycleLabels, paymentMethodLabels } from '#types/subscription'
 import { useRouter } from 'next/navigation'
-import { useDeleteSubscription } from '#apis/common/api'
+import { useDeleteSubscription } from '#apis/subscriptiponAPI'
 
 export default function SubscriptionDetailPage(props: any) {
   //   params,

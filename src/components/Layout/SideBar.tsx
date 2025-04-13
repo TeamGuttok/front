@@ -17,6 +17,7 @@ import { PATH } from '#app/routes'
 import { cn } from '#components/lib/utils'
 import * as Dialog from '@radix-ui/react-dialog'
 import { useAuthStore } from '#stores/auth/useAuthStore'
+import { logoutClient } from '#apis/authClient'
 
 export default function SideBar({ pathname }: { pathname: string }) {
   const { theme, setTheme } = useTheme()
@@ -139,7 +140,7 @@ export default function SideBar({ pathname }: { pathname: string }) {
                     <div className="flex justify-end gap-4">
                       <button
                         type="button"
-                        onClick={logout}
+                        onClick={logoutClient}
                         className="px-4 py-2 bg-red-500 text-white rounded-md"
                       >
                         예

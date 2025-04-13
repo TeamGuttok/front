@@ -17,7 +17,6 @@ export default function Layout({ children }: { children: ReactNode }) {
     setIsMount(true)
   }, [])
 
-  // avoid ssr hydration error
   if (!isMount) return null
 
   return (

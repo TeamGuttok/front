@@ -44,7 +44,7 @@ export const useAuthStore = create<AuthState>()(
             alarm: user.alarm ?? state.user?.alarm ?? true,
           },
         })),
-      
+
       login: (user: Partial<User>) =>
         set(() => ({
           user: {

@@ -16,7 +16,7 @@ import {
 import CardTitle from '#components/_common/CardTitle'
 import { useServiceStore } from '#stores/subscriptions/useServiceStore'
 import { useSubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
-import { useCreateSubscription } from '#apis/common/api'
+import { useCreateSubscription } from '#apis/subscriptiponAPI'
 import { paymentStatusLabels, SubscriptionRequest } from '#types/subscription'
 import { useItemStore } from '#stores/subscriptions/useItemStore'
 import { serviceNameLabels } from '#types/subscription'
