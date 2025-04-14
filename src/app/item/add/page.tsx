@@ -14,6 +14,7 @@ import { useMutation } from '@tanstack/react-query'
 import { searchService } from '#apis/subscriptiponAPI'
 import { useServiceStore } from '#stores/subscriptions/useServiceStore'
 import { ServiceItem, allServices } from '#types/subscription'
+import { useSubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
 
 export default function Page() {
   const { setSelectedService } = useServiceStore()
@@ -40,9 +41,13 @@ export default function Page() {
     const selectedService = {
       ...service,
       iconUrl: service.iconUrl ?? '',
+      title: service.name,
     }
     setSelectedService(selectedService)
-    //setSelectedService(service)
+    useSubscriptionStore.getState().setSubscriptionData({
+      title: service.name,
+      subscription: service.id,
+    })
     router.push('add/detail')
   }
   return (
@@ -81,6 +86,7 @@ export default function Page() {
         <SearchResults
           // searchMutation={searchMutation}
           handleCardClick={(service: ServiceItem) => handleCardClick(service)}
+          allServices={allServices}
         />
       ) : (
         <div className="grid mb-4 gap-4 grid-cols-2 sm:grid-cols-2 lg:grid-cols-4">

@@ -10,6 +10,7 @@ import {
   paymentStatus,
 } from '#types/subscription'
 import { KNOWN_SERVICES } from '#constants/knownServices'
+import { SubscriptionRequest } from '#types/subscription'
 
 export type SubscriptionStore = {
   title: string
@@ -51,7 +52,7 @@ export const useSubscriptionStore = create<SubscriptionState>((set) => ({
     memo: '',
   },
 
-  setSubscriptionData: (data) =>
+  setSubscriptionData: (data: Partial<SubscriptionRequest>) =>
     set((state) => ({
       subscriptionData: { ...state.subscriptionData, ...data },
     })),
