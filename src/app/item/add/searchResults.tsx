@@ -6,18 +6,13 @@ import { PATH } from '#app/routes'
 import { KNOWN_SERVICES } from '#constants/knownServices'
 import { serviceNameLabels } from '#types/subscription'
 
-//import { useRouter } from 'next/navigation'
-
 type ServiceItem = (typeof allServices)[number]
 
 export default function SearchResults({
   handleCardClick,
-  allServices,
 }: {
   handleCardClick: (service: ServiceItem) => void
   allServices: ServiceItem[]
-  // handleCardClick: (service: typeof KNOWN_SERVICES[number]) => void
-  //handleCardClick: (service: (typeof KNOWN_SERVICES)[0]) => void
 }) {
   const { searchResults } = useSearchStore()
 
@@ -27,18 +22,6 @@ export default function SearchResults({
     )
   }
 
-  // const router = useRouter()
-
-  // const searchCardClick = (service: ServiceItem) => {
-  //   const selectedService = {
-  //     ...service,
-  //     iconUrl: service.iconUrl,
-  //     title: service.name,
-  //   }
-  //   handleCardClick(selectedService)
-  //   router.push('add/detail')
-  // }
-
   return (
     <div className="grid mb-4 gap-4 grid-cols-2 sm:grid-cols-2 lg:grid-cols-4">
       {searchResults.map((service) => {
@@ -47,29 +30,14 @@ export default function SearchResults({
             serviceNameLabels[s.id as keyof typeof serviceNameLabels]
           return localizedName === service.name
         })
-        // const matched = KNOWN_SERVICES.find((s) => s.id === service.id)
 
         const fullService: ServiceItem = {
           ...service,
+          id: matched?.id ?? service.id,
           iconUrl: matched?.iconUrl,
           name: matched?.name ?? service.name,
-          // isCustom: matched?.isCustom ?? true,
+          isCustom: false,
         }
-        console.log(
-          '서비스 이름:',
-          fullService.name,
-          '| 아이콘 url:',
-          fullService.iconUrl,
-          '| matched 아이콘:',
-          matched?.iconUrl,
-        )
-        console.log(
-          '🧾 allServices 목록:',
-          allServices.map((s) => s.name),
-        )
-        console.log('searchResult ID:', service.id)
-        console.log('matched iconUrl:', matched?.iconUrl)
-
         return (
           <div
             key={`${service.id}-${service.name}`}

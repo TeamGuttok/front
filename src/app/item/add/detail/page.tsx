@@ -1,6 +1,5 @@
 'use client'
 
-// import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Input } from '#components/_common/Input'
 import { Button } from '#components/_common/Button'
@@ -14,18 +13,13 @@ import {
   SelectGroup,
 } from '#components/_common/Select'
 import CardTitle from '#components/_common/CardTitle'
-import { useServiceStore } from '#stores/subscriptions/useServiceStore'
 import { useSubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
 import { useCreateSubscription } from '#apis/subscriptiponAPI'
-import { paymentStatusLabels, SubscriptionRequest } from '#types/subscription'
-import { useItemStore } from '#stores/subscriptions/useItemStore'
-import { serviceNameLabels } from '#types/subscription'
+import { SubscriptionRequest } from '#types/subscription'
 import { KNOWN_SERVICES } from '#constants/knownServices'
 
 export default function Page() {
   const router = useRouter()
-  const { selectedService } = useServiceStore()
-  //const createSubscription = createSubscription()
   const mutation = useCreateSubscription()
 
   const {
@@ -51,20 +45,12 @@ export default function Page() {
     memo,
   } = subscriptionData
 
-  const payload: SubscriptionRequest = {
-    title,
-    subscription,
-    paymentAmount,
-    paymentCycle,
-    paymentDay,
-    paymentMethod,
-    memo,
-  }
+  const isCustom = subscription === 'CUSTOM_INPUT'
+  const computedTitle = isCustom
+    ? title
+    : (KNOWN_SERVICES.find((s) => s.id === subscription)?.name ?? '')
 
-  const isCustomInput = subscription === 'CUSTOM_INPUT'
-  const computedTitle = isCustomInput ? title : subscription
-
-  const buttonBaseClass = 'w-full py-2 mt-4 text-base text-white shadow'
+  //const buttonBaseClass = 'w-full py-2 mt-4 text-base text-white shadow'
   // const buttonDynamicClass = isDisabled
   //   ? 'bg-gray-400 cursor-not-allowed'
   //   : 'primary'
@@ -97,39 +83,8 @@ export default function Page() {
       memo,
     } = subscriptionData
 
-    const isCustom = subscription === 'CUSTOM_INPUT'
-    const computedTitle = isCustom
-      ? title
-      : (serviceNameLabels[subscription] ?? subscription)
-
-    const iconUrl = isCustom
-      ? ''
-      : (KNOWN_SERVICES.find((s) => s.id === subscription)?.iconUrl ?? '')
-    // const generateId = () => `mock-${Date.now()}`
-
-    const mockItem = {
-      id: 1,
-      useId: `mock-${Date.now()}`,
-      title: computedTitle,
-      subscription,
-      paymentAmount,
-      paymentCycle,
-      paymentDay,
-      paymentMethod,
-      memo,
-      paymentStatus: 'ACTIVE',
-      iconUrl,
-    }
-
-    if (process.env.NODE_ENV !== 'production') {
-      useItemStore.getState().addItem(mockItem)
-      resetSubscriptionData()
-      router.push('/')
-      return
-    }
-
     const payload: SubscriptionRequest = {
-      title: subscription === 'CUSTOM_INPUT' ? title : '',
+      title: isCustom ? title : '',
       subscription,
       paymentAmount,
       paymentCycle,
@@ -177,16 +132,14 @@ export default function Page() {
                 type="text"
                 aria-labelledby="subscriptionTitle"
                 aria-describedby="subscriptionTitle-required"
-                value={computedTitle}
+                value={isCustom ? title : computedTitle}
                 onChange={(e) => {
-                  if (isCustomInput) {
+                  if (isCustom) {
                     setSubscriptionData({ title: e.target.value })
                   }
                 }}
-                //readOnly={!isCustomInput}
-                //onChange={(e) => setSubscriptionData({ title: e.target.value })}
-                //readOnly={!selectedService?.isCustom}
-                placeholder="넷플릭스, 통신비, etc"
+                readOnly={!isCustom}
+                placeholder={isCustom ? '구독명을 입력하세요' : computedTitle}
                 className={cn(inputClassName)}
               />
             </SelectGroup>
@@ -284,7 +237,6 @@ export default function Page() {
                         (option) => option.value === paymentDay,
                       )?.label
                     }
-                    {/* {paymentDayOptions.includes(paymentDay) || paymentDay} */}
                     <SelectContent
                       id="paymentDay"
                       className="border px-2 py-1 mr-10 rounded-md dark:text-black block"

@@ -41,13 +41,15 @@ export default function Page() {
     const selectedService = {
       ...service,
       iconUrl: service.iconUrl ?? '',
+      isCustom: service.isCustom ?? false,
       title: service.name,
     }
     setSelectedService(selectedService)
-    useSubscriptionStore.getState().setSubscriptionData({
-      title: service.name,
-      subscription: service.id,
-    })
+
+    useSubscriptionStore
+      .getState()
+      .updateSubscription(selectedService.isCustom, selectedService.id)
+
     router.push('add/detail')
   }
   return (
@@ -84,7 +86,6 @@ export default function Page() {
 
       {searchQuery.trim().length > 0 ? (
         <SearchResults
-          // searchMutation={searchMutation}
           handleCardClick={(service: ServiceItem) => handleCardClick(service)}
           allServices={allServices}
         />
