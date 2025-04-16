@@ -5,21 +5,32 @@ import { PATH } from '#app/routes'
 import { cn } from '#components/lib/utils'
 import { Settings, Trash2 } from 'lucide-react'
 import { useItemStore } from '#stores/subscriptions/useItemStore'
-import { paymentCycleLabels, paymentMethodLabels } from '#types/subscription'
-import { useRouter } from 'next/navigation'
-import { useDeleteSubscription } from '#apis/subscriptiponAPI'
+import {
+  paymentCycleLabels,
+  paymentMethodLabels,
+  serviceNameLabels,
+  // subscriptionRequest,
+} from '#types/subscription'
+import { useRouter, useParams } from 'next/navigation'
+import { useDeleteSubscription } from '#apis/subscriptionAPI'
+import {
+  //useSubscriptionsClient,
+  useSubscriptionItem,
+} from '#apis/subscriptionClient'
 
-export default function SubscriptionDetailPage(props: any) {
+export default function SubscriptionDetailPage() {
   //   params,
   // }: {
-  //   params: { id: string }
+  //   params: Promise<{ id: string }>
   // }) {
-  const router = useRouter()
-  //const itemId = params.id
-  const itemId = props.params.id
-  const item = useItemStore.getState().items.find((i) => i.useId === itemId)
-  //const item = useItemStore.getState().getItemById(itemId)
 
+  const router = useRouter()
+  const params = useParams<{ id: string }>()
+  const itemId = params.id
+  // const itemId = props.params.id
+  //const item = useItemStore.getState().items.find((i) => i.useId === itemId)
+  const { data: item, isLoading, error } = useSubscriptionItem(params.id)
+  //const item = useItemStore.getState().getItemById(itemId)
   const deleteMutation = useDeleteSubscription()
 
   const handleDelete = () => {
@@ -39,6 +50,23 @@ export default function SubscriptionDetailPage(props: any) {
   const labelClassName =
     'block mb-1 sm:mb-0 tracking-wide text-lg font-medium text-nowrap'
 
+  if (isLoading) {
+    return <p className="text-center text-gray-500">로딩 중..</p>
+  } else if (error) {
+    console.error(error)
+    return (
+      <p className="text-center text-gray-500">
+        구독 데이터를 불러오지 못했습니다. {String(error)}
+      </p>
+    )
+  } else if (!item) {
+    return (
+      <p className="text-center text-gray-500">
+        구독 서비스 상세 정보를 찾을 수 없습니다.
+      </p>
+    )
+  }
+
   return (
     <>
       <div className="flex dark:text-black bg-white rounded-xl flex-col max-w-[30rem] sm:max-w-[42rem] p-8 sm:rounded-md sm:border sm:border-border m-auto -translate-y-8 px-10 pb-8">
@@ -50,7 +78,10 @@ export default function SubscriptionDetailPage(props: any) {
             <div className="grid grid-cols-1 flex-col gap-2 sm:gap-4">
               <div className={cn(groupClassName)}>
                 <span className={cn(labelClassName)}>구독 서비스</span>
-                <span className="text-lg">{item.title}</span>
+                {/* <span className="text-lg">{item.title}</span> */}
+                {item.title?.trim()
+                  ? item.title
+                  : (serviceNameLabels[item.subscription] ?? '알 수 없음')}
               </div>
               <div className={cn(groupClassName)}>
                 <span className={cn(labelClassName)}>결제 금액</span>

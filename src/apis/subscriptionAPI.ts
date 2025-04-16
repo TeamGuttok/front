@@ -31,7 +31,7 @@ export async function searchService(name: string) {
   return res.json()
 }
 
-//구독 서비스 생성 (post)
+// 구독 서비스 생성 (post)
 export const useCreateSubscription = () => {
   const queryClient = useQueryClient()
 
@@ -39,17 +39,20 @@ export const useCreateSubscription = () => {
     mutationFn: async (payload: SubscriptionRequest) => {
       const res = await fetch(`${BASE_URL}/api/subscriptions`, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
       })
 
+      const result = await res.json()
+
       if (!res.ok) {
-        throw new Error('구독 생성 실패')
+        throw new Error(result.message || '구독 생성 실패')
       }
 
-      return res.json()
+      return result
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['subscriptions'] })
@@ -64,7 +67,7 @@ export async function getSubscriptions(lastId = 0, size = 20) {
     size: String(size),
   })
 
-  const res = await fetch(`${BASE_URL}/api/subscriptions/user?${params}`, {
+  const res = await fetch(`${BASE_URL}/api/subscriptions/user`, {
     method: 'GET',
     credentials: 'include',
     headers: {
@@ -72,6 +75,8 @@ export async function getSubscriptions(lastId = 0, size = 20) {
       Accept: 'application/json',
     },
   })
+
+  console.log('res.ok:', res.ok, 'status:', res.status)
 
   if (!res.ok) throw new Error('구독 항목 불러오기 실패')
 
@@ -83,7 +88,7 @@ export const patchSubscription = async (
   id: number,
   payload: SubscriptionContents,
 ) => {
-  const res = await fetch(`/api/subscriptions/${id}`, {
+  const res = await fetch(`${BASE_URL}/api/subscriptions/${id}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',

@@ -23,7 +23,7 @@ import {
   PaymentCycle,
   paymentStatus,
 } from '#types/subscription'
-import { usePatchSubscription } from '#apis/subscriptiponAPI'
+import { usePatchSubscription } from '#apis/subscriptionAPI'
 
 export default function Page() {
   const params = useParams()

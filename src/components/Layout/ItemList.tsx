@@ -6,25 +6,28 @@ import Link from 'next/link'
 import { PATH } from '#app/routes'
 import { useItemStore } from '#stores/subscriptions/useItemStore'
 import { paymentCycleLabels } from '#types/subscription'
+import { useSubscriptionsClient } from '#apis/subscriptionClient'
 
 export default function ItemList() {
-  const { items } = useItemStore()
+  //const { items } = useItemStore()
+  const { data, isLoading, error } = useSubscriptionsClient()
+  const items = data?.contents ?? []
 
   if (!items.length) {
     return (
       <p className="text-center text-gray-500">저장된 구독 항목이 없습니다.</p>
     )
+  } else if (isLoading) {
+    return <p className="text-center text-gray-500">로딩 중...</p>
+  } else if (error) {
+    ;<p className="text-center text-gray-500">
+      구독 데이터를 불러오지 못했습니다.
+    </p>
   }
 
   return (
     <div className="grid grid-cols-1 gap-3">
-      {items.map((item) => {
-        const isMock =
-          typeof item.useId === 'string' && item.useId.startsWith('mock-')
-
-        const itemId = isMock ? item.useId : Number(item.useId)
-
-        return (
+      {items.map((item) =>  (
           <Link key={item.useId} href={PATH.itemDetail(itemId)} passHref>
             <Card
               className={cn(
@@ -62,7 +65,7 @@ export default function ItemList() {
             </Card>
           </Link>
         )
-      })}
+      ))}
     </div>
   )
 }

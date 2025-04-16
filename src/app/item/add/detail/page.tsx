@@ -14,7 +14,7 @@ import {
 } from '#components/_common/Select'
 import CardTitle from '#components/_common/CardTitle'
 import { useSubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
-import { useCreateSubscription } from '#apis/subscriptiponAPI'
+import { useCreateSubscription } from '#apis/subscriptionAPI'
 import { SubscriptionRequest } from '#types/subscription'
 import { KNOWN_SERVICES } from '#constants/knownServices'
 
@@ -62,7 +62,13 @@ export default function Page() {
     'block w-[12.5rem] sm:max-w-[12.5rem] sm:min-w-[12.5rem] pl-2 text-sm sm:text-base placeholder-[hsl(var(--muted-foreground))]'
 
   const isFormValid = () => {
-    return !!(title && paymentAmount && paymentCycle && paymentDay)
+    return !!(
+      title &&
+      paymentAmount &&
+      paymentCycle &&
+      paymentDay &&
+      paymentMethod
+    )
   }
 
   const handleSave = (event: React.FormEvent<HTMLFormElement>) => {
@@ -264,8 +270,16 @@ export default function Page() {
                 id="paymentMethodLabel"
                 className={cn(labelClassName)}
                 aria-labelledby="paymentMethodLabel"
+                aria-required="true"
+                aria-describedby="paymentMethod-required"
               >
                 결제수단
+                <span
+                  id="subscriptionTitle-required"
+                  className="font-light text-sm text-[hsl(var(--destructive))] ml-2"
+                >
+                  필수
+                </span>
               </SelectLabel>
               <Select onValueChange={(value) => updatePaymentMethod(value)}>
                 <SelectTrigger
