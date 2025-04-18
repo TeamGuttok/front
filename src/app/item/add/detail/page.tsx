@@ -299,13 +299,6 @@ export default function Page() {
                 </SelectTrigger>
               </Select>
             </SelectGroup>
-            {/* <div className="flex justify-end mb-2">
-              <Link href="item/add/detail/custom">
-                <p className="tracking-wide underline text-base">
-                  색깔과 아이콘을 선택해주세요
-                </p>
-              </Link>
-            </div> */}
             <SelectGroup className={cn(groupClassName)}>
               <SelectLabel className={cn(labelClassName)}>메모</SelectLabel>
               <textarea

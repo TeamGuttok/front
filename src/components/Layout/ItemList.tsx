@@ -8,6 +8,7 @@ import { paymentCycleLabels } from '#types/subscription'
 import { useSubscriptionsClient } from '#apis/subscriptionClient'
 import { KNOWN_SERVICES } from '#constants/knownServices'
 import { serviceNameLabels } from '#types/subscription'
+import { useSwipeable } from 'react-swipeable'
 
 export default function ItemList() {
   const { data, isLoading, error } = useSubscriptionsClient()

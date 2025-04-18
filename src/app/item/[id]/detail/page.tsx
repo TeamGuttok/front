@@ -63,10 +63,9 @@ export default function SubscriptionDetailPage() {
             <div className="grid grid-cols-1 flex-col gap-2 sm:gap-4">
               <div className={cn(groupClassName)}>
                 <span className={cn(labelClassName)}>구독 서비스</span>
-                {/* <span className="text-lg">{item.title}</span> */}
                 {item.title?.trim()
                   ? item.title
-                  : (serviceNameLabels[item.subscription] ?? '알 수 없음')}
+                  : serviceNameLabels[item.subscription]}
               </div>
               <div className={cn(groupClassName)}>
                 <span className={cn(labelClassName)}>결제 금액</span>
@@ -84,8 +83,7 @@ export default function SubscriptionDetailPage() {
                 <span className={cn(labelClassName)}>결제 수단</span>
                 <span className="text-lg">
                   {paymentMethodLabels[item.paymentMethod] ??
-                    item.paymentMethod ??
-                    '미지정'}
+                    item.paymentMethod}
                 </span>
               </div>
 
@@ -102,7 +100,7 @@ export default function SubscriptionDetailPage() {
                 />
               </button>
               <Link
-                href={PATH.itemEdit(Number(item.useId))}
+                href={PATH.itemEdit(item.id)}
                 aria-label="수정 페이지로 이동"
               >
                 <Settings
