@@ -17,38 +17,33 @@ import CardTitle from '#components/_common/CardTitle'
 import { useServiceStore } from '#stores/subscriptions/useServiceStore'
 import { useSubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
 import {
-  //SubscriptionContents,
   ServiceId,
   PaymentMethod,
   PaymentCycle,
   paymentStatus,
+  serviceNameLabels,
 } from '#types/subscription'
 import { usePatchSubscription } from '#apis/subscriptionAPI'
 import { groupClassName, inputClassName, labelClassName } from '#style/style'
+import { useEffect } from 'react'
+import {
+  useUpdateSubscriptionItem,
+  useSubscriptionItem,
+} from '#apis/subscriptionClient'
 
 export default function Page() {
   const params = useParams()
-  const subscriptionId = Number(params.id)
+  const subscriptionId = Number(params?.id ?? NaN)
   const router = useRouter()
+  const {
+    data: item,
+    isLoading,
+    error,
+  } = useSubscriptionItem(String(subscriptionId))
 
   const patchMutation = usePatchSubscription()
-
   const { selectedService } = useServiceStore()
   const { subscriptionData } = useSubscriptionStore()
-
-  const paymentAmount = useSubscriptionStore(
-    (state) => state.subscriptionData.paymentAmount,
-  )
-  const paymentCycle = useSubscriptionStore(
-    (state) => state.subscriptionData.paymentCycle,
-  )
-  const paymentDay = useSubscriptionStore(
-    (state) => state.subscriptionData.paymentDay,
-  )
-  const paymentMethod = useSubscriptionStore(
-    (state) => state.subscriptionData.paymentMethod,
-  )
-  const memo = useSubscriptionStore((state) => state.subscriptionData.memo)
 
   const {
     setSubscriptionData,
@@ -59,22 +54,66 @@ export default function Page() {
     paymentCycleOptions,
     paymentDayOptions,
     updateMemo,
-    //paymentStatusOptions,
     resetSubscriptionData,
   } = useSubscriptionStore()
 
-  const defaultPaymentCycle =
-    useSubscriptionStore.getState().subscriptionData.paymentCycle
-  const defaultPaymentDay =
-    useSubscriptionStore.getState().subscriptionData.paymentDay
-  const defaultPaymentMethod =
-    useSubscriptionStore.getState().subscriptionData.paymentMethod
-  //const defaultPaymentStatus =
-  //useSubscriptionStore.getState().subscriptionData.paymentStatus
+  const {
+    title,
+    paymentAmount,
+    paymentCycle,
+    paymentDay,
+    paymentMethod,
+    memo,
+    paymentStatus,
+  } = subscriptionData
+
+  useEffect(() => {
+    if (item) {
+      setSubscriptionData({
+        title: item.title,
+        subscription: item.subscription,
+        paymentAmount: item.paymentAmount,
+        paymentMethod: item.paymentMethod,
+        paymentCycle: item.paymentCycle,
+        paymentDay: item.paymentDay,
+        memo: item.memo ?? '',
+        paymentStatus: item.paymentStatus,
+      })
+    }
+  }, [item])
+
+  const computedTitle =
+    subscriptionData.subscription === 'CUSTOM_INPUT'
+      ? subscriptionData.title
+      : serviceNameLabels[subscriptionData.subscription] || ''
 
   const handleSubmit = (): boolean => {
-    const { title, paymentAmount, paymentCycle, paymentDay } = subscriptionData
-    return !!(title && paymentAmount && paymentCycle && paymentDay)
+    const { title, subscription, paymentAmount, paymentCycle, paymentDay } =
+      subscriptionData
+    const isCustom = subscription === 'CUSTOM_INPUT'
+
+    return !!(
+      (isCustom ? title : true) &&
+      paymentAmount &&
+      paymentCycle &&
+      paymentDay
+    )
+  }
+
+  if (isNaN(subscriptionId)) {
+    return <p className="text-red-500 text-center">잘못된 접근입니다.</p>
+  }
+
+  if (isLoading) {
+    return <p className="text-center text-gray-400">데이터 불러오는 중...</p>
+  }
+
+  if (error) {
+    return (
+      <p className="text-center text-red-500">
+        구독 정보를 불러오지 못했습니다
+      </p>
+    )
   }
 
   return (
@@ -104,10 +143,18 @@ export default function Page() {
                 type="text"
                 aria-labelledby="subscriptionTitle"
                 aria-describedby="subscriptionTitle-required"
-                value={subscriptionData.title}
-                onChange={(e) => setSubscriptionData({ title: e.target.value })}
-                readOnly={!selectedService?.isCustom}
-                placeholder="넷플릭스, 통신비, etc"
+                value={computedTitle}
+                onChange={(e) => {
+                  if (subscriptionData.subscription === 'CUSTOM_INPUT') {
+                    setSubscriptionData({ title: e.target.value })
+                  }
+                }}
+                readOnly={subscriptionData.subscription !== 'CUSTOM_INPUT'}
+                placeholder={
+                  subscriptionData.subscription === 'CUSTOM_INPUT'
+                    ? '구독명을 입력하세요'
+                    : computedTitle
+                }
                 className={cn(inputClassName)}
               />
             </SelectGroup>
@@ -171,14 +218,18 @@ export default function Page() {
                     aria-controls="paymentCycle-options"
                     className="flex border rounded-md px-4 sm:w-auto"
                   >
-                    {paymentCycle || defaultPaymentCycle}
+                    {
+                      paymentCycleOptions.find(
+                        (option) => option.value === paymentCycle,
+                      )?.label
+                    }
                     <SelectContent
                       id="paymentCycle-options"
                       className="border px-2 py-1 mr-10 rounded-md dark:text-black"
                     >
-                      {paymentCycleOptions.map((cycle) => (
-                        <SelectItem key={cycle.value} value={cycle.value}>
-                          {cycle.toString()}
+                      {paymentCycleOptions.map(({ value, label }) => (
+                        <SelectItem key={value} value={value}>
+                          {label}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -196,17 +247,18 @@ export default function Page() {
                     aria-controls="paymentDay-options"
                     className="flex border rounded-md px-4"
                   >
-                    {paymentDay || defaultPaymentDay}
+                    {
+                      paymentDayOptions.find(
+                        (option) => option.value === paymentDay,
+                      )?.label
+                    }
                     <SelectContent
                       id="paymentDay"
                       className="border px-2 py-1 mr-10 rounded-md dark:text-black block"
                     >
-                      {paymentDayOptions.map((day) => (
-                        <SelectItem
-                          key={String(day.value)}
-                          value={String(day.value)}
-                        >
-                          {day.label}
+                      {paymentDayOptions.map(({ value, label }) => (
+                        <SelectItem key={value} value={String(value)}>
+                          {label}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -227,8 +279,16 @@ export default function Page() {
                 id="paymentMethodLabel"
                 className={cn(labelClassName)}
                 aria-labelledby="paymentMethodLabel"
+                aria-required="true"
+                aria-describedby="paymentMethod-required"
               >
                 결제수단
+                <span
+                  id="subscriptionAmount-required"
+                  className="font-light text-sm text-[hsl(var(--destructive))] ml-2"
+                >
+                  필수
+                </span>
               </SelectLabel>
               <Select onValueChange={(value) => updatePaymentMethod(value)}>
                 <SelectTrigger
@@ -240,30 +300,24 @@ export default function Page() {
                   className="w-[12.5rem] sm:max-w-[12.5rem] sm:min-w-[12.5rem] 
                 pl-2 flex tracking-wide text-lg font-medium text-nowrap"
                 >
-                  {paymentMethod || defaultPaymentMethod}
+                  {
+                    paymentMethodOptions.find(
+                      (option) => option.value === paymentMethod,
+                    )?.label
+                  }
                   <SelectContent
                     id="paymentMethod"
                     className="border rounded-md px-2 py-1 dark:text-black block"
                   >
-                    {paymentMethodOptions.map((method) => (
-                      <SelectItem
-                        key={String(method.value)}
-                        value={String(method.value)}
-                      >
-                        {method.label}
+                    {paymentMethodOptions.map(({ value, label }) => (
+                      <SelectItem key={value} value={value}>
+                        {label}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </SelectTrigger>
               </Select>
             </SelectGroup>
-            <div className="flex justify-end mb-2">
-              {/* <Link href="item/add/detail/custom">
-                <p className="tracking-wide underline text-base">
-                  색깔과 아이콘을 선택해주세요
-                </p>
-              </Link> */}
-            </div>
             <SelectGroup className={cn(groupClassName)}>
               <SelectLabel className={cn(labelClassName)}>메모</SelectLabel>
               <textarea

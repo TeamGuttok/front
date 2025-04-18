@@ -1,6 +1,6 @@
 'use client'
 
-//import { BASE_URL } from '#constants/url'
+import { BASE_URL } from '#constants/url'
 import { getSubscriptions } from './subscriptionAPI'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 
@@ -29,6 +29,33 @@ export function useSubscriptionItem(id: string) {
       const item = data.contents.find((i) => String(i.id) === id)
       if (!item) throw new Error('아이템을 찾을 수 없습니다.')
       return item
+    },
+  })
+}
+
+// 구독 서비스 수정 (patch)
+export function useUpdateSubscriptionItem (id: string) {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (payload: any) => {
+      const res = await fetch(`${BASE_URL}/api/subscriptions/${id}`, {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      })
+
+      if (!res.ok) {
+        throw new Error('구독 서비스 수정 실패')
+      }
+
+      return res.json()
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['subscriptions'] })
     },
   })
 }

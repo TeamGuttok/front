@@ -76,15 +76,11 @@ export async function getSubscriptions(lastId = 0, size = 20) {
     },
   })
 
-  console.log('res.ok:', res.ok, 'status:', res.status)
-
   if (!res.ok) {
-    const errorText = await res.text()
-    console.error('API 응답 오류:', res.status, errorText)
     throw new Error('구독 항목 불러오기 실패')
   }
 
-  return res.json() // { contents, size, hasNext }
+  return res.json() 
 }
 
 // 구독서비스 수정 api (patch)
@@ -94,6 +90,7 @@ export const patchSubscription = async (
 ) => {
   const res = await fetch(`${BASE_URL}/api/subscriptions/${id}`, {
     method: 'PATCH',
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -118,6 +115,7 @@ export const usePatchSubscription = () => {
     }) => {
       const res = await fetch(`${BASE_URL}/api/subscriptions/${id}`, {
         method: 'PATCH',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
