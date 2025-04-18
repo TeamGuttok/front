@@ -22,18 +22,6 @@ export default function NavigationBar({ pathname }: { pathname: string }) {
               <span>알림</span>
             </Link>
           </li>
-          {/* <li>
-            <Link
-              href={PATH.group}
-              className={cn(
-                itemClassName,
-                pathname === PATH.group && 'text-foreground',
-              )}
-            >
-              <Users aria-label="그룹 아이콘" />
-              <span>그룹</span>
-            </Link>
-          </li> */}
           <li>
             <Link
               href="/"

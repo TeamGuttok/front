@@ -29,7 +29,7 @@ export default function Login() {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const { setUser, isLoggedIn } = useAuthStore()
+  const { login, setUser, isLoggedIn } = useAuthStore()
   const [error, setError] = useState<Record<string, string[]>>({
     email: [],
     password: [],
@@ -61,6 +61,11 @@ export default function Login() {
     },
     onSuccess: (data) => {
       console.log('로그인 성공:', data)
+      login({
+        email: data.data.email,
+        nickName: data.data.nickName,
+        alarm: true,
+      })
       setUser({ email: data.data.email })
       router.push('/')
     },
@@ -83,7 +88,6 @@ export default function Login() {
     loginUser(input)
   }
 
-  // 로그인한 뒤에 login 페이지 접근 시, 메인 페이지로 이동
   useEffect(() => {
     if (isLoggedIn) {
       router.replace('/')
@@ -145,16 +149,6 @@ export default function Login() {
       <div className="sm:w-full h-[1px] bg-border mt-5"></div>
 
       <div className="flex justify-center items-center sm:mt-2">
-        {/* <Link href={PATH.forgotEmail}>
-          <Button
-            type="button"
-            variant="ghost"
-            className="text-sub hover:bg-transparent hover:text-sub-foreground"
-          >
-            이메일 찾기
-          </Button>
-        </Link> */}
-        {/* <span className="text-xs">|</span> */}
         <Link href={PATH.forgotPassword}>
           <Button
             type="button"

@@ -11,24 +11,10 @@ import clsx from 'clsx'
 import { useSearchStore } from '#stores/subscriptions/useSearchStore'
 import SearchResults from './searchResults'
 import { useMutation } from '@tanstack/react-query'
-import { searchService } from '#apis/common/api'
+import { searchService } from '#apis/subscriptionAPI'
 import { useServiceStore } from '#stores/subscriptions/useServiceStore'
 import { ServiceItem, allServices } from '#types/subscription'
-
-// export const allServices: ServiceItem[] = [
-//   {
-//     id: 'custom',
-//     name: '직접 입력하기',
-//     iconUrl: '',
-//     isCustom: true,
-//   },
-//   ...KNOWN_SERVICES.map((service) => ({
-//     id: service.id,
-//     name: service.name,
-//     iconUrl: service.iconUrl,
-//     isCustom: false,
-//   })),
-// ]
+import { useSubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
 
 export default function Page() {
   const { setSelectedService } = useServiceStore()
@@ -55,9 +41,15 @@ export default function Page() {
     const selectedService = {
       ...service,
       iconUrl: service.iconUrl ?? '',
+      isCustom: service.isCustom ?? false,
+      title: service.name,
     }
     setSelectedService(selectedService)
-    //setSelectedService(service)
+
+    useSubscriptionStore
+      .getState()
+      .updateSubscription(selectedService.isCustom, selectedService.id)
+
     router.push('add/detail')
   }
   return (
@@ -94,8 +86,8 @@ export default function Page() {
 
       {searchQuery.trim().length > 0 ? (
         <SearchResults
-          // searchMutation={searchMutation}
           handleCardClick={(service: ServiceItem) => handleCardClick(service)}
+          allServices={allServices}
         />
       ) : (
         <div className="grid mb-4 gap-4 grid-cols-2 sm:grid-cols-2 lg:grid-cols-4">

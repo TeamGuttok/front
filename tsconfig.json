@@ -31,7 +31,8 @@
       "#apis/*": ["./src/apis/*"],
       "#store/*": ["./src/store/*"],
       "#types/*": ["./src/types/*"],
-      "#queries/*": ["./src/queries/*"]
+      "#queries/*": ["./src/queries/*"],
+      "style/*": ["./src/styles/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

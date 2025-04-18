@@ -5,21 +5,21 @@ import { PATH } from '#app/routes'
 import { cn } from '#components/lib/utils'
 import { Settings, Trash2 } from 'lucide-react'
 import { useItemStore } from '#stores/subscriptions/useItemStore'
-import { paymentCycleLabels, paymentMethodLabels } from '#types/subscription'
-import { useRouter } from 'next/navigation'
-import { useDeleteSubscription } from '#apis/common/api'
+import {
+  paymentCycleLabels,
+  paymentMethodLabels,
+  serviceNameLabels,
+} from '#types/subscription'
+import { useRouter, useParams } from 'next/navigation'
+import { useDeleteSubscription } from '#apis/subscriptionAPI'
+import { useSubscriptionItem } from '#apis/subscriptionClient'
+import { groupClassName, labelClassName } from '#style/style'
 
-export default function SubscriptionDetailPage(props: any) {
-  //   params,
-  // }: {
-  //   params: { id: string }
-  // }) {
+export default function SubscriptionDetailPage() {
   const router = useRouter()
-  //const itemId = params.id
-  const itemId = props.params.id
-  const item = useItemStore.getState().items.find((i) => i.useId === itemId)
-  //const item = useItemStore.getState().getItemById(itemId)
-
+  const params = useParams<{ id: string }>()
+  const itemId = params.id
+  const { data: item, isLoading, error } = useSubscriptionItem(params.id)
   const deleteMutation = useDeleteSubscription()
 
   const handleDelete = () => {
@@ -35,9 +35,22 @@ export default function SubscriptionDetailPage(props: any) {
     })
   }
 
-  const groupClassName = 'flex items-start justify-around'
-  const labelClassName =
-    'block mb-1 sm:mb-0 tracking-wide text-lg font-medium text-nowrap'
+  if (isLoading) {
+    return <p className="text-center text-gray-500">로딩 중..</p>
+  } else if (error) {
+    console.error(error)
+    return (
+      <p className="text-center text-gray-500">
+        구독 데이터를 불러오지 못했습니다. {String(error)}
+      </p>
+    )
+  } else if (!item) {
+    return (
+      <p className="text-center text-gray-500">
+        구독 서비스 상세 정보를 찾을 수 없습니다.
+      </p>
+    )
+  }
 
   return (
     <>
@@ -50,7 +63,10 @@ export default function SubscriptionDetailPage(props: any) {
             <div className="grid grid-cols-1 flex-col gap-2 sm:gap-4">
               <div className={cn(groupClassName)}>
                 <span className={cn(labelClassName)}>구독 서비스</span>
-                <span className="text-lg">{item.title}</span>
+                {/* <span className="text-lg">{item.title}</span> */}
+                {item.title?.trim()
+                  ? item.title
+                  : (serviceNameLabels[item.subscription] ?? '알 수 없음')}
               </div>
               <div className={cn(groupClassName)}>
                 <span className={cn(labelClassName)}>결제 금액</span>
@@ -67,8 +83,9 @@ export default function SubscriptionDetailPage(props: any) {
               <div className={cn(groupClassName)}>
                 <span className={cn(labelClassName)}>결제 수단</span>
                 <span className="text-lg">
-                  {item.paymentMethod ??
-                    paymentMethodLabels[item?.paymentMethod]}
+                  {paymentMethodLabels[item.paymentMethod] ??
+                    item.paymentMethod ??
+                    '미지정'}
                 </span>
               </div>
 

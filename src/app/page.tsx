@@ -10,12 +10,10 @@ export default function Home() {
   const { isLoggedIn, setUser } = useAuthStore()
 
   useEffect(() => {
-    // 상태 구독: 상태가 변경될 때마다 콘솔에 출력
     const unsubscribe = useAuthStore.subscribe((state) => {
       console.log('useAuthStore 상태 변경:', state)
     })
 
-    // localStorage에서 사용자 정보를 불러오는 기존 로직
     const storedUser = localStorage.getItem('user')
     if (storedUser) {
       try {

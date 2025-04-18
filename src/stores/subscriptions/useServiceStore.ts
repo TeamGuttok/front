@@ -1,8 +1,10 @@
 import { create } from 'zustand'
 import { useSubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
+import { serviceNameLabels } from '#types/subscription'
 
 export type ServiceStore = {
   id: string
+  title: string
   name: string
   href: string
   iconUrl: React.ReactNode | string
@@ -17,6 +19,9 @@ export type ServiceState = {
 export const useServiceStore = create<ServiceState>((set) => ({
   selectedService: null,
   setSelectedService: (service) => {
+    const id = service.id
+    const isCustom = service.isCustom
+    const nameFromLabels = serviceNameLabels[id]
     set({
       selectedService: {
         ...service,
@@ -26,7 +31,11 @@ export const useServiceStore = create<ServiceState>((set) => ({
 
     const { updateSubscription, setSubscriptionData } =
       useSubscriptionStore.getState()
-    updateSubscription(service.isCustom, service.id)
-    setSubscriptionData({ title: service.isCustom ? '' : service.name })
+
+    updateSubscription(isCustom, id)
+
+    setSubscriptionData({
+      title: isCustom ? '' : (nameFromLabels ?? service.name),
+    })
   },
 }))
