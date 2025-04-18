@@ -98,8 +98,9 @@ export default function SubscriptionDetailPage() {
               <div className={cn(groupClassName)}>
                 <span className={cn(labelClassName)}>결제 수단</span>
                 <span className="text-lg">
-                  {item.paymentMethod ??
-                    paymentMethodLabels[item?.paymentMethod]}
+                  {paymentMethodLabels[item.paymentMethod] ??
+                    item.paymentMethod ??
+                    '미지정'}
                 </span>
               </div>
 
