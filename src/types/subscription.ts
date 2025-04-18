@@ -49,32 +49,16 @@ export const serviceNameLabels: Record<ServiceId, string> = {
   SPOTV_NOW: '스포티비 NOW',
 }
 
-export const PaymentMethodLables : Record<PaymentMethod, string> = {
+export const paymentMethodLabels = {
   CARD: '카드',
   BANK_TRANSFER: '계좌이체',
   NAVER_PAY: '네이버페이',
   KAKAO_PAY: '카카오페이',
   MOBILE_PAYMENT: '휴대폰 결제',
   OTHER: '기타',
-}
+} as const
 
-// 사용하고 있는 곳 수정 후 삭제 
-export type PaymentMethod =
-  | 'CARD'
-  | 'BANK_TRANSFER'
-  | 'MOBILE_PAYMENT'
-  | 'NAVER_PAY'
-  | 'KAKAO_PAY'
-  | 'OTHER'
-
-export const paymentMethodLabels: Record<PaymentMethod, string> = {
-  CARD: '카드',
-  BANK_TRANSFER: '계좌이체',
-  NAVER_PAY: '네이버페이',
-  KAKAO_PAY: '카카오페이',
-  MOBILE_PAYMENT: '휴대폰 결제',
-  OTHER: '기타',
-}
+export type PaymentMethod = keyof typeof paymentMethodLabels
 
 export const paymentDayLabels: number[] = Array.from(
   { length: 31 },
@@ -83,20 +67,20 @@ export const paymentDayLabels: number[] = Array.from(
 
 export type PaymentDay = (typeof paymentDayLabels)[number]
 
-export type PaymentCycle = 'YEARLY' | 'MONTHLY' | 'WEEKLY'
-
-export const paymentCycleLabels: Record<PaymentCycle, string> = {
-  YEARLY: '연',
-  MONTHLY: '월',
+export const paymentCycleLabels = {
+  YEARLY: '년',
+  MONTHLY: '달',
   WEEKLY: '주',
 }
 
-export type paymentStatus = 'COMPLETED' | 'PENDING'
+export type PaymentCycle = keyof typeof paymentCycleLabels
 
-export const paymentStatusLabels: Record<paymentStatus, string> = {
+export const paymentStatusLabels: Record<'PENDING' | 'COMPLETED', string> = {
+  PENDING: '결제 대기',
   COMPLETED: '결제 완료',
-  PENDING: '미결제',
 }
+
+export type paymentStatus = keyof typeof paymentStatusLabels
 
 export interface SubscriptionContents {
   id: number

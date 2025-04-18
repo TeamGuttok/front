@@ -17,6 +17,7 @@ import { useSubscriptionStore } from '#stores/subscriptions/useSubscriptionStore
 import { useCreateSubscription } from '#apis/subscriptionAPI'
 import { SubscriptionRequest } from '#types/subscription'
 import { KNOWN_SERVICES } from '#constants/knownServices'
+import { groupClassName, labelClassName, inputClassName } from '#style/style'
 
 export default function Page() {
   const router = useRouter()
@@ -49,17 +50,6 @@ export default function Page() {
   const computedTitle = isCustom
     ? title
     : (KNOWN_SERVICES.find((s) => s.id === subscription)?.name ?? '')
-
-  //const buttonBaseClass = 'w-full py-2 mt-4 text-base text-white shadow'
-  // const buttonDynamicClass = isDisabled
-  //   ? 'bg-gray-400 cursor-not-allowed'
-  //   : 'primary'
-
-  const groupClassName = 'flex items-start sm:items-center justify-between'
-  const labelClassName =
-    'block mb-1 sm:mb-0 tracking-wide text-lg font-medium text-nowrap'
-  const inputClassName =
-    'block w-[12.5rem] sm:max-w-[12.5rem] sm:min-w-[12.5rem] pl-2 text-sm sm:text-base placeholder-[hsl(var(--muted-foreground))]'
 
   const isFormValid = () => {
     return !!(

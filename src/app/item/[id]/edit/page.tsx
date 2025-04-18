@@ -24,6 +24,7 @@ import {
   paymentStatus,
 } from '#types/subscription'
 import { usePatchSubscription } from '#apis/subscriptionAPI'
+import { groupClassName, inputClassName, labelClassName } from '#style/style'
 
 export default function Page() {
   const params = useParams()
@@ -75,12 +76,6 @@ export default function Page() {
     const { title, paymentAmount, paymentCycle, paymentDay } = subscriptionData
     return !!(title && paymentAmount && paymentCycle && paymentDay)
   }
-
-  const groupClassName = 'flex items-start sm:items-center justify-between'
-  const labelClassName =
-    'block mb-1 sm:mb-0 tracking-wide text-lg font-medium text-nowrap'
-  const inputClassName =
-    'block w-[12.5rem] sm:max-w-[12.5rem] sm:min-w-[12.5rem] pl-2 text-sm sm:text-base placeholder-[hsl(var(--muted-foreground))]'
 
   return (
     <CardTitle className="flex flex-col max-w-[40rem] sm:max-w-[52rem] sm:p-8 sm:rounded-md sm:border sm:border-border m-auto -translate-y-8 px-4">

@@ -9,28 +9,17 @@ import {
   paymentCycleLabels,
   paymentMethodLabels,
   serviceNameLabels,
-  // subscriptionRequest,
 } from '#types/subscription'
 import { useRouter, useParams } from 'next/navigation'
 import { useDeleteSubscription } from '#apis/subscriptionAPI'
-import {
-  //useSubscriptionsClient,
-  useSubscriptionItem,
-} from '#apis/subscriptionClient'
+import { useSubscriptionItem } from '#apis/subscriptionClient'
+import { groupClassName, labelClassName } from '#style/style'
 
 export default function SubscriptionDetailPage() {
-  //   params,
-  // }: {
-  //   params: Promise<{ id: string }>
-  // }) {
-
   const router = useRouter()
   const params = useParams<{ id: string }>()
   const itemId = params.id
-  // const itemId = props.params.id
-  //const item = useItemStore.getState().items.find((i) => i.useId === itemId)
   const { data: item, isLoading, error } = useSubscriptionItem(params.id)
-  //const item = useItemStore.getState().getItemById(itemId)
   const deleteMutation = useDeleteSubscription()
 
   const handleDelete = () => {
@@ -45,10 +34,6 @@ export default function SubscriptionDetailPage() {
       },
     })
   }
-
-  const groupClassName = 'flex items-start justify-around'
-  const labelClassName =
-    'block mb-1 sm:mb-0 tracking-wide text-lg font-medium text-nowrap'
 
   if (isLoading) {
     return <p className="text-center text-gray-500">로딩 중..</p>

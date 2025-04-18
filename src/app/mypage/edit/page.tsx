@@ -1,7 +1,5 @@
 'use client'
 
-// import Link from 'next/link'
-// import { PATH } from '#app/routes'
 import { FormEvent, useState, useEffect } from 'react'
 import CardTitle from '#components/_common/CardTitle'
 import { Button } from '#components/_common/Button'
@@ -11,14 +9,9 @@ import { SelectLabel, SelectGroup } from '#components/_common/Select'
 import { useMutation } from '@tanstack/react-query'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import { BASE_URL } from '#constants/url'
+import { groupClassName, labelClassName, inputClassName } from '#style/style'
 
 export default function MyPage() {
-  const groupClassName = 'flex items-start sm:items-center justify-between'
-  const labelClassName =
-    'block mb-1 sm:mb-0 tracking-wide text-lg font-medium text-nowrap'
-  const inputClassName =
-    'block w-[12.5rem] sm:max-w-[12.5rem] sm:min-w-[12.5rem] pl-2 text-sm sm:text-base placeholder-[hsl(var(--muted-foreground))]'
-
   const { user, setUser } = useAuthStore()
   const [nickName, setNickName] = useState(user?.nickName || '')
   const [password, setPassword] = useState('')
