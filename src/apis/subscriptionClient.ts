@@ -3,6 +3,8 @@
 import { BASE_URL } from '#constants/url'
 import { getSubscriptions } from './subscriptionAPI'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { patchSubscription } from '#apis/subscriptionAPI'
+import { paymentStatus } from '#types/subscription'
 
 //구독 서비스 생성 (post)
 export const useSubscriptionsClient = (lastId = 0, size = 20) => {
@@ -34,7 +36,7 @@ export function useSubscriptionItem(id: string) {
 }
 
 // 구독 서비스 수정 (patch)
-export function useUpdateSubscriptionItem (id: string) {
+export function useUpdateSubscriptionItem(id: string) {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -53,6 +55,26 @@ export function useUpdateSubscriptionItem (id: string) {
       }
 
       return res.json()
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['subscriptions'] })
+    },
+  })
+}
+
+// 결제완료/대기 상태 변경 hook (수정 patch)
+export function usePatchPaymentStatus() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({
+      id,
+      status,
+    }: {
+      id: number
+      status: paymentStatus
+    }) => {
+      return patchSubscription(id, { paymentStatus: status })
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['subscriptions'] })

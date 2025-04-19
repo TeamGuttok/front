@@ -9,6 +9,13 @@ export interface ServiceItem {
   isCustom: boolean
 }
 
+export interface userInfo {
+  id?: number
+  email: string
+  nickName: string
+  alarm: boolean
+}
+
 export const allServices: ServiceItem[] = [
   {
     id: 'custom',
@@ -82,6 +89,16 @@ export const paymentStatusLabels: Record<'PENDING' | 'COMPLETED', string> = {
 
 export type paymentStatus = keyof typeof paymentStatusLabels
 
+export interface SubscriptionRequest {
+  title: string
+  subscription: ServiceId
+  paymentAmount: number
+  paymentMethod: PaymentMethod
+  paymentCycle: PaymentCycle
+  paymentDay: number
+  memo?: string
+}
+
 export interface SubscriptionContents {
   id: number
   title: string
@@ -91,14 +108,4 @@ export interface SubscriptionContents {
   paymentStatus: paymentStatus
   paymentCycle: PaymentCycle
   paymentDay: number
-}
-
-export interface SubscriptionRequest {
-  title: string
-  subscription: ServiceId
-  paymentAmount: number
-  paymentMethod?: PaymentMethod
-  paymentCycle: PaymentCycle
-  paymentDay: number
-  memo?: string
 }

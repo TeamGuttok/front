@@ -10,7 +10,7 @@ import { ErrorMessage } from '#components/_common/ErrorMessage'
 import RegisterInputField from './RegisterInputField'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import { z } from 'zod'
-import { BASE_URL } from '#constants/url'
+import { register } from '#apis/userAPI'
 
 const RegisterSuccess = dynamic(() => import('./RegisterSuccess'))
 
@@ -44,57 +44,81 @@ export default function Register() {
   const [error, setError] = useState<Record<string, string[]>>({})
 
   const { mutate: registerUser, isPending: isRegistering } = useMutation({
-    mutationFn: async () => {
-      const response = await fetch(`${BASE_URL}/api/users/signup`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({
-          password: password,
-          email: user?.email,
-          nickName: nickName,
-          alarm: true,
-        }),
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.message || '회원가입 요청 실패')
-      }
-
-      const data = await response.json()
-      if (data.status !== '100 CONTINUE') {
-        throw new Error('회원가입 실패. 다시 시도해주세요.')
-      }
-
-      return data
-    },
+    mutationFn: register,
     onSuccess: (data) => {
-      console.log('회원가입 성공:', data)
-
       setUser({
         email: data.data.email,
         nickName: data.data.nickName,
-        alarm: true,
+        alarm: data.data.alarm,
       })
-
-      useAuthStore.setState({ isLoggedIn: true })
-      console.log('useAuthStore 변경 후:', useAuthStore.getState())
-      // setUser({ email: data.data.email, nickName: nickName || data.data.nickName, alarm: true  })
     },
     onError: (error) => {
       if (error instanceof Error) {
-        setError({ general: [error.message] })
+        console.error('회원가입 실패:', error)
       }
     },
+    // mutationFn: async () => {
+    //   const response = await fetch(`${BASE_URL}/api/users/signup`, {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     credentials: 'include',
+    //     body: JSON.stringify({
+    //       password: password,
+    //       email: user?.email,
+    //       nickName: nickName,
+    //       alarm: true,
+    //     }),
+    //   })
+
+    //   if (!response.ok) {
+    //     const errorData = await response.json()
+    //     throw new Error(errorData.message || '회원가입 요청 실패')
+    //   }
+
+    //   const data = await response.json()
+    //   if (data.status !== '100 CONTINUE') {
+    //     throw new Error('회원가입 실패. 다시 시도해주세요.')
+    //   }
+
+    //   return data
+    // },
+    // onSuccess: async (data) => {
+    //   try {
+    //     const meRes = await fetch(`${BASE_URL}/api/users/check-session`, {
+    //       method: 'GET',
+    //       credentials: 'include',
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //         Accept: 'application/json',
+    //       },
+    //     })
+
+    //     if (!meRes.ok) {
+    //       throw new Error('세션 확인 실패')
+    //     }
+
+    //     const me = await meRes.json()
+
+    //     setUser({
+    //       email: me.email ?? '',
+    //       nickName: me.nickName ?? '',
+    //       alarm: typeof me.alarm === 'boolean' ? me.alarm : true,
+    //     })
+
+    //     useAuthStore.setState({ isLoggedIn: true })
+    //   } catch (error) {
+    //     console.error('세션 확인 실패', error)
+    //   }
+    // },
+    // onError: (error) => {
+    //   if (error instanceof Error) {
+    //     setError({ general: [error.message] })
+    //   }
+    // },
   })
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    // console.log('useAuthStore:', useAuthStore.getState())
-    // console.log('비밀번호:', password)
-    // console.log('비밀번호 확인:', passwordConfirm)
-    // console.log('닉네임', nickName)
 
     const input = {
       email: user?.email ?? '',
@@ -104,17 +128,14 @@ export default function Register() {
       alarm: true,
     }
 
-    console.log('검증할 데이터:', input)
-
     const parseResult = registerSchema.safeParse(input)
 
     if (!parseResult.success) {
-      console.log('유효성 검사 실패:', parseResult.error.flatten().fieldErrors)
       setError(parseResult.error.flatten().fieldErrors)
       return
     }
 
-    registerUser()
+    //registerUser()
   }
 
   if (isLoggedIn) {
@@ -144,17 +165,13 @@ export default function Register() {
                   placeholder="닉네임을 입력하세요"
                   className="w-0 grow"
                   value={nickName}
-                  //onChange={(e) => setUser({ nickName: e.target.value })}
                   onChange={(e) => setNickName(e.target.value)}
                 />
               </div>
               <ErrorMessage errors={error?.nickname} className="ml-20" />
             </div>
 
-            <RegisterInputField
-
-            // defaultValue={formData?.get('email')?.toString() ?? ''}
-            />
+            <RegisterInputField />
 
             <div className="flex flex-col gap-1 min-h-16">
               <div className="flex items-center">
@@ -168,7 +185,6 @@ export default function Register() {
                   className="w-0 grow"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  //defaultValue={formData?.get('password') as string}
                   autoComplete="new-password"
                 />
               </div>
@@ -201,7 +217,6 @@ export default function Register() {
                 className="ml-20"
               />
             </div>
-            {/* <ErrorMessage errors={error?.passwordConfirm || []} /> */}
             <Button
               type="submit"
               className="flex justify-self-center w-full h-10 text-md rounded-lg mt-10"

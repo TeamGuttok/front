@@ -8,40 +8,22 @@ import { getHours } from 'date-fns'
 import { Plus } from 'lucide-react'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import { useItemStore } from '#stores/subscriptions/useItemStore'
-// 배포 후 주석 해제
-// import { getSubscriptions } from '#apis/common/api'
-// import { useQuery } from '@tanstack/react-query'
+import { getGreeting } from '#hooks/getGreeting'
+import { useUserNickname } from '#apis/userClient'
 
 export default function Page() {
   const currentHour = getHours(new Date())
   const { user } = useAuthStore()
+  const { data: nickName, isLoading } = useUserNickname()
+
   const total = useItemStore((state) => state.getTotalPaymentAmount)
-
-  const getGreeting = () => {
-    if (currentHour >= 5 && currentHour < 12) return <p>좋은 아침입니다,</p>
-    if (currentHour >= 12 && currentHour < 18) return <p>좋은 점심입니다,</p>
-    return <p>좋은 저녁입니다, </p>
-  }
-
-  // const { setItems } = useItemStore()
-
-  // const { data, isLoading, error } = useQuery({
-  //   queryKey: ['user-subscriptions'],
-  //   queryFn: () => getSubscriptions(0, 20),
-  // })
-
-  // data ?? setItems(data.contents)
 
   return (
     <div className="mx-auto p-5 flex flex-col min-h-[calc(100vh-4.5rem)] pb-[3rem]">
       <div className="flex justify-between mb-6">
         <div className="flex flex-col">
           <h1 className="text-xl font-semibold flex flex-row">
-            {getGreeting()}
-            <span>&nbsp;</span>
-            <p>
-              <span>{user.nickName}</span> 님.
-            </p>
+            {getGreeting(nickName, isLoading)}
           </h1>
           <h2>
             이번 달 지출은{' '}
@@ -52,15 +34,6 @@ export default function Page() {
             입니다.
           </h2>
         </div>
-        {/* <Link
-          href={PATH.calendarView}
-          aria-label="캘린더 페이지로 이동"
-          className="sm:hidden flex items-center"
-        >
-          <Button className="w-11 h-11">
-            <CalendarDays size={35} />
-          </Button>
-        </Link> */}
       </div>
 
       <div className="flex-1 overflow-auto">

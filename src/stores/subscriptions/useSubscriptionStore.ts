@@ -76,18 +76,6 @@ export const useSubscriptionStore = create<SubscriptionState>((set) => ({
         },
       }
     }),
-  // set((state) => ({
-
-  //   subscriptionData: {
-
-  //     ...state.subscriptionData,
-  //     subscription: isCustom
-  //       ? 'CUSTOM_INPUT'
-  //       : subscriptionId,
-  //       // || KNOWN_SERVICES[0].id
-  //     title: isCustom ? state.subscriptionData.title : knownServiceName,
-  //   },
-  // })),
 
   resetSubscriptionData: () =>
     set(() => ({
