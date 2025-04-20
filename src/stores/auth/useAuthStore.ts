@@ -4,21 +4,16 @@ import {
   persist,
   createJSONStorage,
 } from 'zustand/middleware'
-
-interface User {
-  email: string
-  nickName: string
-  alarm: boolean
-}
+import type { userInfo } from '#types/subscription'
 
 interface AuthState {
   isLoggedIn: boolean
   isEmailVerified: boolean
-  user: User | null
+  user: userInfo | null
   logout: () => void
-  setUser: (user: Partial<User>) => void
+  setUser: (user: Partial<userInfo>) => void
   verifyEmail: () => void
-  login: (user: Partial<User>) => void
+  login: (user: Partial<userInfo>) => void
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -36,7 +31,7 @@ export const useAuthStore = create<AuthState>()(
           isLoggedIn: false,
           isEmailVerified: false,
         }),
-      setUser: (user: Partial<User>) =>
+      setUser: (user: Partial<userInfo>) =>
         set((state) => ({
           user: {
             email: user.email ?? state.user?.email ?? '',
@@ -45,7 +40,7 @@ export const useAuthStore = create<AuthState>()(
           },
         })),
 
-      login: (user: Partial<User>) =>
+      login: (user: Partial<userInfo>) =>
         set(() => ({
           user: {
             email: user.email ?? '',

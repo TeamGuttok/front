@@ -23,7 +23,7 @@ export async function logoutClient() {
       throw new Error('로그아웃 실패')
     }
 
-    logout() // 상태 초기화
+    logout()
     window.location.href = '/'
   } catch (error) {
     console.error('클라이언트 로그아웃 실패:', error)

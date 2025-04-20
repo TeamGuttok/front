@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { z } from 'zod'
 import { BASE_URL } from '#constants/url'
+import { loginUser, checkSession } from '#apis/authAPI'
 
 export interface User {
   email: string
@@ -35,47 +36,72 @@ export default function Login() {
     password: [],
   })
 
-  const { mutate: loginUser, isPending } = useMutation<
-    { status: string; data: User } | undefined,
-    Error,
-    { email: string; password: string }
-  >({
-    mutationFn: async (credentials) => {
-      const response = await fetch(`${BASE_URL}/api/users/signin`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(credentials),
-      })
+  const { mutate: loginMutate, isPending } = useMutation({
+    mutationFn: loginUser,
 
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.message || '로그인 요청 실패')
-      }
-
-      const data = await response.json()
-      if (data.status !== 'OK') {
-        throw new Error('로그인 실패. 다시 시도해주세요.')
-      }
-
-      return data
-    },
-    onSuccess: (data) => {
-      console.log('로그인 성공:', data)
+    onSuccess: (user) => {
       login({
-        email: data.data.email,
-        nickName: data.data.nickName,
-        alarm: true,
+        email: user.email,
+        nickName: user.nickName,
+        alarm: user.alarm,
       })
-      setUser({ email: data.data.email })
+      setUser({
+        email: user.email,
+        nickName: user.nickName,
+        alarm: user.alarm,
+      })
+
       router.push('/')
     },
-    onError: (error, data) => {
-      console.log('로그인 실패:', data)
+
+    onError: (error) => {
       if (error instanceof Error) {
         setError({ general: [error.message] })
       }
     },
   })
+
+  // const { mutate: loginUser, isPending } = useMutation<
+  //   { status: string; data: User } | undefined,
+  //   Error,
+  //   { email: string; password: string }
+  // >({
+  //   mutationFn: async (credentials) => {
+  //     const response = await fetch(`${BASE_URL}/api/users/signin`, {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify(credentials),
+  //     })
+
+  //     if (!response.ok) {
+  //       const errorData = await response.json()
+  //       throw new Error(errorData.message || '로그인 요청 실패')
+  //     }
+
+  //     const data = await response.json()
+  //     if (data.status !== 'OK') {
+  //       throw new Error('로그인 실패. 다시 시도해주세요.')
+  //     }
+
+  //     return data
+  //   },
+  //   onSuccess: (data) => {
+  //     console.log('로그인 성공:', data)
+  //     login({
+  //       email: data.data.email,
+  //       nickName: data.data.nickName,
+  //       alarm: true,
+  //     })
+  //     setUser({ email: data.data.email })
+  //     router.push('/')
+  //   },
+  //   onError: (error, data) => {
+  //     console.log('로그인 실패:', data)
+  //     if (error instanceof Error) {
+  //       setError({ general: [error.message] })
+  //     }
+  //   },
+  // })
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -85,7 +111,7 @@ export default function Login() {
       setError(parseResult.error.flatten().fieldErrors)
       return
     }
-    loginUser(input)
+    loginMutate(input)
   }
 
   useEffect(() => {
