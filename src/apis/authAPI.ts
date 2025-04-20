@@ -2,18 +2,11 @@
 
 'use server'
 
-import { redirect } from 'next/navigation'
-import { useAuthStore } from '#stores/auth/useAuthStore'
 import { BASE_URL } from '#constants/url'
 import type { userInfo } from '#types/subscription'
 
-interface State {
-  error?: Record<string, string[]>
-  formData?: FormData
-}
-
 // 로그인 post
-export async function loginUser({
+export async function useLogin({
   email,
   password,
 }: {
@@ -39,55 +32,4 @@ export async function loginUser({
   }
 
   return data.data as userInfo
-}
-
-// 로그아웃
-export async function logout(
-  prevState: State | null,
-  formData: FormData,
-): Promise<State> {
-  const storeUser = useAuthStore.getState().user
-  const email = (storeUser && storeUser.email) || formData.get('email')
-  const nickName = (storeUser && storeUser.nickName) || ''
-
-  console.log('logoutAction 입력값:', { email, nickName })
-
-  try {
-    const response = await fetch(`${BASE_URL}/api/users/signout`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: '*/*',
-      },
-      body: JSON.stringify({ email, nickName }),
-    })
-    redirect('/')
-  } catch (error: unknown) {
-    return {
-      error: {
-        general: [
-          error instanceof Error ? error.message : '로그아웃에 실패했습니다.',
-        ],
-      },
-      formData,
-    }
-  }
-}
-
-// 세션 체크
-export async function checkSession() {
-  const response = await fetch(`${BASE_URL}/api/users/check-session`, {
-    method: 'GET',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-  })
-
-  if (!response.ok) {
-    throw new Error('세션 확인 실패')
-  }
-
-  return response.json()
 }

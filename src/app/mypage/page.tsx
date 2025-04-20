@@ -11,7 +11,7 @@ import { useAuthStore } from '#stores/auth/useAuthStore'
 import useTheme from '#contexts/ThemeProvider/hook'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
-import { getMypage } from '#apis/subscriptionAPI'
+// import { getMypage } from '#apis/subscriptionAPI'
 import { BASE_URL } from '#constants/url'
 
 export default function MyPage() {
@@ -23,16 +23,16 @@ export default function MyPage() {
   const email = user?.email
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false)
 
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ['userProfile'],
-    queryFn: getMypage,
-  })
-  if (isLoading) {
-    console.log(data)
-  }
-  if (isError) {
-    console.log(error)
-  }
+  // const { data, isLoading, isError, error } = useQuery({
+  //   queryKey: ['userProfile'],
+  //   queryFn: getMypage,
+  // })
+  // if (isLoading) {
+  //   console.log(data)
+  // }
+  // if (isError) {
+  //   console.log(error)
+  // }
 
   // 알림 설정 API
   const { mutate: toggleAlarm, isPending: isTogglingAlarm } = useMutation({
@@ -52,34 +52,6 @@ export default function MyPage() {
     },
     onError: (error) => {
       console.error('알림 설정 변경 실패:', error)
-    },
-  })
-
-  // 로그아웃 API
-  const { mutate: signOut, isPending: isLoggingOut } = useMutation({
-    mutationFn: async () => {
-      const response = await fetch(`${BASE_URL}/api/users/signout`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: { Accept: '*/*' },
-      })
-
-      if (!response.ok) {
-        throw new Error('로그아웃 실패')
-      }
-
-      const data = await response.json()
-      if (data.status !== '100 CONTINUE') {
-        throw new Error('로그아웃 중 오류가 발생했습니다.')
-      }
-
-      return data
-    },
-    onSuccess: () => {
-      logout()
-    },
-    onError: (error) => {
-      console.error('로그아웃 실패:', error)
     },
   })
 

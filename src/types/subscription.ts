@@ -108,4 +108,7 @@ export interface SubscriptionContents {
   paymentStatus: paymentStatus
   paymentCycle: PaymentCycle
   paymentDay: number
+  memo?: string
+  registerData: string
+  updateData: string
 }
