@@ -11,28 +11,36 @@ import {
   serviceNameLabels,
 } from '#types/subscription'
 import { useRouter, useParams } from 'next/navigation'
-import { useDeleteSubscription } from '#apis/subscriptionAPI'
-import { useSubscriptionItem } from '#apis/subscriptionClient'
+import {
+  useSubscriptionItem,
+  useDeleteSubscription,
+} from '#apis/subscriptionClient'
 import { groupClassName, labelClassName } from '#style/style'
+import { ConfirmDialog } from '#components/Layout/ConfirmDialog'
+import { useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 
 export default function SubscriptionDetailPage() {
   const router = useRouter()
   const params = useParams<{ id: string }>()
-  const itemId = params.id
-  const { data: item, isLoading, error } = useSubscriptionItem(params.id)
-  const deleteMutation = useDeleteSubscription()
+  const itemId = parseInt(params.id, 10)
+  const { isLoading, error } = useSubscriptionItem(params.id)
+  const { mutate: deleteSubscription } = useDeleteSubscription()
+  const { data: item } = useSubscriptionItem(String(itemId), {
+    enabled: !!itemId && typeof window !== 'undefined',
+  })
+
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
   const handleDelete = () => {
-    if (!item?.id) return
-    deleteMutation.mutate(Number(item.id), {
-      onSuccess: () => {
-        useItemStore.getState().removeItem(item.useId)
-        router.push('/')
+    deleteSubscription(
+      { id: Number(itemId) },
+      {
+        onSuccess: () => {
+          router.push('/')
+        },
       },
-      onError: (err) => {
-        console.error('삭제 실패:', err)
-      },
-    })
+    )
   }
 
   if (isLoading) {
@@ -47,7 +55,7 @@ export default function SubscriptionDetailPage() {
   } else if (!item) {
     return (
       <p className="text-center text-gray-500">
-        구독 서비스 상세 정보를 찾을 수 없습니다.
+        구독 서비스가 존재하지 않습니다.
       </p>
     )
   }
@@ -93,12 +101,22 @@ export default function SubscriptionDetailPage() {
               </div>
             </div>
             <div className="flex justify-end pb-1">
-              <button onClick={handleDelete} className="mr-6">
+              <button
+                type="button"
+                onClick={() => setShowDeleteDialog(true)}
+                className="mr-6"
+              >
                 <Trash2
                   className="w-full h-full text-gray-500"
                   aria-label="삭제 아이콘"
                 />
               </button>
+              <ConfirmDialog
+                open={showDeleteDialog}
+                onOpenChange={setShowDeleteDialog}
+                title="해당 항목을 삭제하시겠습니까?"
+                onConfirm={handleDelete}
+              />
               <Link
                 href={PATH.itemEdit(item.id)}
                 aria-label="수정 페이지로 이동"

@@ -23,12 +23,12 @@ import {
   paymentStatus,
   serviceNameLabels,
 } from '#types/subscription'
-import { usePatchSubscription } from '#apis/subscriptionAPI'
 import { groupClassName, inputClassName, labelClassName } from '#style/style'
 import { useEffect } from 'react'
 import {
-  useUpdateSubscriptionItem,
+  useUpdateSubscription,
   useSubscriptionItem,
+  useDeleteSubscription,
 } from '#apis/subscriptionClient'
 
 export default function Page() {
@@ -41,7 +41,7 @@ export default function Page() {
     error,
   } = useSubscriptionItem(String(subscriptionId))
 
-  const patchMutation = usePatchSubscription()
+  const patchMutation = useUpdateSubscription()
   const { selectedService } = useServiceStore()
   const { subscriptionData } = useSubscriptionStore()
 

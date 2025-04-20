@@ -1,10 +1,13 @@
 'use client'
 
 import { BASE_URL } from '#constants/url'
-import { getSubscriptions } from './subscriptionAPI'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { patchSubscription } from '#apis/subscriptionAPI'
-import { paymentStatus } from '#types/subscription'
+import {
+  getSubscriptions,
+  updataSubscription,
+  deleteSubscription,
+} from '#apis/subscriptionAPI'
+import { paymentStatus, SubscriptionContents } from '#types/subscription'
 
 //구독 서비스 생성 (post)
 export const useSubscriptionsClient = (lastId = 0, size = 20) => {
@@ -15,7 +18,10 @@ export const useSubscriptionsClient = (lastId = 0, size = 20) => {
 }
 
 // 구독 서비스 개별 조회 (/detail)
-export function useSubscriptionItem(id: string) {
+export function useSubscriptionItem(
+  id: string,
+  options?: { enabled?: boolean },
+) {
   const queryClient = useQueryClient()
 
   return useQuery({
@@ -29,37 +35,67 @@ export function useSubscriptionItem(id: string) {
 
       const data = await getSubscriptions()
       const item = data.contents.find((i) => String(i.id) === id)
-      if (!item) throw new Error('아이템을 찾을 수 없습니다.')
+      //if (!item) throw new Error('아이템을 찾을 수 없습니다.')
+      if (!item) return null
       return item
     },
+    enabled: options?.enabled ?? true,
   })
 }
 
 // 구독 서비스 수정 (patch)
-export function useUpdateSubscriptionItem(id: string) {
+
+export const useUpdateSubscription = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (payload: any) => {
-      const res = await fetch(`${BASE_URL}/api/subscriptions/${id}`, {
-        method: 'PATCH',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      })
+    mutationFn: ({
+      id,
+      payload,
+    }: {
+      id: number
+      payload: Partial<SubscriptionContents>
+    }) => updataSubscription(id, payload),
 
-      if (!res.ok) {
-        throw new Error('구독 서비스 수정 실패')
-      }
-
-      return res.json()
-    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['subscriptions'] })
     },
   })
+}
+
+// 결제 서비스 삭제 (delete)
+
+export function useDeleteSubscription() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({ id }: { id: number }) => deleteSubscription(id),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['subscriptions'] })
+    },
+  })
+
+  // return useMutation({
+  //   mutationFn: async () => {
+  //     const res = await fetch(`${BASE_URL}/api/subscriptions/${id}`, {
+  //       method: 'DELETE',
+  //       credentials: 'include',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //     })
+
+  //     if (!res.ok) {
+  //       throw new Error('구독 서비스 삭제 실패')
+  //     }
+
+  //     return res.json()
+  //   },
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries({ queryKey: ['subscriptions'] })
+  //   },
+  // })
 }
 
 // 결제완료/대기 상태 변경 hook (수정 patch)
@@ -74,7 +110,20 @@ export function usePatchPaymentStatus() {
       id: number
       status: paymentStatus
     }) => {
-      return patchSubscription(id, { paymentStatus: status })
+      const res = await fetch(`${BASE_URL}/api/subscriptions/${id}`, {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ paymentStatus: status }),
+      })
+
+      if (!res.ok) {
+        throw new Error('결제 상태 변경 실패')
+      }
+
+      return res.json()
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['subscriptions'] })

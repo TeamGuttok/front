@@ -88,7 +88,8 @@ export async function getSubscriptions(
 }
 
 // 구독서비스 수정 api (patch)
-export const patchSubscription = async (
+
+export const updataSubscription = async (
   id: number,
   payload: Partial<SubscriptionContents>,
 ) => {
@@ -101,59 +102,110 @@ export const patchSubscription = async (
     body: JSON.stringify(payload),
   })
 
+  const result = await res.json()
+
   if (!res.ok) {
-    throw new Error('구독 항목 수정 실패')
+    throw new Error(result.message || '구독 수정 실패')
   }
-
-  return res.json()
-}
-
-export const usePatchSubscription = () => {
-  return useMutation({
-    mutationFn: async ({
-      id,
-      payload,
-    }: {
-      id: number
-      payload: SubscriptionContents
-    }) => {
-      const res = await fetch(`${BASE_URL}/api/subscriptions/${id}`, {
-        method: 'PATCH',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      })
-
-      if (!res.ok) {
-        throw new Error('구독 항목 수정 실패')
-      }
-
-      return res.json()
-    },
-  })
+  return result
 }
 
 // 구독 서비스 삭제 api (delete)
-
 export const deleteSubscription = async (id: number) => {
-  const res = await fetch(`/api/subscriptions/${id}`, {
+  const res = await fetch(`${BASE_URL}/api/subscriptions/${id}`, {
     method: 'DELETE',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ id }),
   })
+
+  const result = await res.json()
 
   if (!res.ok) {
-    throw new Error('구독 항목 삭제 실패')
+    throw new Error(result.message || '구독 삭제 실패')
   }
-
-  return res.json()
+  return result
 }
 
-export const useDeleteSubscription = () => {
-  return useMutation({
-    mutationFn: deleteSubscription,
-  })
-}
+// export const useDeleteSubscription = () => {
+//   const queryClient = useQueryClient()
+
+//   return useMutation ({
+//     mutationFn: async ({id} : {id: number}) => {
+//       const res = await fetch(`${BASE_URL}/api/subscriptions/${id}`, {
+//         method: 'DELETE',
+//         credentials: 'include',
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({id}),
+//       })
+
+//       if (!res.ok) {
+//         throw new Error('구독 항목 삭제 실패')
+//       }
+//       return res.json()
+//     },
+//     onSuccess: () => {
+//       queryClient.invalidateQueries({ queryKey: ['subscriptions'] })
+//     },
+//   })
+// }
+
+// export const deleteSubscription = async (id: number) => {
+//   const res = await fetch(`${BASE_URL}/api/subscriptions/${id}`, {
+//     method: 'DELETE',
+//     credentials: 'include',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify({id}),
+//   })
+//   if (!res.ok) {
+//     throw new Error('구독 항목 삭제 실패')
+//   }
+//   return res.json()
+// }
+
+// export const useDeleteSubscription = () => {
+//   return useMutation({
+//     mutationFn: async (id: number) => {
+//       const res = await fetch(`${BASE_URL}/api/subscriptions/${id}`, {
+//         method: 'DELETE',
+//         credentials: 'include',
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//       });
+
+//       if (!res.ok) {
+//         throw new Error('구독 항목 삭제 실패');
+//       }
+
+//       return res.json();
+//     },
+//   });
+// };
+
+// export const deleteSubscription = async (id: number) => {
+//   const res = await fetch(`${BASE_URL}/api/subscriptions/${id}`, {
+//     method: 'DELETE',
+//   })
+
+//   if (!res.ok) {
+//     throw new Error('구독 항목 삭제 실패')
+//   }
+
+//   return res.json()
+// }
+
+// export const useDeleteSubscription = () => {
+//   return useMutation({
+//     mutationFn: deleteSubscription,
+//   })
+// }
 
 // export const useUpdateSubscription = () => {
 //   const queryClient = useQueryClient()

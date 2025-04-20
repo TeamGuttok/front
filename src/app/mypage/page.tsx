@@ -11,7 +11,8 @@ import { useAuthStore } from '#stores/auth/useAuthStore'
 import useTheme from '#contexts/ThemeProvider/hook'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
-import { BASE_URL, getMypage } from '#apis/subscriptionAPI'
+import { getMypage } from '#apis/subscriptionAPI'
+import { BASE_URL } from '#constants/url'
 
 export default function MyPage() {
   const { fetchProfile } = useMyPageStore()

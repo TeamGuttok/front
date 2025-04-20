@@ -6,13 +6,9 @@ import { cn } from '#components/lib/utils'
 import { Bell, CalendarCheck, Users, HandCoins } from 'lucide-react'
 import Carousel from '#components/_common/Carousel/index'
 import { Button } from '#components/_common/Button'
+import { buttonClassName, iconClassName } from '#style/style'
 
 export default function Home({ pathname }: { pathname: string }) {
-  const buttonClassName =
-    'w-20 bg-primary text-white rounded-md shadow hover:bg-[hsl(var(--primary-hover))]'
-  const iconClassName =
-    'w-16 h-16 stroke-[hsl(var(--primary))] mx-auto flex items-center justify-center'
-
   return (
     <div className="pb-[7rem] background-color-[hsl(var(--background))] flex flex-col min-h-[calc(100vh-4.5rem)] my-auto 2xl:pb-[8rem]">
       <div className="mt-10">
