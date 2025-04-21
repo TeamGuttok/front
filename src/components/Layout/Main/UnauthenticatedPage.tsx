@@ -78,6 +78,7 @@ export default function Home({ pathname }: { pathname: string }) {
             </p>
           </div>
           <div className="text-center">
+            TODO: 메일 알림으로 변경
             <CalendarCheck
               aria-label="캘린더 아이콘"
               className={getIconClassName()}

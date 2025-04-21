@@ -32,13 +32,29 @@ export const useAuthStore = create<AuthState>()(
           isEmailVerified: false,
         }),
       setUser: (user: Partial<userInfo>) =>
-        set((state) => ({
-          user: {
-            email: user.email ?? state.user?.email ?? '',
-            nickName: user.nickName ?? state.user?.nickName ?? '',
-            alarm: user.alarm ?? state.user?.alarm ?? true,
-          },
-        })),
+        set((state) => {
+          const currentUser = state.user ?? {
+            email: '',
+            nickName: '',
+            alarm: true,
+          }
+
+          return {
+            user: {
+              email: user.email ?? currentUser.email,
+              nickName: user.nickName ?? currentUser.nickName,
+              alarm: user.alarm ?? currentUser.alarm,
+            },
+          }
+        }),
+      // setUser: (user: Partial<userInfo>) =>
+      //   set((state) => ({
+      //     user: {
+      //       email: user.email ?? state.user?.email ?? '',
+      //       nickName: user.nickName ?? state.user?.nickName ?? '',
+      //       alarm: user.alarm ?? state.user?.alarm ?? true,
+      //     },
+      //   })),
 
       login: (user: Partial<userInfo>) =>
         set(() => ({

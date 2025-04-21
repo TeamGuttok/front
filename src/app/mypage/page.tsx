@@ -9,80 +9,17 @@ import { useEffect, useState } from 'react'
 import { useMyPageStore } from './edit/mypageAction'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import useTheme from '#contexts/ThemeProvider/hook'
-import { useMutation, useQuery } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
-// import { getMypage } from '#apis/subscriptionAPI'
-import { BASE_URL } from '#constants/url'
+import { useToggleAlarmMutation } from '#apis/notiClient'
 
 export default function MyPage() {
   const { fetchProfile } = useMyPageStore()
   const { isLoggedIn, user, setUser, logout } = useAuthStore()
   const { theme, setTheme } = useTheme()
   const router = useRouter()
-
-  const email = user?.email
+  const { mutate: toggleAlarm, isPending: isTogglingAlarm } =
+    useToggleAlarmMutation()
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false)
-
-  // const { data, isLoading, isError, error } = useQuery({
-  //   queryKey: ['userProfile'],
-  //   queryFn: getMypage,
-  // })
-  // if (isLoading) {
-  //   console.log(data)
-  // }
-  // if (isError) {
-  //   console.log(error)
-  // }
-
-  // 알림 설정 API
-  const { mutate: toggleAlarm, isPending: isTogglingAlarm } = useMutation({
-    mutationFn: async () => {
-      const response = await fetch(`${BASE_URL}/api/users/alarm`, {
-        method: 'PATCH',
-        headers: { Accept: '*/*' },
-        credentials: 'include',
-      })
-      if (!response.ok) {
-        throw new Error('알림 설정 변경 실패')
-      }
-      return response.json()
-    },
-    onSuccess: () => {
-      setUser({ alarm: !user?.alarm })
-    },
-    onError: (error) => {
-      console.error('알림 설정 변경 실패:', error)
-    },
-  })
-
-  // 탈퇴 API
-  const { mutate: deleteAccount, isPending: isDeletingAccount } = useMutation({
-    mutationFn: async () => {
-      const response = await fetch(`${BASE_URL}/api/users`, {
-        method: 'DELETE',
-        credentials: 'include',
-        headers: { Accept: '*/*' },
-      })
-
-      if (!response.ok) {
-        throw new Error('회원 탈퇴 실패')
-      }
-
-      const data = await response.json()
-      if (data.status !== '100 CONTINUE') {
-        throw new Error('회원 탈퇴 중 오류가 발생했습니다.')
-      }
-
-      return data
-    },
-    onSuccess: () => {
-      logout()
-      setShowDeleteDialog(false)
-    },
-    onError: (error) => {
-      console.error('회원 탈퇴 실패:', error)
-    },
-  })
 
   useEffect(() => {
     fetchProfile()
@@ -177,11 +114,12 @@ export default function MyPage() {
 
         <div className="flex justify-end mt-3">
           <Button
-            onClick={() => signOut()}
-            disabled={isLoggingOut}
+            //onClick={() => signOut()}
+            //disabled={isLoggingOut}
             className="primary hover:[hsl(var(--primary-hover))]"
           >
-            <span> {isLoggingOut ? '로그아웃 중...' : '로그아웃'}</span>
+            {/* <span> {isLoggingOut ? '로그아웃 중...' : '로그아웃'}</span> */}
+            로그아웃
           </Button>
           <Button
             onClick={() => setShowDeleteDialog(true)}
@@ -199,8 +137,8 @@ export default function MyPage() {
             <div className="flex justify-end space-x-4">
               <Button onClick={() => setShowDeleteDialog(false)}>아니오</Button>
               <Button
-                onClick={() => deleteAccount()}
-                disabled={isDeletingAccount}
+                // onClick={() => deleteAccount()}
+                // disabled={isDeletingAccount}
                 className="bg-red-400 hover:bg-red-500"
               >
                 예

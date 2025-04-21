@@ -48,3 +48,32 @@ export const getUserInfo = async (): Promise<userInfo> => {
   const json = await res.json()
   return json.data as userInfo
 }
+
+// 탈퇴 API
+// const { mutate: deleteAccount, isPending: isDeletingAccount } = useMutation({
+//   mutationFn: async () => {
+//     const response = await fetch(`${BASE_URL}/api/users`, {
+//       method: 'DELETE',
+//       credentials: 'include',
+//       headers: { Accept: '*/*' },
+//     })
+
+//     if (!response.ok) {
+//       throw new Error('회원 탈퇴 실패')
+//     }
+
+//     const data = await response.json()
+//     if (data.status !== '100 CONTINUE') {
+//       throw new Error('회원 탈퇴 중 오류가 발생했습니다.')
+//     }
+
+//     return data
+//   },
+//   onSuccess: () => {
+//     logout()
+//     setShowDeleteDialog(false)
+//   },
+//   onError: (error) => {
+//     console.error('회원 탈퇴 실패:', error)
+//   },
+// })

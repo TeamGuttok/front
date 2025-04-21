@@ -54,6 +54,53 @@ export const useNotifications = (pageRequest: PageRequest) => {
   })
 }
 
+// 알림 상태 (사용/미사용) 변경 patch
+
+export const patchUserAlarm = async () => {
+  const response = await fetch(`${BASE_URL}/api/users/alarm`, {
+    method: 'PATCH',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify({}),
+  })
+
+  const result = await response.json()
+
+  console.log('📦 PATCH 응답:', result)
+
+  if (!response.ok) {
+    throw new Error(result.message || '알림 설정 변경 실패')
+  }
+
+  return result
+}
+
+// export const patchUserAlarm = async (): Promise<{
+//   message: string
+//   data: {
+//     alarm: boolean
+//   }
+//   status: string
+// }> => {
+//   const response = await fetch(`${BASE_URL}/api/users/alarm`, {
+//     method: 'PATCH',
+//     headers: {
+//       'Accept': 'application/json',
+//       'Content-Type': 'application/json',
+//     },
+//     credentials: 'include',
+//   })
+
+//   if (!response.ok) {
+//     throw new Error('알림 설정 변경 실패')
+//   }
+
+//   return response.json()
+// }
+
 // 알림 읽음 처리 put
 const markNotificationsAsRead = async (ids: number[]) => {
   const res = await fetch('/api/notifications', {

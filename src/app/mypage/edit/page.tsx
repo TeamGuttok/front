@@ -240,37 +240,6 @@ export default function MyPage() {
                 </p>
               )}
             </Button>
-            <SelectGroup className={cn(groupClassName)}>
-              <SelectLabel
-                aria-labelledby="mypagePassword"
-                aria-describedby="mypagePassword-required"
-                aria-required="true"
-                className={cn(labelClassName)}
-              >
-                알림{' '}
-              </SelectLabel>
-              <Input
-                type="password"
-                aria-labelledby="mypagePassword"
-                aria-describedby="mypagePassword-required"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="수정할 비밀번호를 작성해주세요"
-                className={cn(inputClassName)}
-              />
-            </SelectGroup>
-            <Button
-              type="submit"
-              disabled={PasswordLoading}
-              className="w-full bg-primary text-white hover:bg-[hsl(var(--primary-hover))]"
-            >
-              <span>{PasswordLoading ? '저장 중...' : '저장하기'}</span>
-              {PasswordError && (
-                <p className="text-center text-sm text-red-500">
-                  {PasswordError.message}
-                </p>
-              )}
-            </Button>
           </div>
         </form>
       </div>
