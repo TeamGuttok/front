@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { PATH } from '#app/routes'
 import { cn } from '#components/lib/utils'
 import { Settings, Trash2 } from 'lucide-react'
-import { useItemStore } from '#stores/subscriptions/useItemStore'
 import {
   paymentCycleLabels,
   paymentMethodLabels,
@@ -18,7 +17,6 @@ import {
 import { groupClassName, labelClassName } from '#style/style'
 import { ConfirmDialog } from '#components/Layout/ConfirmDialog'
 import { useState } from 'react'
-import { useQueryClient } from '@tanstack/react-query'
 
 export default function SubscriptionDetailPage() {
   const router = useRouter()
@@ -31,6 +29,8 @@ export default function SubscriptionDetailPage() {
   })
 
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+
+  console.log(item)
 
   const handleDelete = () => {
     deleteSubscription(
@@ -97,7 +97,7 @@ export default function SubscriptionDetailPage() {
 
               <div className={cn(groupClassName)}>
                 <span className={cn(labelClassName)}>메모</span>
-                <span className="text-lg">{item?.memo}</span>
+                <span className="text-lg">{item.memo}</span>
               </div>
             </div>
             <div className="flex justify-end pb-1">

@@ -35,7 +35,6 @@ export function useSubscriptionItem(
 
       const data = await getSubscriptions()
       const item = data.contents.find((i) => String(i.id) === id)
-      //if (!item) throw new Error('아이템을 찾을 수 없습니다.')
       if (!item) return null
       return item
     },
@@ -44,7 +43,6 @@ export function useSubscriptionItem(
 }
 
 // 구독 서비스 수정 (patch)
-
 export const useUpdateSubscription = () => {
   const queryClient = useQueryClient()
 
@@ -64,7 +62,6 @@ export const useUpdateSubscription = () => {
 }
 
 // 결제 서비스 삭제 (delete)
-
 export function useDeleteSubscription() {
   const queryClient = useQueryClient()
 
@@ -75,27 +72,6 @@ export function useDeleteSubscription() {
       queryClient.invalidateQueries({ queryKey: ['subscriptions'] })
     },
   })
-
-  // return useMutation({
-  //   mutationFn: async () => {
-  //     const res = await fetch(`${BASE_URL}/api/subscriptions/${id}`, {
-  //       method: 'DELETE',
-  //       credentials: 'include',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //     })
-
-  //     if (!res.ok) {
-  //       throw new Error('구독 서비스 삭제 실패')
-  //     }
-
-  //     return res.json()
-  //   },
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries({ queryKey: ['subscriptions'] })
-  //   },
-  // })
 }
 
 // 결제완료/대기 상태 변경 hook (수정 patch)

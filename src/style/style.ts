@@ -1,3 +1,21 @@
+import { twMerge } from 'tailwind-merge'
+
+export function getIconClassName() {
+  return twMerge(
+    'w-16 h-16 mx-auto flex items-center justify-center',
+    'stroke-[hsl(var(--primary))]',
+  )
+}
+
+export function getMenuClassName() {
+  return twMerge(
+    'flex items-center gap-2 p-3 text-sub hover:text-primary rounded-md',
+  )
+}
+
+export const menuClassName =
+  'flex items-center gap-2 p-3 text-sub hover:text-primary rounded-md'
+
 export const groupClassName = 'flex items-start sm:items-center justify-between'
 
 export const labelClassName =
@@ -8,9 +26,6 @@ export const inputClassName =
 
 export const buttonClassName =
   'w-20 bg-primary text-white rounded-md shadow hover:bg-[hsl(var(--primary-hover))]'
-
-export const iconClassName =
-  'w-16 h-16 stroke-[hsl(var(--primary))] mx-auto flex items-center justify-center'
 
 export const getBadgeClass = (status: 'PENDING' | 'COMPLETED') => {
   return status === 'COMPLETED'

@@ -6,7 +6,7 @@ import { cn } from '#components/lib/utils'
 import { Bell, CalendarCheck, Users, HandCoins } from 'lucide-react'
 import Carousel from '#components/_common/Carousel/index'
 import { Button } from '#components/_common/Button'
-import { buttonClassName, iconClassName } from '#style/style'
+import { buttonClassName, getIconClassName } from '#style/style'
 
 export default function Home({ pathname }: { pathname: string }) {
   return (
@@ -58,7 +58,7 @@ export default function Home({ pathname }: { pathname: string }) {
           <div className="text-center aspect-w-1 aspect-h-1">
             <HandCoins
               aria-label="구독비 절약 아이콘"
-              className={iconClassName}
+              className={getIconClassName()}
               strokeWidth={2.2}
             />
             <h3 className="my-2 text-lg font-medium">구독비 절약</h3>
@@ -69,7 +69,7 @@ export default function Home({ pathname }: { pathname: string }) {
           <div className="text-center aspect-w-1 aspect-h-1">
             <Bell
               aria-label="알림 서비스 아이콘"
-              className={iconClassName}
+              className={getIconClassName()}
               strokeWidth={2.2}
             />
             <h3 className="my-2 text-lg font-medium">알림 서비스</h3>
@@ -78,9 +78,10 @@ export default function Home({ pathname }: { pathname: string }) {
             </p>
           </div>
           <div className="text-center">
+            {/* TODO: 메일 알림으로 변경/아이콘컬러변경 */}
             <CalendarCheck
               aria-label="캘린더 아이콘"
-              className={iconClassName}
+              className={getIconClassName()}
               strokeWidth={2.2}
             />
             <h3 className="my-2 text-lg font-medium">캘린더 제공</h3>
@@ -91,7 +92,7 @@ export default function Home({ pathname }: { pathname: string }) {
           <div className="text-center">
             <Users
               aria-label="그룹 아이콘"
-              className={iconClassName}
+              className={getIconClassName()}
               strokeWidth={2.2}
             />
             <h3 className="my-2 text-lg font-medium">그룹 공유</h3>

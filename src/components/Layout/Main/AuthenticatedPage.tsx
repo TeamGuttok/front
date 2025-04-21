@@ -9,12 +9,13 @@ import { Plus } from 'lucide-react'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import { useItemStore } from '#stores/subscriptions/useItemStore'
 import { getGreeting } from '#hooks/getGreeting'
-import { useUserNickname } from '#apis/userClient'
+import { useMyProfileQuery } from '#apis/userClient'
 
 export default function Page() {
   const currentHour = getHours(new Date())
   const { user } = useAuthStore()
-  const { data: nickName, isLoading } = useUserNickname()
+  const { data: userInfo, isLoading } = useMyProfileQuery()
+  const nickName = userInfo?.nickName
 
   const total = useItemStore((state) => state.getTotalPaymentAmount)
 
