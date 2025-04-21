@@ -47,14 +47,6 @@ export const useAuthStore = create<AuthState>()(
             },
           }
         }),
-      // setUser: (user: Partial<userInfo>) =>
-      //   set((state) => ({
-      //     user: {
-      //       email: user.email ?? state.user?.email ?? '',
-      //       nickName: user.nickName ?? state.user?.nickName ?? '',
-      //       alarm: user.alarm ?? state.user?.alarm ?? true,
-      //     },
-      //   })),
 
       login: (user: Partial<userInfo>) =>
         set(() => ({

@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { PATH } from '#app/routes'
 import { Card } from '#components/_common/Card'
 import { cn } from '#components/lib/utils'
-//import type { SubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
 import { useQuery } from '@tanstack/react-query'
 import { BASE_URL } from '#constants/url'
 import { SubscriptionContents } from '#types/subscription'
@@ -56,11 +55,9 @@ export default function ItemList() {
             key={sub.title}
             className={cn(
               'flex justify-between items-center p-4 rounded-lg shadow-md dark:bg-gray-800 bg-white hover:bg-slate-200 hover:dark:bg-gray-700',
-              //sub.shared ? 'bg-red-100' : 'bg-white',
             )}
           >
             <div className="flex items-center gap-3">
-              {/* <div className={cn('w-8 h-8 rounded-full', sub.color)}></div> */}
               <div className="dark:color-black">
                 <h3 className="font-medium">{sub.title}</h3>
                 <p className="text-xs dark:text-gray-500">{sub.paymentCycle}</p>

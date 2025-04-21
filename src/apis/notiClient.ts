@@ -2,10 +2,12 @@
 
 'use client'
 
-import { useMutation } from '@tanstack/react-query'
-import { patchUserAlarm } from './notiAPI'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { patchUserAlarm, fetchNotifications } from './notiAPI'
 import { useAuthStore } from '#stores/auth/useAuthStore'
+import type { PageRequest } from '#types/notification'
 
+// 알림 상태 변경 patch
 export const useToggleAlarmMutation = () => {
   const { setUser } = useAuthStore()
 
@@ -13,7 +15,7 @@ export const useToggleAlarmMutation = () => {
     mutationFn: patchUserAlarm,
     onSuccess: (response) => {
       console.log('성공:', response)
-      console.log('🔍 response.data:', response.data)
+      console.log('response.data:', response.data)
       const updatedAlarm = response.data.alarm
 
       const alarm = response?.data?.alarm
@@ -47,5 +49,16 @@ export const useToggleAlarmMutation = () => {
 
       console.log('전체 에러 객체:', JSON.stringify(error, null, 2))
     },
+  })
+}
+
+// 알림 리스트 조회 get
+export const useNotifications = (pageRequest: PageRequest) => {
+  return useQuery({
+    queryKey: ['notifications', pageRequest.lastId, pageRequest.size],
+    queryFn: () => fetchNotifications(pageRequest),
+    staleTime: 1000 * 60 * 3,
+    placeholderData: undefined,
+    retry: 1,
   })
 }

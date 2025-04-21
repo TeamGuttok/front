@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { PATH } from '#app/routes'
 import { cn } from '#components/lib/utils'
-import { Bell, CalendarCheck, Users, HandCoins } from 'lucide-react'
+import { Bell, TextSearch, HandCoins, Mail } from 'lucide-react'
 import Carousel from '#components/_common/Carousel/index'
 import { Button } from '#components/_common/Button'
 import { buttonClassName, getIconClassName } from '#style/style'
@@ -63,7 +63,7 @@ export default function Home({ pathname }: { pathname: string }) {
             />
             <h3 className="my-2 text-lg font-medium">구독비 절약</h3>
             <p className="text-sm lg:px-9 break-keep-all">
-              불필요한 구독을 찾아 비용을 절감해보세요
+              불필요한 구독을 찾아 비용을 절감하세요
             </p>
           </div>
           <div className="text-center aspect-w-1 aspect-h-1">
@@ -78,26 +78,25 @@ export default function Home({ pathname }: { pathname: string }) {
             </p>
           </div>
           <div className="text-center">
-            {/* TODO: 메일 알림으로 변경/아이콘컬러변경 */}
-            <CalendarCheck
-              aria-label="캘린더 아이콘"
+            <Mail
+              aria-label="메일 아이콘"
               className={getIconClassName()}
               strokeWidth={2.2}
             />
-            <h3 className="my-2 text-lg font-medium">캘린더 제공</h3>
+            <h3 className="my-2 text-lg font-medium">메일 알림</h3>
             <p className="text-sm lg:px-8 break-keep-all">
-              결제 일정을 캘린더에서 확인하세요
+              결제 일정을 메일으로 받아보세요
             </p>
           </div>
           <div className="text-center">
-            <Users
+            <TextSearch
               aria-label="그룹 아이콘"
               className={getIconClassName()}
               strokeWidth={2.2}
             />
-            <h3 className="my-2 text-lg font-medium">그룹 공유</h3>
+            <h3 className="my-2 text-lg font-medium">구독 서비스 검색</h3>
             <p className="text-sm lg:px-8 break-keep-all">
-              다양한 사람들과 구독 서비스를 공유하세요
+              저장된 구독 서비스 중 사용 중인 서비스를 선택하세요
             </p>
           </div>
         </div>

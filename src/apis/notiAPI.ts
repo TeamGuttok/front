@@ -2,49 +2,52 @@
 
 import { BASE_URL } from '#constants/url'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-
-type NotificationStatus = 'READ' | 'UNREAD'
-type NotificationCategory = 'APPLICATION' | 'SYSTEM'
-
-export interface Notification {
-  id: number
-  category: NotificationCategory
-  message: string
-  status: NotificationStatus
-  registerDate: string
-  updateDate: string
-}
-
-interface PageRequest {
-  lastId: number
-  size: number
-}
-
-interface NotificationResponse {
-  contents: Notification[]
-  size: number
-  hasNext: boolean
-  status: string
-  message?: string
-}
+import type { PageRequest, NotificationResponse } from '#types/notification'
 
 // 알림 목록 가져오기 get
 export const fetchNotifications = async (
   pageRequest: PageRequest,
 ): Promise<NotificationResponse> => {
-  const query = new URLSearchParams({
-    'pageRequest.lastId': String(pageRequest.lastId),
-    'pageRequest.size': String(pageRequest.size),
+  const query = new URLSearchParams()
+
+  if (pageRequest.lastId && pageRequest.lastId > 0) {
+    query.set('lastId', String(pageRequest.lastId))
+  }
+
+  query.set('size', String(pageRequest.size))
+
+  const res = await fetch(`${BASE_URL}/api/notifications?${query.toString()}`, {
+    method: 'GET',
+    headers: {
+      Accept: '*/*',
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
   })
 
-  const res = await fetch(`${BASE_URL}/api/notifications?${query.toString()}`)
-
   if (!res.ok) {
-    throw new Error('알림 목록 요청 실패')
+    const errorData = await res.json().catch(() => ({}))
+    throw new Error(errorData.message || '알림 목록 조회 실패')
   }
 
   return res.json()
 }
+// export const fetchNotifications = async (
+//   pageRequest: PageRequest,
+// ): Promise<NotificationResponse> => {
+//   const query = new URLSearchParams({
+//     'pageRequest.lastId': String(pageRequest.lastId),
+//     'pageRequest.size': String(pageRequest.size),
+//   })
+
+//   const res = await fetch(`${BASE_URL}/api/notifications?${query.toString()}`)
+
+//   if (!res.ok) {
+//     throw new Error('알림 목록 요청 실패')
+//   }
+
+//   return res.json()
+// }
 
 export const useNotifications = (pageRequest: PageRequest) => {
   return useQuery({

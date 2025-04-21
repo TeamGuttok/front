@@ -12,19 +12,24 @@ import { useRouter } from 'next/navigation'
 import { useToggleAlarmMutation } from '#apis/notiClient'
 import { useMyProfileQuery, useDeleteUser } from '#apis/userClient'
 import { ConfirmDialog } from '#components/Layout/ConfirmDialog'
+import { useHandleLogout } from '#hooks/useHandleLogout'
 
 export default function MyPage() {
   const { isLoading: isProfileLoading, isError: isProfileError } =
     useMyProfileQuery()
   const { mutate: deleteAccount, isPending: isDeletingAccount } =
     useDeleteUser()
-  const { isLoggedIn, user, setUser, logout } = useAuthStore()
+  const { user, setUser } = useAuthStore()
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
   const { theme, setTheme } = useTheme()
   const router = useRouter()
 
   const { mutate: toggleAlarm, isPending: isTogglingAlarm } =
     useToggleAlarmMutation()
+
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false)
+  const handleLogout = useHandleLogout()
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -76,7 +81,6 @@ export default function MyPage() {
           <p className="text-gray-600">이메일 결제 리마인드</p>
           <div>
             <button onClick={() => toggleAlarm()} disabled={isTogglingAlarm}>
-              {/* // TODO // 토글 false일 때 바탕화면 색 제거 */}
               {user.alarm ? (
                 <ToggleLeft
                   aria-label="이메일 결제 리마인드 동의"
@@ -115,9 +119,18 @@ export default function MyPage() {
         </div>
 
         <div className="flex justify-end mt-3">
-          <Button className="primary hover:[hsl(var(--primary-hover))]">
+          <Button
+            onClick={() => setShowLogoutDialog(true)}
+            className="primary hopver:[hsl(var(--primary-hover))]"
+          >
             <span>로그아웃</span>
           </Button>
+          <ConfirmDialog
+            open={showLogoutDialog}
+            onOpenChange={setShowLogoutDialog}
+            title="로그아웃 하시겠습니까?"
+            onConfirm={handleLogout}
+          />
 
           <Button
             onClick={() => setShowDeleteDialog(true)}
@@ -132,7 +145,7 @@ export default function MyPage() {
         onOpenChange={setShowDeleteDialog}
         title="정말 탈퇴하시겠습니까?"
         description="탈퇴하시면 계정과 기록이 모두 삭제됩니다."
-        onConfirm={() => useDeleteUser()}
+        onConfirm={() => deleteAccount()}
       />
     </CardTitle>
   )

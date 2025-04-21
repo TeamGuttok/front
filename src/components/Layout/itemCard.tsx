@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { Card } from '#components/_common/Card'
 import { cn } from '#components/lib/utils'
 import { PATH } from '#app/routes'
-import StatusBadge from '#components/Layout/StatusBadge'
 import {
   SubscriptionContents,
   paymentCycleLabels,
@@ -43,7 +42,8 @@ export default function ItemCard({ item }: Props) {
         {...swipeHandlers}
         className={cn(
           'flex justify-between items-center p-4 rounded-lg shadow-md dark:bg-gray-800 bg-white hover:bg-slate-200 hover:dark:bg-gray-700',
-          item.paymentStatus === 'PENDING' ? 'bg-red-100' : 'bg-white',
+          //item.paymentStatus === 'PENDING' ? 'bg-red-100' :
+          'bg-white',
         )}
       >
         <div className="flex items-center gap-3">
@@ -66,10 +66,10 @@ export default function ItemCard({ item }: Props) {
               {item.title?.trim()
                 ? item.title
                 : (serviceNameLabels[item.subscription] ?? '알 수 없음')}
-              <StatusBadge
+              {/* <StatusBadge
                 status={item.paymentStatus}
                 paymentDay={item.paymentDay}
-              />
+              /> */}
             </h3>
             <p className="text-xs dark:text-gray-500">
               {item.paymentCycle

@@ -19,12 +19,15 @@ import {
   useMarkAsRead,
   useDeleteNotification,
 } from '#apis/notiAPI'
+import StatusBadge from '#components/Layout/StatusBadge'
 
 export default function NotificationList() {
-  const { data, isLoading, error } = useNotifications({ lastId: 0, size: 10 })
+  const { data, isLoading, error } = useNotifications({ lastId: 0, size: 30 })
   const { mutate: markAsReadAPI } = useMarkAsRead()
   const { mutate: deleteAPI } = useDeleteNotification()
 
+  // TODO
+  // [ ]로그인하지 않고 접속하면 로그인 페이지로 이동시키기
   const items = useItemStore((state) => state.items)
 
   if (isLoading)
@@ -47,15 +50,6 @@ export default function NotificationList() {
       <div className="flex flex-col items-center w-full mt-5">
         <h2 className="text-3xl sm:text-3xl font-bold">알림</h2>
       </div>
-      <div className="w-full h-[1px] bg-border mt-5">
-        <div className="relative">
-          {/* {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
-                {unreadCount}
-              </span>
-            )} */}
-        </div>
-      </div>
 
       <div className="flex-1 overflow-auto">
         <div className="grid grid-cols-1 gap-3">
@@ -65,10 +59,7 @@ export default function NotificationList() {
               <Card
                 key={n.id}
                 className={cn(
-                  'flex justify-between items-center p-4 shadow-md rounded-lg dark:bg-gray-800',
-                  n.status === 'UNREAD'
-                    ? 'bg-yellow-100'
-                    : 'bg-white hover:bg-slate-200',
+                  'flex justify-between items-center p-4 shadow-md rounded-lg dark:bg-gray-800 bg-white hover:bg-slate-200',
                 )}
                 onClick={() => {
                   if (n.status === 'UNREAD') {
@@ -78,20 +69,14 @@ export default function NotificationList() {
               >
                 <div className="flex items-center gap-3">
                   <div>
-                    <h3 className="font-medium">
-                      {item?.title ?? '제목 없음'}
-                    </h3>
+                    <h3 className="font-medium">ex: netflix</h3>
                     <p className="text-xs text-gray-600">
-                      {item?.paymentCycle && item?.paymentDay
-                        ? `매${paymentCycleLabels[item.paymentCycle]} ${item.paymentDay}일 결제 예정`
-                        : '결제 정보 없음'}
+                      {new Date(n.registerDate).toLocaleString('ko-KR')}
                     </p>
                   </div>
                   <div className="text-right">
                     {n.status === 'UNREAD' && (
-                      <span className="text-xs font-semibold text-red-500">
-                        읽지 않음
-                      </span>
+                      <StatusBadge variant="notification" status="UNREAD" />
                     )}
                   </div>
                 </div>
