@@ -8,6 +8,7 @@ import {
   deleteUser,
 } from './userAPI'
 import { useAuthStore } from '#stores/auth/useAuthStore'
+import { useRouter } from 'next/navigation'
 
 // 마이페이지 조회 get
 export const useMyProfileQuery = () => {
@@ -60,12 +61,14 @@ export const usePatchPasswordMutation = () => {
 // 탈퇴 delete
 export const useDeleteUser = () => {
   const { logout } = useAuthStore()
+  const router = useRouter()
 
   return useMutation({
     mutationFn: deleteUser,
     onSuccess: (response) => {
       console.log('탈퇴 성공:', response.message)
       logout()
+      router.push('/')
     },
     onError: (error) => {
       console.error('탈퇴 실패:', error)

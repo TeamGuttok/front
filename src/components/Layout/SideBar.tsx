@@ -6,31 +6,16 @@ import { Menu, Bell, User, LogIn, LogOut, Moon, Sun } from 'lucide-react'
 import { PATH } from '#app/routes'
 import { cn } from '#components/lib/utils'
 import { useAuthStore } from '#stores/auth/useAuthStore'
-import { useLogoutClient } from '#apis/authClient'
 import { getMenuClassName } from '#style/style'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { ConfirmDialog } from '#components/Layout/ConfirmDialog'
+import { useHandleLogout } from '#hooks/useHandleLogout'
 
 export default function SideBar({ pathname }: { pathname: string }) {
   const { theme, setTheme } = useTheme()
-  const router = useRouter()
-  const { mutate: requestLogout } = useLogoutClient()
   const [showLogoutDialog, setShowLogoutDialog] = useState(false)
-
+  const handleLogout = useHandleLogout()
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
-  const logout = useAuthStore((state) => state.logout)
-
-  const handleLogout = () => {
-    requestLogout(undefined, {
-      onSuccess: () => {
-        router.push('/')
-      },
-      onError: (error) => {
-        console.error('로그아웃 실패:', error)
-      },
-    })
-  }
 
   return (
     <aside className="fixed flex z-50 flex-col w-56 h-screen p-5 bg-secondary shadow-sm mb-5">

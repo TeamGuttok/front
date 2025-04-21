@@ -43,7 +43,8 @@ export default function ItemCard({ item }: Props) {
         {...swipeHandlers}
         className={cn(
           'flex justify-between items-center p-4 rounded-lg shadow-md dark:bg-gray-800 bg-white hover:bg-slate-200 hover:dark:bg-gray-700',
-          item.paymentStatus === 'PENDING' ? 'bg-red-100' : 'bg-white',
+          //item.paymentStatus === 'PENDING' ? 'bg-red-100' :
+          'bg-white',
         )}
       >
         <div className="flex items-center gap-3">
