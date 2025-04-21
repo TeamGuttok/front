@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import { PATH } from '#app/routes'
 import { Input } from '#components/_common/Input'
-import { KNOWN_SERVICES } from '#constants/knownServices'
 import { Button } from '#components/_common/Button'
 import { Plus, Search } from 'lucide-react'
 import { useRouter } from 'next/navigation'

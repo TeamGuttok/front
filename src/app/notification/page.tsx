@@ -26,6 +26,8 @@ export default function NotificationList() {
   const { mutate: markAsReadAPI } = useMarkAsRead()
   const { mutate: deleteAPI } = useDeleteNotification()
 
+  // TODO
+  // [ ]로그인하지 않고 접속하면 로그인 페이지로 이동시키기
   const items = useItemStore((state) => state.items)
 
   if (isLoading)
