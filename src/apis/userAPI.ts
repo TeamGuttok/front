@@ -70,6 +70,32 @@ export const patchUserNickName = async (nickName: string) => {
   return data
 }
 
+// 비밀번호 변경 patch
+
+export const patchUserPassword = async (password: string): Promise<{
+  message: string
+  data: null
+  status: string
+}> => {
+  const response = await fetch(`${BASE_URL}/api/users/password`, {
+    method: 'PATCH',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify({ password }),
+  })
+
+  const data = await response.json()
+
+  if (!response.ok || data.status !== '100 CONTINUE') {
+    throw new Error(data.message || '비밀번호 변경 실패')
+  }
+
+  return data
+}
+
 // 탈퇴 API
 // const { mutate: deleteAccount, isPending: isDeletingAccount } = useMutation({
 //   mutationFn: async () => {

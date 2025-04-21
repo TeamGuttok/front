@@ -8,7 +8,11 @@ import { cn } from '#components/lib/utils'
 import { SelectLabel, SelectGroup } from '#components/_common/Select'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import { groupClassName, labelClassName, inputClassName } from '#style/style'
-import { useMyProfileQuery, usePatchNickNameMutation } from '#apis/userClient'
+import {
+  useMyProfileQuery,
+  usePatchNickNameMutation,
+  usePatchPasswordMutation,
+} from '#apis/userClient'
 
 export default function MyPage() {
   const { user, setUser } = useAuthStore()
@@ -18,11 +22,18 @@ export default function MyPage() {
 
   const { mutate: updateNickName, isPending: isNickNameUpdating } =
     usePatchNickNameMutation()
+  const { mutate: updatePassword, isPending: isPasswordUpdating } =
+    usePatchPasswordMutation()
 
   const nickNameUpdateSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     if (!nickName) return
     updateNickName(nickName)
+  }
+
+  const passwordUpdateSubmit = () => {
+    if (!password) return
+    updatePassword(password)
   }
 
   useEffect(() => {
@@ -88,18 +99,14 @@ export default function MyPage() {
                 className={cn(inputClassName)}
               />
             </SelectGroup>
-            {/* <Button
+            <Button
               type="button"
-              disabled={PasswordLoading}
+              onClick={passwordUpdateSubmit}
+              disabled={isPasswordUpdating}
               className="w-full bg-primary text-white hover:bg-[hsl(var(--primary-hover))]"
             >
-              <span>{PasswordLoading ? '저장 중...' : '저장하기'}</span>
-              {PasswordError && (
-                <p className="text-center text-sm text-red-500">
-                  {PasswordError.message}
-                </p>
-              )}
-            </Button> */}
+              <span>{isPasswordUpdating ? '저장 중...' : '비밀번호 변경'}</span>
+            </Button>
           </div>
         </form>
       </div>
