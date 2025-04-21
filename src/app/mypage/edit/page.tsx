@@ -13,6 +13,7 @@ import {
   usePatchNickNameMutation,
   usePatchPasswordMutation,
 } from '#apis/userClient'
+import { nickNameSchema, passwordSchema } from '#schema/userSchema'
 
 export default function MyPage() {
   const { user, setUser } = useAuthStore()
@@ -25,14 +26,25 @@ export default function MyPage() {
   const { mutate: updatePassword, isPending: isPasswordUpdating } =
     usePatchPasswordMutation()
 
-  const nickNameUpdateSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-    if (!nickName) return
+  const nickNameUpdateSubmit = () => {
+    const parsed = nickNameSchema.safeParse(nickName)
+
+    if (!parsed.success) {
+      alert(parsed.error.errors[0].message)
+      return
+    }
+
     updateNickName(nickName)
   }
 
   const passwordUpdateSubmit = () => {
-    if (!password) return
+    const parsed = passwordSchema.safeParse(password)
+
+    if (!parsed.success) {
+      alert(parsed.error.errors[0].message)
+      return
+    }
+
     updatePassword(password)
   }
 

@@ -12,8 +12,8 @@ export async function register({
 }: Omit<userInfo, 'nickName'> & { password: string; nickName: string }) {
   const response = await fetch(`${BASE_URL}/api/users/signup`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password, nickName, alarm }),
   })
 
@@ -53,11 +53,11 @@ export const getUserInfo = async (): Promise<userInfo> => {
 export const patchUserNickName = async (nickName: string) => {
   const response = await fetch(`${BASE_URL}/api/users/nickname`, {
     method: 'PATCH',
+    credentials: 'include',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    credentials: 'include',
     body: JSON.stringify({ nickName }),
   })
 
@@ -72,18 +72,20 @@ export const patchUserNickName = async (nickName: string) => {
 
 // 비밀번호 변경 patch
 
-export const patchUserPassword = async (password: string): Promise<{
+export const patchUserPassword = async (
+  password: string,
+): Promise<{
   message: string
   data: null
   status: string
 }> => {
   const response = await fetch(`${BASE_URL}/api/users/password`, {
     method: 'PATCH',
+    credentials: 'include',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    credentials: 'include',
     body: JSON.stringify({ password }),
   })
 
@@ -96,31 +98,22 @@ export const patchUserPassword = async (password: string): Promise<{
   return data
 }
 
-// 탈퇴 API
-// const { mutate: deleteAccount, isPending: isDeletingAccount } = useMutation({
-//   mutationFn: async () => {
-//     const response = await fetch(`${BASE_URL}/api/users`, {
-//       method: 'DELETE',
-//       credentials: 'include',
-//       headers: { Accept: '*/*' },
-//     })
+// 탈퇴 delete
+export const deleteUser = async (): Promise<{
+  message: string
+  data: null
+  status: string
+}> => {
+  const response = await fetch(`${BASE_URL}/api/users`, {
+    method: 'DELETE',
+    headers: { Accept: '*/*' },
+    credentials: 'include',
+  })
 
-//     if (!response.ok) {
-//       throw new Error('회원 탈퇴 실패')
-//     }
+  if (!response.ok) {
+    const errorData = await response.json()
+    throw new Error(errorData.message || '회원 탈퇴 실패')
+  }
 
-//     const data = await response.json()
-//     if (data.status !== '100 CONTINUE') {
-//       throw new Error('회원 탈퇴 중 오류가 발생했습니다.')
-//     }
-
-//     return data
-//   },
-//   onSuccess: () => {
-//     logout()
-//     setShowDeleteDialog(false)
-//   },
-//   onError: (error) => {
-//     console.error('회원 탈퇴 실패:', error)
-//   },
-// })
+  return response.json()
+}

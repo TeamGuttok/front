@@ -1,17 +1,33 @@
 'use client'
 
 import { useQuery, useMutation } from '@tanstack/react-query'
-import { getUserInfo, patchUserNickName, patchUserPassword } from './userAPI'
+import {
+  getUserInfo,
+  patchUserNickName,
+  patchUserPassword,
+  deleteUser,
+} from './userAPI'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 
 // 마이페이지 조회 get
 export const useMyProfileQuery = () => {
+  const { setUser } = useAuthStore()
+
   return useQuery({
     queryKey: ['myProfile'],
-    queryFn: getUserInfo,
+    queryFn: async () => {
+      const data = await getUserInfo()
+      setUser({
+        email: data.email,
+        nickName: data.nickName,
+        alarm: data.alarm,
+      })
+      return data
+    },
+    staleTime: 1000 * 60 * 5,
+    retry: 1,
   })
 }
-
 // 닉네임 변경 patch
 export const usePatchNickNameMutation = () => {
   const { setUser, user } = useAuthStore()
@@ -19,7 +35,7 @@ export const usePatchNickNameMutation = () => {
   return useMutation({
     mutationFn: patchUserNickName,
     onSuccess: (response, nickName) => {
-      const updatedNickName = response.data?.nickName ?? nickName 
+      const updatedNickName = response.data?.nickName ?? nickName
       setUser({ nickName: updatedNickName })
     },
     onError: (error) => {
@@ -37,6 +53,22 @@ export const usePatchPasswordMutation = () => {
     },
     onError: (err) => {
       console.error('비밀번호 변경 실패:', err)
+    },
+  })
+}
+
+// 탈퇴 delete
+export const useDeleteUser = () => {
+  const { logout } = useAuthStore()
+
+  return useMutation({
+    mutationFn: deleteUser,
+    onSuccess: (response) => {
+      console.log('탈퇴 성공:', response.message)
+      logout()
+    },
+    onError: (error) => {
+      console.error('탈퇴 실패:', error)
     },
   })
 }
