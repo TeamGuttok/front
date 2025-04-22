@@ -38,7 +38,7 @@ export default function Login() {
   const { mutate: loginMutate, isPending } = useMutation({
     mutationFn: useLogin,
 
-    onSuccess: (user) => {
+    onSuccess: async (user) => {
       login({
         email: user.email,
         nickName: user.nickName,
@@ -49,6 +49,8 @@ export default function Login() {
         nickName: user.nickName,
         alarm: user.alarm,
       })
+
+      await new Promise((resolve) => setTimeout(resolve, 100))
 
       router.push('/')
     },

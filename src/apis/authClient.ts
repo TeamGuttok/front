@@ -3,6 +3,7 @@
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import { useMutation } from '@tanstack/react-query'
 import { BASE_URL } from '#constants/url'
+import { sendCertificationCode, SendCertificationRequest } from './authAPI'
 
 // 로그아웃 post
 export const logout = async (): Promise<void> => {
@@ -33,6 +34,20 @@ export const useLogoutClient = () => {
     },
     onError: (error) => {
       console.error('로그아웃 실패:', error)
+    },
+  })
+}
+
+// 인증번호 발송 post
+
+export const useSendCertificationCode = () => {
+  return useMutation({
+    mutationFn: (data: SendCertificationRequest) => sendCertificationCode(data),
+    onSuccess: (res) => {
+      console.log('발송 성공:', res.message)
+    },
+    onError: (err) => {
+      console.error('발송 실패:', err)
     },
   })
 }

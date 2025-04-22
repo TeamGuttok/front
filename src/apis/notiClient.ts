@@ -18,11 +18,9 @@ export const useToggleAlarmMutation = () => {
       console.log('response.data:', response.data)
       const updatedAlarm = response.data.alarm
 
-      const alarm = response?.data?.alarm
-
       if (
-        !response ||
-        !response.data ||
+        // !response ||
+        // !response.data ||
         typeof response.data.alarm !== 'boolean'
       ) {
         console.warn('응답에 alarm 값이 없거나 잘못됨:', response)
@@ -30,9 +28,13 @@ export const useToggleAlarmMutation = () => {
       }
 
       setUser({ alarm: updatedAlarm })
+      const user = useAuthStore.getState().user
+      console.log(user)
     },
     onError: async (error) => {
       console.error('알림 설정 변경 실패:', error)
+      const user = useAuthStore.getState().user
+      console.log(user)
 
       if (error instanceof Error) {
         console.log('error.message:', error.message)

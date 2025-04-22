@@ -10,7 +10,10 @@ import {
 import { paymentStatus, SubscriptionContents } from '#types/subscription'
 
 //구독 서비스 생성 (post)
-export const useSubscriptionsClient = (lastId = 0, size = 20) => {
+export const useSubscriptionsClient = (
+  lastId = Number.MAX_SAFE_INTEGER,
+  size = Number.MAX_SAFE_INTEGER,
+) => {
   return useQuery({
     queryKey: ['subscriptions', lastId],
     queryFn: () => getSubscriptions(lastId, size),

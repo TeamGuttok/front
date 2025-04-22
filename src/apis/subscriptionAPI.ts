@@ -57,19 +57,15 @@ export const useCreateSubscription = () => {
 // 구독서비스 조회 api (get)
 export async function getSubscriptions(
   lastId = Number.MAX_SAFE_INTEGER,
-  size = 100,
+  size = 100_000,
 ) {
-  const pageRequest = {
-    lastId,
-    size,
-  }
-
   const query = new URLSearchParams({
-    pageRequest: JSON.stringify(pageRequest),
+    lastId: String(lastId),
+    size: String(size),
   })
 
   const res = await fetch(
-    `${BASE_URL}/api/subscriptions/user?pageRequest=${encodeURIComponent(JSON.stringify(pageRequest))}`,
+    `${BASE_URL}/api/subscriptions/user?${query.toString()}`,
     {
       method: 'GET',
       credentials: 'include',
