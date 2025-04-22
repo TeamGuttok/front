@@ -4,20 +4,15 @@ import { Button } from '#components/_common/Button'
 import { PATH } from '#app/routes'
 import Link from 'next/link'
 import ItemList from '#components/Layout/ItemList'
-import { getHours } from 'date-fns'
 import { Plus } from 'lucide-react'
-import { useAuthStore } from '#stores/auth/useAuthStore'
-import { useItemStore } from '#stores/subscriptions/useItemStore'
 import { getGreeting } from '#hooks/getGreeting'
 import { useMyProfileQuery } from '#apis/userClient'
+import { useCurrentMonthPaymentTotal } from '#hooks/useTotalPayment'
 
 export default function Page() {
-  const currentHour = getHours(new Date())
-  const { user } = useAuthStore()
   const { data: userInfo, isLoading } = useMyProfileQuery()
   const nickName = userInfo?.nickName
-
-  const total = useItemStore((state) => state.getTotalPaymentAmount)
+  const monthlyTotal = useCurrentMonthPaymentTotal()
 
   return (
     <div className="mx-auto p-5 flex flex-col min-h-[calc(100vh-4.5rem)] pb-[3rem]">
@@ -28,10 +23,7 @@ export default function Page() {
           </h1>
           <h2>
             이번 달 지출은{' '}
-            <span className="font-bold">
-              ₩
-              {useItemStore.getState().getTotalPaymentAmount().toLocaleString()}
-            </span>{' '}
+            <span className="font-bold">₩{monthlyTotal.toLocaleString()}</span>{' '}
             입니다.
           </h2>
         </div>
