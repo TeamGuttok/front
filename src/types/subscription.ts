@@ -9,13 +9,6 @@ export interface ServiceItem {
   isCustom: boolean
 }
 
-export interface userInfo {
-  id?: number
-  email: string
-  nickName: string
-  alarm: boolean
-}
-
 export const allServices: ServiceItem[] = [
   {
     id: 'custom',

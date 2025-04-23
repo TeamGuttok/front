@@ -19,6 +19,7 @@ export const useMyProfileQuery = () => {
     queryFn: async () => {
       const data = await getUserInfo()
       setUser({
+        id: data.id,
         email: data.email,
         nickName: data.nickName,
         alarm: data.alarm,

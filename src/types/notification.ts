@@ -1,7 +1,10 @@
-import type { SubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
+import { FETCH_ALL } from '#constants/pagination'
 
 // 알림 상태
 export type NotificationStatus = 'READ' | 'UNREAD'
+
+// 알림 카테고리
+export type NotificationCategory = 'APPLICATION' | 'REMINDER'
 
 export type StatusBadgeProps =
   | {
@@ -14,9 +17,6 @@ export type StatusBadgeProps =
       status: NotificationStatus
       paymentDay?: never
     }
-
-// 알림 카테고리
-export type NotificationCategory = 'APPLICATION' | 'SYSTEM'
 
 // 단일 알림 객체
 export interface Notification {
@@ -35,6 +35,11 @@ export interface Notification {
 export interface PageRequest {
   lastId: number
   size: number
+}
+
+export const fetchNotiRequest: PageRequest = {
+  lastId: FETCH_ALL,
+  size: FETCH_ALL,
 }
 
 // 알림 페이징 응답

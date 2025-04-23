@@ -4,7 +4,7 @@ import {
   persist,
   createJSONStorage,
 } from 'zustand/middleware'
-import type { userInfo } from '#types/subscription'
+import type { userInfo } from '#types/user'
 
 interface AuthState {
   isLoggedIn: boolean
