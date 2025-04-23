@@ -1,7 +1,7 @@
 // 회원가입 / 비밀번호 변경 / 닉네일 변경 / 알림 상태 변경 / 마이페이지 조회 / 회원 탈퇴
 
 import { BASE_URL } from '#constants/url'
-import type { userInfo } from '#types/subscription'
+import type { userInfo } from '#types/user'
 
 // 회원가입 post
 export async function register({

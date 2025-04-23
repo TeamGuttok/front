@@ -32,7 +32,8 @@
       "#store/*": ["./src/store/*"],
       "#types/*": ["./src/types/*"],
       "#queries/*": ["./src/queries/*"],
-      "style/*": ["./src/styles/*"]
+      "style/*": ["./src/styles/*"],
+      "schema/*": ["./src/shema/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

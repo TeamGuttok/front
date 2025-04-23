@@ -3,16 +3,11 @@
 'use server'
 
 import { BASE_URL } from '#constants/url'
-import type { userInfo } from '#types/subscription'
+import type { userInfo, ApiResponse } from '#types/user'
+import { cookies } from 'next/headers'
 
 export interface SendCertificationRequest {
   email: string
-}
-
-export interface ApiResponse {
-  message: string
-  data: unknown
-  status: string
 }
 
 // 로그인 post
@@ -23,19 +18,21 @@ export async function useLogin({
   email: string
   password: string
 }): Promise<userInfo> {
-  const response = await fetch(`${BASE_URL}/api/users/signin`, {
+  const cookie = cookies()
+  const res = await fetch(`${BASE_URL}/api/users/signin`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'include',
+    headers: { 'Content-Type': 'application/json', Cookie: cookie.toString() },
+
+    //credentials: 'include',
     body: JSON.stringify({ email, password }),
   })
 
-  if (!response.ok) {
-    const errorData = await response.json()
+  if (!res.ok) {
+    const errorData = await res.json()
     throw new Error(errorData.message || '로그인 요청 실패')
   }
 
-  const data = await response.json()
+  const data = await res.json()
 
   if (data.status !== 'OK') {
     throw new Error('로그인 실패. 다시 시도해주세요.')
@@ -50,10 +47,12 @@ export async function useLogin({
 export const sendCertificationCode = async (
   request: SendCertificationRequest,
 ): Promise<ApiResponse> => {
+  const cookie = cookies()
   const res = await fetch(`${BASE_URL}/api/mail/certification`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      Cookie: cookie.toString(),
       Accept: '*/*',
     },
     credentials: 'include',

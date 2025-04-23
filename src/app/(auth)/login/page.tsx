@@ -10,20 +10,9 @@ import { useAuthStore } from '#stores/auth/useAuthStore'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
-import { z } from 'zod'
+import { loginSchema } from '#schema/userSchema'
 import { useLogin } from '#apis/authAPI'
-
-export interface User {
-  email: string
-  nickName: string
-  alarm: boolean
-  password?: string
-}
-
-const loginSchema = z.object({
-  email: z.string().email('정확한 이메일을 입력해주세요.'),
-  password: z.string().min(1, '정확한 비밀번호를 입력해주세요.'),
-})
+import { useLoginClient } from '#apis/authClient'
 
 export default function Login() {
   const router = useRouter()
@@ -35,32 +24,34 @@ export default function Login() {
     password: [],
   })
 
-  const { mutate: loginMutate, isPending } = useMutation({
-    mutationFn: useLogin,
+  const { mutate: loginMutate, isPending } = useLoginClient()
 
-    onSuccess: async (user) => {
-      login({
-        email: user.email,
-        nickName: user.nickName,
-        alarm: user.alarm,
-      })
-      setUser({
-        email: user.email,
-        nickName: user.nickName,
-        alarm: user.alarm,
-      })
+  // const { mutate: loginMutate, isPending } = useMutation({
+  //   mutationFn: useLogin,
 
-      await new Promise((resolve) => setTimeout(resolve, 100))
+  //   onSuccess: async (user) => {
+  //     login({
+  //       email: user.email,
+  //       nickName: user.nickName,
+  //       alarm: user.alarm,
+  //     })
+  //     setUser({
+  //       email: user.email,
+  //       nickName: user.nickName,
+  //       alarm: user.alarm,
+  //     })
 
-      router.push('/')
-    },
+  //     await new Promise((resolve) => setTimeout(resolve, 100))
 
-    onError: (error) => {
-      if (error instanceof Error) {
-        setError({ general: [error.message] })
-      }
-    },
-  })
+  //     router.push('/')
+  //   },
+
+  //   onError: (error) => {
+  //     if (error instanceof Error) {
+  //       setError({ general: [error.message] })
+  //     }
+  //   },
+  // })
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -70,7 +61,19 @@ export default function Login() {
       setError(parseResult.error.flatten().fieldErrors)
       return
     }
-    loginMutate(input)
+    loginMutate(input, {
+      onSuccess: async (user) => {
+        login(user)
+        setUser(user)
+        await new Promise((resolve) => setTimeout(resolve, 100))
+        router.push('/')
+      },
+      onError: (error) => {
+        if (error instanceof Error) {
+          setError({ general: [error.message] })
+        }
+      },
+    })
   }
 
   useEffect(() => {

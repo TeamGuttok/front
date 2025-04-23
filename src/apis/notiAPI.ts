@@ -3,6 +3,7 @@
 import { BASE_URL } from '#constants/url'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import type { PageRequest, NotificationResponse } from '#types/notification'
+import { FETCH_ALL } from '#constants/pagination'
 
 // 알림 목록 가져오기 get
 export const fetchNotifications = async (
@@ -32,22 +33,6 @@ export const fetchNotifications = async (
 
   return res.json()
 }
-// export const fetchNotifications = async (
-//   pageRequest: PageRequest,
-// ): Promise<NotificationResponse> => {
-//   const query = new URLSearchParams({
-//     'pageRequest.lastId': String(pageRequest.lastId),
-//     'pageRequest.size': String(pageRequest.size),
-//   })
-
-//   const res = await fetch(`${BASE_URL}/api/notifications?${query.toString()}`)
-
-//   if (!res.ok) {
-//     throw new Error('알림 목록 요청 실패')
-//   }
-
-//   return res.json()
-// }
 
 export const useNotifications = (pageRequest: PageRequest) => {
   return useQuery({
@@ -67,7 +52,6 @@ export const patchUserAlarm = async () => {
       'Content-Type': 'application/json',
     },
     credentials: 'include',
-    // body: JSON.stringify({}),
   })
 
   const result = await res.json()
@@ -85,7 +69,10 @@ export const patchUserAlarm = async () => {
 const markNotificationsAsRead = async (ids: number[]) => {
   const res = await fetch('/api/notifications', {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
     body: JSON.stringify({ ids }),
   })
 
@@ -105,11 +92,14 @@ export const useMarkAsRead = () => {
   })
 }
 
-// 삭제 delete
+// 알림 삭제 delete
 const deleteNotifications = async (ids: number[]) => {
   const res = await fetch('/api/notifications', {
     method: 'DELETE',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
     body: JSON.stringify({ ids }),
   })
 

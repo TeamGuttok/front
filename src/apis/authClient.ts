@@ -3,7 +3,39 @@
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import { useMutation } from '@tanstack/react-query'
 import { BASE_URL } from '#constants/url'
-import { sendCertificationCode, SendCertificationRequest } from './authAPI'
+import {
+  sendCertificationCode,
+  SendCertificationRequest,
+  useLogin,
+} from './authAPI'
+import type { userInfo, LoginInput } from '#types/user'
+
+// 로그인 post
+export function useLoginClient() {
+  return useMutation<userInfo, Error, LoginInput>({
+    mutationFn: async ({ email, password }) => {
+      const res = await fetch(`${BASE_URL}/api/users/signin`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email, password }),
+      })
+
+      if (!res.ok) {
+        const errorData = await res.json()
+        throw new Error(errorData.message || '로그인 요청 실패')
+      }
+
+      const data = await res.json()
+
+      if (data.status !== 'OK') {
+        throw new Error('로그인 실패. 다시 시도해주세요.')
+      }
+
+      return data.data as userInfo
+    },
+  })
+}
 
 // 로그아웃 post
 export const logout = async (): Promise<void> => {
