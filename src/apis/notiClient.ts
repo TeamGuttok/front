@@ -2,8 +2,12 @@
 
 'use client'
 
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { patchUserAlarm, fetchNotifications } from './notiAPI'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import {
+  patchUserAlarm,
+  fetchNotifications,
+  markNotificationsAsRead,
+} from './notiAPI'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import type { PageRequest } from '#types/notification'
 
@@ -79,5 +83,29 @@ export const useNotifications = (pageRequest: PageRequest) => {
     staleTime: 1000 * 60 * 3,
     placeholderData: undefined,
     retry: 1,
+  })
+}
+
+// 알림 읽음 처리 put
+export const useMarkAsRead = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: markNotificationsAsRead,
+    onSuccess: (_data, ids) => {
+      console.log(ids)
+      queryClient.setQueryData(
+        ['notifications', 'reminders', 10000, 10000],
+        (oldData: any) => {
+          if (!oldData) return oldData
+
+          const updated = oldData.contents.map((noti: any) =>
+            ids.includes(noti.id) ? { ...noti, status: 'READ' } : noti,
+          )
+
+          return { ...oldData, contents: updated }
+        },
+      )
+    },
   })
 }

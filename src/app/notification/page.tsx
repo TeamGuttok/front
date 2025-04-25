@@ -5,11 +5,8 @@ import { Card } from '#components/_common/Card'
 import { cn } from '#components/lib/utils'
 import { Trash2 } from 'lucide-react'
 import { useItemStore } from '#stores/subscriptions/useItemStore'
-import {
-  useNotifications,
-  useMarkAsRead,
-  useDeleteNotification,
-} from '#apis/notiAPI'
+import { useNotifications, useDeleteNotification } from '#apis/notiAPI'
+import { useMarkAsRead } from '#apis/notiClient'
 import StatusBadge from '#components/Layout/StatusBadge'
 
 export default function NotificationList() {
@@ -47,7 +44,7 @@ export default function NotificationList() {
       </div>
 
       <div className="flex-1 overflow-auto mt-10">
-        <div className="grid grid-cols-1 gap-3">
+        <div className="grid grid-cols-1 gap-3 cursor-pointer">
           {data.contents
             .filter((n) => n.category === 'REMINDER')
             .map((n) => {

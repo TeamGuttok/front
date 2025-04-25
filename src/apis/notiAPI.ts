@@ -35,6 +35,12 @@ export const fetchNotifications = async (
 }
 
 export const useNotifications = (pageRequest: PageRequest) => {
+  console.log('📦 queryKey', [
+    'notifications',
+    'reminders',
+    pageRequest.lastId,
+    pageRequest.size,
+  ])
   return useQuery({
     queryKey: ['notifications', pageRequest],
     queryFn: () => fetchNotifications(pageRequest),
@@ -66,8 +72,8 @@ export const patchUserAlarm = async () => {
 }
 
 // 알림 읽음 처리 put
-const markNotificationsAsRead = async (ids: number[]) => {
-  const res = await fetch('/api/notifications', {
+export const markNotificationsAsRead = async (ids: number[]) => {
+  const res = await fetch(`${BASE_URL}/api/notifications`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -79,17 +85,6 @@ const markNotificationsAsRead = async (ids: number[]) => {
   if (!res.ok) throw new Error('알림 읽음 처리 실패')
 
   return res.json()
-}
-
-export const useMarkAsRead = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: markNotificationsAsRead,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notifications'] })
-    },
-  })
 }
 
 // 알림 삭제 delete
