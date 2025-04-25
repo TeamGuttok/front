@@ -7,6 +7,7 @@ import {
   patchUserAlarm,
   fetchNotifications,
   markNotificationsAsRead,
+  deleteNotifications,
 } from './notiAPI'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import type { PageRequest } from '#types/notification'
@@ -106,6 +107,18 @@ export const useMarkAsRead = () => {
           return { ...oldData, contents: updated }
         },
       )
+    },
+  })
+}
+
+// 알림 삭제 delete
+export const useDeleteNotification = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: deleteNotifications,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['notifications'] })
     },
   })
 }

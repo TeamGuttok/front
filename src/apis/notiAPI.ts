@@ -88,28 +88,18 @@ export const markNotificationsAsRead = async (ids: number[]) => {
 }
 
 // 알림 삭제 delete
-const deleteNotifications = async (ids: number[]) => {
-  const res = await fetch('/api/notifications', {
+export const deleteNotifications = async (ids: number[] | number) => {
+  const idsArray = Array.isArray(ids) ? ids : [ids]
+  const res = await fetch(`${BASE_URL}/api/notifications`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
     },
     credentials: 'include',
-    body: JSON.stringify({ ids }),
+    body: JSON.stringify({ ids: idsArray }),
   })
 
   if (!res.ok) throw new Error('알림 삭제 실패')
 
   return res.json()
-}
-
-export const useDeleteNotification = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: deleteNotifications,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notifications'] })
-    },
-  })
 }

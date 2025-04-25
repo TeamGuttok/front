@@ -5,8 +5,8 @@ import { Card } from '#components/_common/Card'
 import { cn } from '#components/lib/utils'
 import { Trash2 } from 'lucide-react'
 import { useItemStore } from '#stores/subscriptions/useItemStore'
-import { useNotifications, useDeleteNotification } from '#apis/notiAPI'
-import { useMarkAsRead } from '#apis/notiClient'
+import { useNotifications } from '#apis/notiAPI'
+import { useMarkAsRead, useDeleteNotification } from '#apis/notiClient'
 import StatusBadge from '#components/Layout/StatusBadge'
 
 export default function NotificationList() {
