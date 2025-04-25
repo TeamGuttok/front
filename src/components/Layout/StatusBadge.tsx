@@ -9,13 +9,13 @@ export default function StatusBadge({
 }: StatusBadgeProps) {
   if (variant === 'notification' && status === 'UNREAD') {
     return (
-      <p
+      <div
         className="absolute top-0 right-0 text-[0.6rem] sm:text-xs font-semibold text-yellow-100 dark:text-yellow-900 bg-amber-500
-      py-1 px-1 rounded-lg whitespace-normal  min-w-4 text-center"
+      py-1 px-2 ml-4 rounded-lg whitespace-normal text-center"
       >
         <p>읽지</p>
         <p>않음</p>
-      </p>
+      </div>
     )
   }
 

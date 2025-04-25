@@ -57,8 +57,25 @@ export const useToggleAlarmMutation = () => {
 // 알림 리스트 조회 get
 export const useNotifications = (pageRequest: PageRequest) => {
   return useQuery({
-    queryKey: ['notifications', pageRequest.lastId, pageRequest.size],
-    queryFn: () => fetchNotifications(pageRequest),
+    queryKey: [
+      'notifications',
+      'reminders',
+      pageRequest.lastId,
+      pageRequest.size,
+    ],
+    queryFn: async () => {
+      const allNotifications = await fetchNotifications(pageRequest)
+      const filteredContents = allNotifications.contents.filter(
+        (noti) => noti.category === 'REMINDER',
+      )
+      console.log(allNotifications)
+      return {
+        ...allNotifications,
+        contents: filteredContents,
+        size: filteredContents.length,
+        hasNext: false,
+      }
+    },
     staleTime: 1000 * 60 * 3,
     placeholderData: undefined,
     retry: 1,
