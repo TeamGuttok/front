@@ -46,12 +46,13 @@ export default function NotificationList() {
     return <p className="text-center text-gray-500 mt-10">📭 알림이 없습니다</p>
 
   return (
-    <CardTitle className="mx-auto p-5 flex flex-col min-h-[calc(100vh-4.5rem)] pb-[3rem]">
+    <CardTitle className="mx-auto lg:m-8 p-5 flex flex-col min-h-[calc(100vh-4.5rem)] pb-[3rem]">
       <div className="flex flex-col items-center w-full mt-5">
         <h2 className="text-3xl sm:text-3xl font-bold">알림</h2>
+        <p className="mt-2">오른쪽으로 스와이프해서 알림을 삭제하세요.</p>
       </div>
 
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto mt-10">
         <div className="grid grid-cols-1 gap-3">
           {data.contents.map((n) => {
             const item = items.find((i) => i.title === n.message)
@@ -67,28 +68,26 @@ export default function NotificationList() {
                   }
                 }}
               >
-                <div className="flex items-center gap-3">
-                  <div>
-                    <h3 className="font-medium">ex: netflix</h3>
+                <div className="flex items-center gap-3 relative">
+                  <div className="flex-col gap-1 pr-8">
+                    <h3 className="font-medium leading-snug">{n.message}</h3>
                     <p className="text-xs text-gray-600">
                       {new Date(n.registerDate).toLocaleString('ko-KR')}
                     </p>
                   </div>
-                  <div className="text-right">
-                    {n.status === 'UNREAD' && (
-                      <StatusBadge variant="notification" status="UNREAD" />
-                    )}
-                  </div>
+                  {n.status === 'UNREAD' && (
+                    <StatusBadge variant="notification" status="UNREAD" />
+                  )}
                 </div>
-                <Button
+                <button
                   onClick={(e) => {
                     e.stopPropagation()
                     deleteAPI([n.id])
                   }}
-                  className="text-gray-600 hover:text-red-500"
+                  className="text-red rounded-full p-2 lg:p-3 hover:bg-red-500"
                 >
                   <Trash2 size={20} />
-                </Button>
+                </button>
               </Card>
             )
           })}
