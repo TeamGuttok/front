@@ -7,7 +7,7 @@ import { Trash2 } from 'lucide-react'
 import { useItemStore } from '#stores/subscriptions/useItemStore'
 import { useNotifications } from '#apis/notiAPI'
 import { useMarkAsRead, useDeleteNotification } from '#apis/notiClient'
-import StatusBadge from '#components/Layout/StatusBadge'
+import StatusBadge from '#components/ui/StatusBadge'
 
 export default function NotificationList() {
   const { data, isLoading, error } = useNotifications({

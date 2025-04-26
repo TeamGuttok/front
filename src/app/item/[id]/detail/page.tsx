@@ -15,7 +15,7 @@ import {
   useDeleteSubscription,
 } from '#apis/subscriptionClient'
 import { groupClassName, labelClassName } from '#style/style'
-import { ConfirmDialog } from '#components/Layout/ConfirmDialog'
+import { ConfirmDialog } from '#components/ui/ConfirmDialog'
 import { useState } from 'react'
 
 export default function SubscriptionDetailPage() {

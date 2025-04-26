@@ -18,6 +18,7 @@ import { useCreateSubscription } from '#apis/subscriptionAPI'
 import { SubscriptionRequest } from '#types/subscription'
 import { KNOWN_SERVICES } from '#constants/knownServices'
 import { groupClassName, labelClassName, inputClassName } from '#style/style'
+import { Textarea } from '#components/_common/TextArea'
 
 export default function Page() {
   const router = useRouter()
@@ -301,7 +302,7 @@ export default function Page() {
             </SelectGroup>
             <SelectGroup className={cn(groupClassName)}>
               <SelectLabel className={cn(labelClassName)}>메모</SelectLabel>
-              <textarea
+              <Textarea
                 placeholder="메모를 입력하세요"
                 maxLength={200}
                 onChange={(e) => updateMemo(e.target.value)}

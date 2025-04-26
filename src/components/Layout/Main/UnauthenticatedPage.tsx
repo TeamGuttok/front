@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { PATH } from '#app/routes'
 import { cn } from '#components/lib/utils'
 import { Bell, TextSearch, HandCoins, Mail } from 'lucide-react'
-import Carousel from '#components/_common/Carousel/index'
+import Carousel from '#components/ui/Carousel'
 import { Button } from '#components/_common/Button'
 import { buttonClassName, getIconClassName } from '#style/style'
 
