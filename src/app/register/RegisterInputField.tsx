@@ -4,8 +4,8 @@ import { Label } from '#components/_common/Label'
 import { Input } from '#components/_common/Input'
 import { ErrorMessage } from '#components/_common/ErrorMessage'
 import { Button } from '#components/_common/Button'
-import OTPForm from '#components/ui/registerOTPForm'
-import { useSendCertificationCode } from '#apis/authClient'
+import OTPForm from '#components/ui/OTPForm'
+import { useSendCertificationCode, useVerifyOTP } from '#apis/authClient'
 import { emailSchema } from '#schema/userSchema'
 
 interface RegisterInputFieldProps {
@@ -13,7 +13,7 @@ interface RegisterInputFieldProps {
   onChangeEmail: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-export default function RegisterInputField({
+export default function RegisterInputFiel({
   email,
   onChangeEmail,
 }: RegisterInputFieldProps) {
@@ -27,6 +27,7 @@ export default function RegisterInputField({
     isPending,
     isSuccess,
   } = useSendCertificationCode()
+  const verifyMutation = useVerifyOTP()
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
@@ -107,6 +108,7 @@ export default function RegisterInputField({
           resetTrigger={otpReset}
           onSuccess={handleOtpSuccess}
           className="mt-2 mb-3 space-y-4"
+          verifyMutation={verifyMutation}
         />
       )}
     </div>

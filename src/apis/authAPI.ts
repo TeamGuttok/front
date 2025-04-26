@@ -87,18 +87,23 @@ export async function sendCertificationCode(email: string) {
 }
 
 // 회원가입 인증번호 검증 post
-export async function verifyCertificationCode({
+export async function verifyRegisterCode({
   email,
   certificationNumber,
 }: {
   email: string
   certificationNumber: string
 }) {
+  const cookie = cookies()
   const res = await fetch(`${BASE_URL}/api/users/email-verification`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', Cookie: cookie.toString() },
     credentials: 'include',
-    body: JSON.stringify({ email, certificationNumber }),
+    body: JSON.stringify({
+      email,
+      certificationNumber,
+      Cookie: cookie.toString(),
+    }),
   })
 
   if (!res.ok) {
@@ -106,4 +111,31 @@ export async function verifyCertificationCode({
   }
 
   return res.json()
+}
+
+// 비밀번호 찾기 인증번호 검증 post
+export async function verifyPasswordCode({
+  email,
+  certificationNumber,
+}: {
+  email: string
+  certificationNumber: string
+}) {
+  const cookie = cookies()
+  const response = await fetch(`${BASE_URL}/api/users/certification-number`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Cookie: cookie.toString(),
+    },
+    credentials: 'include',
+    body: JSON.stringify({ email, certificationNumber }),
+  })
+
+  if (!response.ok) {
+    const errorData = await response.json()
+    throw new Error(errorData.message || '비밀번호 찾기 인증 실패')
+  }
+
+  return response.json()
 }

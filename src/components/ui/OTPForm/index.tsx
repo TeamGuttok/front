@@ -8,9 +8,10 @@ import {
 } from '#components/_common/InputOtp'
 import { cn } from '#components/lib/utils'
 import { Button } from '#components/_common/Button'
-import { useSendCertificationCode, useVerifyOTP } from '#apis/authClient'
+import { useSendCertificationCode } from '#apis/authClient'
 import { ErrorMessage } from '#components/_common/ErrorMessage'
 import { useAuthStore } from '#stores/auth/useAuthStore'
+import type { UseMutationResult } from '@tanstack/react-query'
 
 const TIME_LIMIT_SECONDS = 10 * 60 // 10분
 
@@ -19,6 +20,12 @@ interface OTPFormProps {
   onSuccess: (session: string) => void
   resetTrigger: number
   className?: string
+  verifyMutation: UseMutationResult<
+    any,
+    any,
+    { email: string; certificationNumber: string },
+    unknown
+  >
 }
 
 export default function OTPForm({
@@ -26,6 +33,7 @@ export default function OTPForm({
   onSuccess,
   className,
   resetTrigger,
+  verifyMutation: { mutate: verify, isPending: isLoading, isSuccess, reset },
 }: OTPFormProps) {
   const { verifyEmail } = useAuthStore()
   const inputRef = useRef<HTMLInputElement>(null)
@@ -35,12 +43,6 @@ export default function OTPForm({
   const [startTime, setStartTime] = useState(() => performance.now())
   const [isSubmitted, setIsSubmitted] = useState(false)
 
-  const {
-    mutate: verifyOTP,
-    isPending: isLoading,
-    isSuccess,
-    reset,
-  } = useVerifyOTP()
   const { mutate: resendCertificationCode } = useSendCertificationCode()
 
   useEffect(() => {
@@ -105,7 +107,7 @@ export default function OTPForm({
 
     setIsSubmitted(true)
 
-    verifyOTP(
+    verify(
       { email, certificationNumber: otp },
       {
         onSuccess: (data) => {
