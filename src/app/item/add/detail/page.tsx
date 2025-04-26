@@ -303,6 +303,7 @@ export default function Page() {
               <SelectLabel className={cn(labelClassName)}>메모</SelectLabel>
               <textarea
                 placeholder="메모를 입력하세요"
+                maxLength={200}
                 onChange={(e) => updateMemo(e.target.value)}
                 value={memo}
                 className="p-2 w-[12.5rem] sm:max-w-[12.5rem] sm:min-w-[12.5rem]  text-sm sm:text-base block 
@@ -320,7 +321,6 @@ export default function Page() {
             className={`w-full py-2 mt-4 text-base text-white shadow ${
               !isFormValid() ? 'bg-gray-400 cursor-not-allowed' : 'primary'
             }`}
-            //className={`${buttonBaseClass} ${buttonDynamicClass}`}
           >
             저장하기
           </Button>

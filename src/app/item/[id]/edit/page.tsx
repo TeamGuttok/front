@@ -28,7 +28,6 @@ import { useEffect } from 'react'
 import {
   useUpdateSubscription,
   useSubscriptionItem,
-  useDeleteSubscription,
 } from '#apis/subscriptionClient'
 
 export default function Page() {
@@ -322,6 +321,7 @@ export default function Page() {
               <SelectLabel className={cn(labelClassName)}>메모</SelectLabel>
               <textarea
                 placeholder="메모를 입력하세요"
+                maxLength={200}
                 onChange={(e) => updateMemo(e.target.value)}
                 value={memo}
                 className="p-2 w-[12.5rem] sm:max-w-[12.5rem] sm:min-w-[12.5rem]  text-sm sm:text-base block 
