@@ -28,8 +28,8 @@ import { useEffect } from 'react'
 import {
   useUpdateSubscription,
   useSubscriptionItem,
-  useDeleteSubscription,
 } from '#apis/subscriptionClient'
+import { Textarea } from '#components/_common/TextArea'
 
 export default function Page() {
   const params = useParams()
@@ -320,8 +320,9 @@ export default function Page() {
             </SelectGroup>
             <SelectGroup className={cn(groupClassName)}>
               <SelectLabel className={cn(labelClassName)}>메모</SelectLabel>
-              <textarea
+              <Textarea
                 placeholder="메모를 입력하세요"
+                maxLength={200}
                 onChange={(e) => updateMemo(e.target.value)}
                 value={memo}
                 className="p-2 w-[12.5rem] sm:max-w-[12.5rem] sm:min-w-[12.5rem]  text-sm sm:text-base block 

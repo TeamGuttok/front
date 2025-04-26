@@ -15,7 +15,7 @@ import {
   useDeleteSubscription,
 } from '#apis/subscriptionClient'
 import { groupClassName, labelClassName } from '#style/style'
-import { ConfirmDialog } from '#components/Layout/ConfirmDialog'
+import { ConfirmDialog } from '#components/ui/ConfirmDialog'
 import { useState } from 'react'
 
 export default function SubscriptionDetailPage() {
@@ -71,9 +71,11 @@ export default function SubscriptionDetailPage() {
             <div className="grid grid-cols-1 flex-col gap-2 sm:gap-4">
               <div className={cn(groupClassName)}>
                 <span className={cn(labelClassName)}>구독 서비스</span>
-                {item.title?.trim()
-                  ? item.title
-                  : serviceNameLabels[item.subscription]}
+                <span className="text-lg">
+                  {item.title?.trim()
+                    ? item.title
+                    : serviceNameLabels[item.subscription]}
+                </span>
               </div>
               <div className={cn(groupClassName)}>
                 <span className={cn(labelClassName)}>결제 금액</span>
@@ -94,20 +96,19 @@ export default function SubscriptionDetailPage() {
                     item.paymentMethod}
                 </span>
               </div>
-
               <div className={cn(groupClassName)}>
                 <span className={cn(labelClassName)}>메모</span>
-                <span className="text-lg">{item.memo}</span>
+                <span className="text-lg max-w-60 text-right">{item.memo}</span>
               </div>
             </div>
             <div className="flex justify-end pb-1">
               <button
                 type="button"
                 onClick={() => setShowDeleteDialog(true)}
-                className="mr-6"
+                className="p-3 hover:bg-red-500 rounded-full"
               >
                 <Trash2
-                  className="w-full h-full text-gray-500"
+                  className="w-6 h-6 text-gray-500 "
                   aria-label="삭제 아이콘"
                 />
               </button>
@@ -120,9 +121,10 @@ export default function SubscriptionDetailPage() {
               <Link
                 href={PATH.itemEdit(item.id)}
                 aria-label="수정 페이지로 이동"
+                className="p-3 flex items-center justify-center rounded-full hover:bg-gray-200"
               >
                 <Settings
-                  className="w-full h-full text-gray-500"
+                  className="w-6 h-6 text-gray-500"
                   aria-label="수정 아이콘"
                 />
               </Link>

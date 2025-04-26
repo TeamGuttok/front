@@ -8,7 +8,7 @@ import { cn } from '#components/lib/utils'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import { getMenuClassName } from '#style/style'
 import { useState } from 'react'
-import { ConfirmDialog } from '#components/Layout/ConfirmDialog'
+import { ConfirmDialog } from '#components/ui/ConfirmDialog'
 import { useHandleLogout } from '#hooks/useHandleLogout'
 
 export default function SideBar({ pathname }: { pathname: string }) {

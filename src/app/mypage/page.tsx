@@ -11,7 +11,7 @@ import useTheme from '#contexts/ThemeProvider/hook'
 import { useRouter } from 'next/navigation'
 import { useToggleAlarmMutation } from '#apis/notiClient'
 import { useMyProfileQuery, useDeleteUser } from '#apis/userClient'
-import { ConfirmDialog } from '#components/Layout/ConfirmDialog'
+import { ConfirmDialog } from '#components/ui/ConfirmDialog'
 import { useHandleLogout } from '#hooks/useHandleLogout'
 
 export default function MyPage() {

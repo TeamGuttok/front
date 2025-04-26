@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { useMutation } from '@tanstack/react-query'
 import {
   InputOTP,
   InputOTPGroup,
@@ -9,8 +8,9 @@ import {
 } from '#components/_common/InputOtp'
 import { cn } from '#components/lib/utils'
 import { Button } from '#components/_common/Button'
-import { BASE_URL } from '#constants/url'
-//import { OTPInputContext } from 'input-otp'
+import { useSendCertificationCode, useVerifyOTP } from '#apis/authClient'
+import { ErrorMessage } from '#components/_common/ErrorMessage'
+import { useAuthStore } from '#stores/auth/useAuthStore'
 
 const TIME_LIMIT_SECONDS = 10 * 60 // 10분
 
@@ -27,49 +27,21 @@ export default function OTPForm({
   className,
   resetTrigger,
 }: OTPFormProps) {
+  const { verifyEmail } = useAuthStore()
   const inputRef = useRef<HTMLInputElement>(null)
   const [otp, setOtp] = useState('')
   const [timeLeft, setTimeLeft] = useState(TIME_LIMIT_SECONDS)
   const [errors, setErrors] = useState<string[]>([])
   const [startTime, setStartTime] = useState(() => performance.now())
   const [isSubmitted, setIsSubmitted] = useState(false)
-  const [isVerified, setIsVerified] = useState(false)
 
   const {
     mutate: verifyOTP,
     isPending: isLoading,
     isSuccess,
     reset,
-  } = useMutation({
-    mutationFn: async () => {
-      console.log('인증번호 검증:', email, otp)
-      const response = await fetch(`${BASE_URL}/api/users/email-verification`, {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: email,
-          certificationNumber: otp,
-        }),
-      })
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
-      }
-
-      return response.json()
-    },
-    onSuccess: (data) => {
-      console.log('인증번호 검증 성공:', email, otp)
-      onSuccess(data.session)
-    },
-    onError: (err: unknown) => {
-      if (err instanceof Error) {
-        setErrors([`이메일 인증 요청 실패: ${err.message}`])
-      }
-    },
-  })
+  } = useVerifyOTP()
+  const { mutate: resendCertificationCode } = useSendCertificationCode()
 
   useEffect(() => {
     setOtp('')
@@ -106,14 +78,45 @@ export default function OTPForm({
     return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
   }
 
-  function handleVerifyOTP(value: string) {
-    if (isSubmitted || isLoading || isVerified) {
+  function handleVerifyOTP() {
+    if (isLoading) return
+
+    if (timeLeft === 0) {
+      resendCertificationCode(email, {
+        onSuccess: () => {
+          reset()
+          setOtp('')
+          setStartTime(performance.now())
+          setTimeLeft(TIME_LIMIT_SECONDS)
+          setErrors([])
+          setIsSubmitted(false)
+          if (inputRef.current) {
+            inputRef.current.focus()
+          }
+        },
+        onError: (err: any) => {
+          setErrors([err.message || '인증번호 재요청 실패'])
+        },
+      })
       return
     }
+
+    if (isSubmitted) return
+
     setIsSubmitted(true)
-    verifyOTP()
-    //mutate()
-    console.log('otp 입력 완료', value)
+
+    verifyOTP(
+      { email, certificationNumber: otp },
+      {
+        onSuccess: (data) => {
+          verifyEmail()
+          onSuccess(data.session)
+        },
+        onError: (err: any) => {
+          setErrors([err.message || '인증 실패'])
+        },
+      },
+    )
   }
 
   return (
@@ -134,7 +137,6 @@ export default function OTPForm({
           maxLength={6}
           value={otp}
           onChange={(value) => setOtp(value)}
-          //onComplete={handleComplete}
           containerClassName="justify-center"
           disabled={isLoading || timeLeft === 0}
         >
@@ -147,11 +149,18 @@ export default function OTPForm({
 
         <Button
           type="button"
-          onClick={() => handleVerifyOTP(otp)}
+          onClick={handleVerifyOTP}
           disabled={isLoading}
           className="w-32 mt-5 mb-3"
         >
-          {isLoading ? '인증중...' : isSuccess ? '인증완료' : '인증하기'}
+          {timeLeft === 0
+            ? '다시 요청'
+            : isLoading
+              ? '인증중...'
+              : isSuccess
+                ? '인증완료'
+                : '인증하기'}
+          <ErrorMessage errors={errors} className="mt-2" />
         </Button>
       </div>
 

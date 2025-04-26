@@ -5,10 +5,25 @@ import { useMutation } from '@tanstack/react-query'
 import { BASE_URL } from '#constants/url'
 import {
   sendCertificationCode,
-  SendCertificationRequest,
-  useLogin,
+  register,
+  verifyCertificationCode,
 } from './authAPI'
 import type { userInfo, LoginInput } from '#types/user'
+
+//회원가입 post
+export function useRegister() {
+  return useMutation({
+    mutationFn: register,
+    onSuccess: (data) => {
+      console.log('회원가입 성공:', data)
+    },
+    onError: (error) => {
+      if (error instanceof Error) {
+        console.error('회원가입 실패:', error.message)
+      }
+    },
+  })
+}
 
 // 로그인 post
 export function useLoginClient() {
@@ -71,15 +86,35 @@ export const useLogoutClient = () => {
 }
 
 // 인증번호 발송 post
-
 export const useSendCertificationCode = () => {
   return useMutation({
-    mutationFn: (data: SendCertificationRequest) => sendCertificationCode(data),
+    mutationFn: (email: string) => sendCertificationCode(email),
     onSuccess: (res) => {
       console.log('발송 성공:', res.message)
     },
     onError: (err) => {
       console.error('발송 실패:', err)
+    },
+  })
+}
+
+// 회원가입 인증번호 검증 post
+export function useVerifyOTP() {
+  return useMutation({
+    mutationFn: ({
+      email,
+      certificationNumber,
+    }: {
+      email: string
+      certificationNumber: string
+    }) => verifyCertificationCode({ email, certificationNumber }),
+    onSuccess: (data) => {
+      console.log('OTP 인증 성공', data)
+    },
+    onError: (error) => {
+      if (error instanceof Error) {
+        console.error('OTP 인증 실패', error.message)
+      }
     },
   })
 }

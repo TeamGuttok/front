@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { House, User, Users, Bell } from 'lucide-react'
+import { House, User, Bell } from 'lucide-react'
 import { PATH } from '#app/routes'
 import { cn } from '#components/lib/utils'
 
@@ -15,7 +15,7 @@ export default function NavigationBar({ pathname }: { pathname: string }) {
               href={PATH.notification}
               className={cn(
                 itemClassName,
-                pathname === PATH.notification && 'bg-accent',
+                pathname === PATH.notification && 'text-foreground',
               )}
             >
               <Bell aria-label="알림 아이콘" size={20} />

@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import { Button } from '#components/_common/Button'
 
+// TODO
+// [ ] 알림 조회 aplication 가져와서 환영 메세지 보여주기
 export default function RegisterSuccess({ nickName }: { nickName: string }) {
   return (
     <div className="flex flex-col items-center m-auto">

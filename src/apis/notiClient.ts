@@ -2,8 +2,13 @@
 
 'use client'
 
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { patchUserAlarm, fetchNotifications } from './notiAPI'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import {
+  patchUserAlarm,
+  fetchNotifications,
+  markNotificationsAsRead,
+  deleteNotifications,
+} from './notiAPI'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import type { PageRequest } from '#types/notification'
 
@@ -57,10 +62,63 @@ export const useToggleAlarmMutation = () => {
 // 알림 리스트 조회 get
 export const useNotifications = (pageRequest: PageRequest) => {
   return useQuery({
-    queryKey: ['notifications', pageRequest.lastId, pageRequest.size],
-    queryFn: () => fetchNotifications(pageRequest),
+    queryKey: [
+      'notifications',
+      'reminders',
+      pageRequest.lastId,
+      pageRequest.size,
+    ],
+    queryFn: async () => {
+      const allNotifications = await fetchNotifications(pageRequest)
+      const filteredContents = allNotifications.contents.filter(
+        (noti) => noti.category === 'REMINDER',
+      )
+      console.log(allNotifications)
+      return {
+        ...allNotifications,
+        contents: filteredContents,
+        size: filteredContents.length,
+        hasNext: false,
+      }
+    },
     staleTime: 1000 * 60 * 3,
     placeholderData: undefined,
     retry: 1,
+  })
+}
+
+// 알림 읽음 처리 put
+export const useMarkAsRead = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: markNotificationsAsRead,
+    onSuccess: (_data, ids) => {
+      console.log(ids)
+      queryClient.setQueryData(
+        ['notifications', 'reminders', 10000, 10000],
+        (oldData: any) => {
+          if (!oldData) return oldData
+
+          const updated = oldData.contents.map((noti: any) =>
+            ids.includes(noti.id) ? { ...noti, status: 'READ' } : noti,
+          )
+
+          return { ...oldData, contents: updated }
+        },
+      )
+    },
+  })
+}
+
+// 알림 삭제 delete
+export const useDeleteNotification = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: deleteNotifications,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['notifications'] })
+    },
   })
 }
