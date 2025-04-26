@@ -43,7 +43,6 @@ export const patchUserNickName = async (nickName: string) => {
 }
 
 // 비밀번호 변경 patch
-
 export const patchUserPassword = async (
   password: string,
 ): Promise<{

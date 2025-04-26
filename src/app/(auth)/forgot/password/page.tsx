@@ -1,6 +1,6 @@
-// export default function ForgotPasswordPage() {
-//   return <div>비밀번호 찾기 페이지</div>
-// }
+export default function ForgotPasswordPage() {
+  return <div>비밀번호 찾기 페이지입니다</div>
+}
 
 // 'use client'
 
@@ -9,9 +9,9 @@
 // import { Input } from '#components/_common/Input'
 // import { ErrorMessage } from '#components/_common/ErrorMessage'
 // import { Button } from '#components/_common/Button'
-// import OTPForm from '#components/_common/OTPForm'
+// import OTPForm from '#components/ui/OTPForm'
 // import { useMutation } from '@tanstack/react-query'
-// // import { forgotPasswordAction } from './forgotPasswordAction'
+// //import { forgotPasswordAction } from './forgotPasswordAction'
 // import ForgotPasswordSuccess from './ForgotPasswordSuccess'
 // import { BASE_URL } from '#constants/url'
 

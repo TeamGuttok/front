@@ -6,7 +6,8 @@ import { BASE_URL } from '#constants/url'
 import {
   sendCertificationCode,
   register,
-  verifyCertificationCode,
+  verifyRegisterCode,
+  verifyPasswordCode,
 } from './authAPI'
 import type { userInfo, LoginInput } from '#types/user'
 
@@ -107,13 +108,26 @@ export function useVerifyOTP() {
     }: {
       email: string
       certificationNumber: string
-    }) => verifyCertificationCode({ email, certificationNumber }),
+    }) => verifyRegisterCode({ email, certificationNumber }),
+  })
+}
+
+// 비밀번호 찾기 인증번호 검증 post
+export function usePasswordOTP() {
+  return useMutation({
+    mutationFn: ({
+      email,
+      certificationNumber,
+    }: {
+      email: string
+      certificationNumber: string
+    }) => verifyPasswordCode({ email, certificationNumber }),
     onSuccess: (data) => {
-      console.log('OTP 인증 성공', data)
+      console.log('비밀번호 찾기 인증 성공', data)
     },
     onError: (error) => {
       if (error instanceof Error) {
-        console.error('OTP 인증 실패', error.message)
+        console.error('비밀번호 찾기 인증 실패', error.message)
       }
     },
   })
