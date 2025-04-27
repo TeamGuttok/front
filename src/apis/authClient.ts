@@ -4,7 +4,7 @@ import { useAuthStore } from '#stores/auth/useAuthStore'
 import { useMutation } from '@tanstack/react-query'
 import { BASE_URL } from '#constants/url'
 import {
-  sendCertificationCode,
+  //sendCertificationCode,
   register,
   verifyRegisterCode,
   verifyPasswordCode,
@@ -89,7 +89,20 @@ export const useLogoutClient = () => {
 // 인증번호 발송 post
 export const useSendCertificationCode = () => {
   return useMutation({
-    mutationFn: (email: string) => sendCertificationCode(email),
+    mutationFn: async (email: string) => {
+      const res = await fetch(`${BASE_URL}/api/mail/certification`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email }),
+      })
+
+      if (!res.ok) {
+        throw new Error(`${res.status}` || '인증번호 요청 실패')
+      }
+      return res.json()
+    },
+
     onSuccess: (res) => {
       console.log('발송 성공:', res.message)
     },
