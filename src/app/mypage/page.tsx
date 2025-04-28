@@ -19,10 +19,9 @@ export default function MyPage() {
     useMyProfileQuery()
   const { mutate: deleteAccount, isPending: isDeletingAccount } =
     useDeleteUser()
-  const { user, setUser } = useAuthStore()
+  const { user } = useAuthStore()
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
   const { theme, setTheme } = useTheme()
-  const router = useRouter()
 
   const { mutate: toggleAlarm, isPending: isTogglingAlarm } =
     useToggleAlarmMutation()
@@ -30,13 +29,6 @@ export default function MyPage() {
   const [showLogoutDialog, setShowLogoutDialog] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false)
   const handleLogout = useHandleLogout()
-
-  useEffect(() => {
-    if (!isLoggedIn) {
-      router.push('/login')
-    }
-  }, [setUser, router])
-
   if (!isLoggedIn || isProfileLoading) return null
 
   return (
