@@ -1,27 +1,61 @@
 'use client'
 
 import { useAuthStore } from '#stores/auth/useAuthStore'
-import { useMutation } from '@tanstack/react-query'
+import { Register, useMutation } from '@tanstack/react-query'
 import { BASE_URL } from '#constants/url'
 import {
   //sendCertificationCode,
-  register,
+  //register,
   verifyRegisterCode,
   verifyPasswordCode,
 } from './authAPI'
 import type { userInfo, LoginInput } from '#types/user'
 
 //회원가입 post
-export function useRegister() {
+// export function useRegister() {
+//   return useMutation({
+//     mutationFn: register,
+//     onSuccess: (data) => {
+//       console.log('회원가입 성공:', data)
+//     },
+//     onError: (error) => {
+//       if (error instanceof Error) {
+//         console.error('회원가입 실패:', error.message)
+//       }
+//     },
+//   })
+//}
+
+export const useRegister = () => {
   return useMutation({
-    mutationFn: register,
-    onSuccess: (data) => {
-      console.log('회원가입 성공:', data)
-    },
-    onError: (error) => {
-      if (error instanceof Error) {
-        console.error('회원가입 실패:', error.message)
+    mutationFn: async ({
+      email,
+      password,
+      nickName,
+      alarm,
+    }: {
+      email: string
+      password: string
+      nickName: string
+      alarm: boolean
+    }) => {
+      const res = await fetch(`${BASE_URL}/api/users/signup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email, password, nickName, alarm }),
+      })
+
+      if (!res.ok) {
+        const errorData = await res.json()
+        throw new Error(errorData.message || '회원가입 실패')
       }
+    },
+    onSuccess: (res) => {
+      console.log('발송 성공:', res)
+    },
+    onError: (err) => {
+      console.error('발송 실패:', err)
     },
   })
 }
