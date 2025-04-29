@@ -9,9 +9,7 @@ import { PATH } from '#app/routes'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { useMutation } from '@tanstack/react-query'
 import { loginSchema } from '#schema/userSchema'
-import { useLogin } from '#apis/authAPI'
 import { useLoginClient } from '#apis/authClient'
 
 export default function Login() {
@@ -25,33 +23,6 @@ export default function Login() {
   })
 
   const { mutate: loginMutate, isPending } = useLoginClient()
-
-  // const { mutate: loginMutate, isPending } = useMutation({
-  //   mutationFn: useLogin,
-
-  //   onSuccess: async (user) => {
-  //     login({
-  //       email: user.email,
-  //       nickName: user.nickName,
-  //       alarm: user.alarm,
-  //     })
-  //     setUser({
-  //       email: user.email,
-  //       nickName: user.nickName,
-  //       alarm: user.alarm,
-  //     })
-
-  //     await new Promise((resolve) => setTimeout(resolve, 100))
-
-  //     router.push('/')
-  //   },
-
-  //   onError: (error) => {
-  //     if (error instanceof Error) {
-  //       setError({ general: [error.message] })
-  //     }
-  //   },
-  // })
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()

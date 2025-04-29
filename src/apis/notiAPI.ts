@@ -5,7 +5,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import type { PageRequest, NotificationResponse } from '#types/notification'
 import { FETCH_ALL } from '#constants/pagination'
 
-// 알림 목록 가져오기 get
+// 알림 가져오기 get
 export const fetchNotifications = async (
   pageRequest: PageRequest,
 ): Promise<NotificationResponse> => {
@@ -35,7 +35,7 @@ export const fetchNotifications = async (
 }
 
 export const useNotifications = (pageRequest: PageRequest) => {
-  console.log('📦 queryKey', [
+  console.log('queryKey', [
     'notifications',
     'reminders',
     pageRequest.lastId,
@@ -49,7 +49,6 @@ export const useNotifications = (pageRequest: PageRequest) => {
 }
 
 // 알림 상태 (사용/미사용) 변경 patch
-
 export const patchUserAlarm = async () => {
   const res = await fetch(`${BASE_URL}/api/users/alarm`, {
     method: 'PATCH',

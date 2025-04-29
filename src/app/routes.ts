@@ -1,11 +1,12 @@
 export const PATH = {
-  listView: '/',
+  main: '/',
   notification: '/notification',
   mypage: '/mypage',
   mypageEdit: '/mypage/edit',
 
   login: '/login',
   register: '/register',
+  registerSuccess: '/register/success',
   forgotPassword: '/forgot/password',
 
   itemAdd: '/item/add',
