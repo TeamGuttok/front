@@ -1,6 +1,5 @@
 'use client'
 
-import dynamic from 'next/dynamic'
 import { useState } from 'react'
 import { Label } from '#components/_common/Label'
 import { Input } from '#components/_common/Input'
@@ -10,8 +9,10 @@ import RegisterInputField from './RegisterInputField'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import { registerSchema } from '#schema/userSchema'
 import { useRegister } from '#apis/authClient'
+import { useRouter } from 'next/navigation'
+import { PATH } from '#app/routes'
 
-const RegisterSuccess = dynamic(() => import('./RegisterSuccess'))
+//const RegisterSuccess = dynamic(() => import('./success/page'))
 
 export default function Register() {
   const { user, setUser } = useAuthStore()
@@ -20,6 +21,7 @@ export default function Register() {
   const [passwordConfirm, setPasswordConfirm] = useState<string>('')
   const [error, setError] = useState<Record<string, string[]>>({})
   const { mutate: registerUser, isPending: isRegistering } = useRegister()
+  const router = useRouter()
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -39,16 +41,22 @@ export default function Register() {
       return
     }
 
-    registerUser({
-      email: input.email,
-      password: input.password,
-      nickName: input.nickName,
-      alarm: input.alarm,
-    })
-  }
-
-  if (isLoggedIn) {
-    return <RegisterSuccess nickName={user?.nickName} />
+    registerUser(
+      {
+        email: input.email,
+        password: input.password,
+        nickName: input.nickName,
+        alarm: input.alarm,
+      },
+      {
+        onSuccess: () => {
+          router.push(PATH.registerSuccess)
+        },
+        onError: (err) => {
+          console.error(err)
+        },
+      },
+    )
   }
 
   return (

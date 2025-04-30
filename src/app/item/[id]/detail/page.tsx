@@ -37,7 +37,7 @@ export default function SubscriptionDetailPage() {
       { id: Number(itemId) },
       {
         onSuccess: () => {
-          router.push('/')
+          router.push(PATH.main)
         },
       },
     )

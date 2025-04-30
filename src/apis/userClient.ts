@@ -9,6 +9,7 @@ import {
 } from './userAPI'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import { useRouter } from 'next/navigation'
+import { PATH } from '#app/routes'
 
 // 마이페이지 조회 get
 export const useMyProfileQuery = () => {
@@ -69,7 +70,7 @@ export const useDeleteUser = () => {
     onSuccess: (response) => {
       console.log('탈퇴 성공:', response.message)
       logout()
-      router.push('/')
+      router.push(PATH.main)
     },
     onError: (error) => {
       console.error('탈퇴 실패:', error)

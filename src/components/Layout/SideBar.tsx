@@ -27,10 +27,10 @@ export default function SideBar({ pathname }: { pathname: string }) {
         <ul>
           <li>
             <Link
-              href={PATH.listView}
+              href={PATH.main}
               className={cn(
                 getMenuClassName(),
-                pathname === PATH.listView && 'bg-accent',
+                pathname === PATH.main && 'bg-accent',
               )}
             >
               <Menu aria-label="리스트 뷰 아이콘" size={20} />
