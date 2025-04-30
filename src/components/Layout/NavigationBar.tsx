@@ -27,7 +27,7 @@ export default function NavigationBar({ pathname }: { pathname: string }) {
               href="/"
               className={cn(
                 itemClassName,
-                pathname === '/' && 'text-foreground',
+                pathname === PATH.main && 'text-foreground',
               )}
             >
               <House aria-label="홈 아이콘" />

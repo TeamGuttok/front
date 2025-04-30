@@ -19,6 +19,7 @@ import { SubscriptionRequest } from '#types/subscription'
 import { KNOWN_SERVICES } from '#constants/knownServices'
 import { groupClassName, labelClassName, inputClassName } from '#style/style'
 import { Textarea } from '#components/_common/TextArea'
+import { PATH } from '#app/routes'
 
 export default function Page() {
   const router = useRouter()
@@ -94,7 +95,7 @@ export default function Page() {
       onSuccess: (data) => {
         console.log('구독 항목 생성 성공:', data)
         resetSubscriptionData()
-        router.push('/')
+        router.push(PATH.main)
       },
       onError: (error) => {
         console.error('구독 항목 생성 실패:', error)

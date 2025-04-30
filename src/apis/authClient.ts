@@ -169,13 +169,13 @@ export function usePasswordOTP() {
       email: string
       certificationNumber: string
     }) => verifyPasswordCode({ email, certificationNumber }),
-    onSuccess: (data) => {
-      console.log('비밀번호 찾기 인증 성공', data)
-    },
-    onError: (error) => {
-      if (error instanceof Error) {
-        console.error('비밀번호 찾기 인증 실패', error.message)
-      }
-    },
+    // onSuccess: (data) => {
+    //   console.log('비밀번호 찾기 인증 성공', data)
+    // },
+    // onError: (error) => {
+    //   if (error instanceof Error) {
+    //     console.error('비밀번호 찾기 인증 실패', error.message)
+    //   }
+    //},
   })
 }

@@ -37,7 +37,7 @@ export default function Login() {
         login(user)
         setUser(user)
         await new Promise((resolve) => setTimeout(resolve, 100))
-        router.push('/')
+        router.push(PATH.main)
       },
       onError: (error) => {
         if (error instanceof Error) {
@@ -49,7 +49,7 @@ export default function Login() {
 
   useEffect(() => {
     if (isLoggedIn) {
-      router.replace('/')
+      router.replace(PATH.main)
     }
   }, [isLoggedIn, router])
 

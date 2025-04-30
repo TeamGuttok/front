@@ -3,6 +3,7 @@
 import { useLogoutClient } from '#apis/authClient'
 import { useRouter } from 'next/navigation'
 import { useAuthStore } from '#stores/auth/useAuthStore'
+import { PATH } from '#app/routes'
 
 export const useHandleLogout = () => {
   const { mutate: requestLogout } = useLogoutClient()
@@ -13,7 +14,7 @@ export const useHandleLogout = () => {
     requestLogout(undefined, {
       onSuccess: () => {
         logout()
-        router.push('/')
+        router.push(PATH.main)
       },
       onError: (error) => {
         console.error('로그아웃 실패:', error)

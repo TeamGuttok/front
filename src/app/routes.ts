@@ -7,12 +7,11 @@ export const PATH = {
   login: '/login',
   register: '/register',
   registerSuccess: '/register/success',
-  forgotPassword: '/forgot/password',
+  forgotPassword: '/forgotPassword',
+  resetPassword: '/forgotPassword/reset',
 
   itemAdd: '/item/add',
   addDetail: '/item/add/detail',
   itemDetail: (id: string | number) => `/item/${id}/detail`,
   itemEdit: (id: string | number) => `/item/${id}/edit`,
-  // itemDetail: (itemId: number) => `/item/${itemId}/detail`,
-  // itemEdit: (itemId: number) => `/item/${itemId}/edit`,
 }
