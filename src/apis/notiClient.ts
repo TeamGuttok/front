@@ -14,26 +14,24 @@ import type { PageRequest } from '#types/notification'
 
 // 알림 상태 변경 patch
 export const useToggleAlarmMutation = () => {
-  const { setUser } = useAuthStore()
+  const { user, setUser } = useAuthStore()
 
   return useMutation({
     mutationFn: patchUserAlarm,
     onSuccess: (response) => {
       console.log('성공:', response)
-      console.log('response.data:', response.data)
       const updatedAlarm = response.data.alarm
+      const { user } = useAuthStore.getState()
 
-      if (
-        // !response ||
-        // !response.data ||
-        typeof response.data.alarm !== 'boolean'
-      ) {
-        console.warn('응답에 alarm 값이 없거나 잘못됨:', response)
-        return
-      }
+      if (!user) return
 
       setUser({ alarm: updatedAlarm })
-      const user = useAuthStore.getState().user
+
+      useAuthStore.getState().setUser({
+        email: user.email,
+        nickName: user.nickName,
+        alarm: !user.alarm, // toggle
+      })
       console.log(user)
     },
     onError: async (error) => {
