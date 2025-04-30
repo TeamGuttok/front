@@ -25,12 +25,14 @@ export const useAuthStore = create<AuthState>()(
       resetEmailVerification: () => set({ isEmailVerified: false }),
       user: { email: '', nickName: '', alarm: true },
 
-      logout: () =>
+      logout: () => {
         set({
           user: { email: '', nickName: '', alarm: true },
           isLoggedIn: false,
           isEmailVerified: false,
-        }),
+        })
+        useAuthStore.persist.clearStorage()
+      },
       setUser: (user: Partial<userInfo>) =>
         set((state) => {
           const currentUser = state.user ?? {

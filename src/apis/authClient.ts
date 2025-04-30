@@ -1,30 +1,10 @@
 'use client'
 
 import { useAuthStore } from '#stores/auth/useAuthStore'
-import { Register, useMutation } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { BASE_URL } from '#constants/url'
-import {
-  //sendCertificationCode,
-  //register,
-  verifyRegisterCode,
-  verifyPasswordCode,
-} from './authAPI'
+import { verifyRegisterCode, verifyPasswordCode } from './authAPI'
 import type { userInfo, LoginInput } from '#types/user'
-
-//회원가입 post
-// export function useRegister() {
-//   return useMutation({
-//     mutationFn: register,
-//     onSuccess: (data) => {
-//       console.log('회원가입 성공:', data)
-//     },
-//     onError: (error) => {
-//       if (error instanceof Error) {
-//         console.error('회원가입 실패:', error.message)
-//       }
-//     },
-//   })
-//}
 
 export const useRegister = () => {
   return useMutation({
@@ -111,7 +91,7 @@ export const useLogoutClient = () => {
   return useMutation({
     mutationFn: logout,
     onSuccess: () => {
-      clearSession()
+      useAuthStore.persist.clearStorage()
       console.log('로그아웃 성공')
     },
     onError: (error) => {
