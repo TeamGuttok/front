@@ -43,16 +43,14 @@
 
 ### UI/UX 구현
 
-- **모듈형 컴포넌트 UI 개발**
-  - 사용자 정보 수정, 구독 서비스 등록 등 주요 페이지를 `React` 기반 컴포넌트로 분리하여 구성
-  - `Radix UI`, `Tailwind CSS`로 반응형 및 접근성 있는 컴포넌트 구성
-  - `Zod`를 사용해서 사용자 입력값에 대한 유효성 검증 및 에러 메시지 표시 처리
+- 사용자 정보 수정, 구독 서비스 등록 등 주요 페이지를 `React` 기반 컴포넌트로 분리하여 구성
+- `Radix UI`, `Tailwind CSS`로 반응형 및 접근성 있는 컴포넌트 구성
+- `Zod`를 사용해서 사용자 입력값에 대한 유효성 검증 및 에러 메시지 표시 처리
 
 ### 클라이언트 상태 관리
 
-- **Zustand를 활용한 전역 상태 관리**
-  - `zustand`와 `zustand-persist`를 사용해 로그인 상태, 사용자 정보, 구독 서비스 입력값 등 클라이언트 상태 유지
-  - 세션 스토리지를 기반으로 새로고침 이후에도 상태를 복원할 수 있도록 처리
+- `zustand`와 `zustand-persist`를 사용해 로그인 상태, 사용자 정보, 구독 서비스 입력값 등 클라이언트 상태 유지
+- 세션 스토리지를 기반으로 새로고침 이후에도 상태를 복원할 수 있도록 처리
 
 ### API 통신 및 인증 흐름
 
@@ -77,7 +75,7 @@
 프로젝트 클론 및 의존성 설치를 진행해주세요.
 
 ```
-git clone https://github.com/stillcorners/guttok-front.git
+git clone https://github.com/TeamGuttok/front.git
 cd front
 npm install
 ```
