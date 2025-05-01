@@ -128,6 +128,7 @@ export default function Page() {
               </SelectLabel>
               <Input
                 type="text"
+                maxLength={50}
                 aria-labelledby="subscriptionTitle"
                 aria-describedby="subscriptionTitle-required"
                 value={isCustom ? title : computedTitle}
