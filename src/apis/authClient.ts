@@ -31,12 +31,6 @@ export const useRegister = () => {
         throw new Error(errorData.message || '회원가입 실패')
       }
     },
-    onSuccess: (res) => {
-      console.log('발송 성공:', res)
-    },
-    onError: (err) => {
-      console.error('발송 실패:', err)
-    },
   })
 }
 
@@ -92,7 +86,6 @@ export const useLogoutClient = () => {
     mutationFn: logout,
     onSuccess: () => {
       useAuthStore.persist.clearStorage()
-      console.log('로그아웃 성공')
     },
     onError: (error) => {
       console.error('로그아웃 실패:', error)
@@ -115,13 +108,6 @@ export const useSendCertificationCode = () => {
         throw new Error(`${res.status}` || '인증번호 요청 실패')
       }
       return res.json()
-    },
-
-    onSuccess: (res) => {
-      console.log('발송 성공:', res.message)
-    },
-    onError: (err) => {
-      console.error('발송 실패:', err)
     },
   })
 }
@@ -149,13 +135,5 @@ export function usePasswordOTP() {
       email: string
       certificationNumber: string
     }) => verifyPasswordCode({ email, certificationNumber }),
-    // onSuccess: (data) => {
-    //   console.log('비밀번호 찾기 인증 성공', data)
-    // },
-    // onError: (error) => {
-    //   if (error instanceof Error) {
-    //     console.error('비밀번호 찾기 인증 실패', error.message)
-    //   }
-    //},
   })
 }

@@ -10,9 +10,7 @@ export default function Home() {
   const { isLoggedIn, setUser } = useAuthStore()
 
   useEffect(() => {
-    const unsubscribe = useAuthStore.subscribe((state) => {
-      console.log('useAuthStore 상태 변경:', state)
-    })
+    const unsubscribe = useAuthStore.subscribe((state) => {})
 
     const storedUser = localStorage.getItem('user')
     if (storedUser) {

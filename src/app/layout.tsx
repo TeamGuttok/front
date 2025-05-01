@@ -12,7 +12,25 @@ export const metadata: Metadata = {
     template: '%s - 구똑',
     default: '구똑',
   },
-  description: '고정지출 관리 서비스',
+  description: '구똑: 구독을 똑똑하게',
+  icons: {
+    icon: [
+      {
+        //rel: 'icon',
+        //type: 'image/png',
+        url: '/images/favicon/light_favicon.png',
+        media: '(prefers-color-scheme: light)',
+        href: '/images/favicon/light_favicon.png',
+      },
+      {
+        //rel: 'icon',
+        //type: 'image/png',
+        url: '/images/favicon/dark_favicon.png',
+        media: '(prefers-color-scheme: dark)',
+        href: '/images/favicon/dark_favicon.png',
+      },
+    ],
+  },
 }
 
 export default function RootLayout({

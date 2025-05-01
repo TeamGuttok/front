@@ -61,8 +61,6 @@ export const patchUserAlarm = async () => {
 
   const result = await res.json()
 
-  console.log('PATCH 응답:', result)
-
   if (!res.ok) {
     throw new Error(result.message || '알림 설정 변경 실패')
   }

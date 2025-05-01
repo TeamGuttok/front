@@ -51,12 +51,6 @@ export const usePatchNickNameMutation = () => {
 export const usePatchPasswordMutation = () => {
   return useMutation({
     mutationFn: patchUserPassword,
-    onSuccess: (res) => {
-      console.log('비밀번호 변경 성공:', res.message)
-    },
-    onError: (err) => {
-      console.error('비밀번호 변경 실패:', err)
-    },
   })
 }
 
@@ -68,12 +62,8 @@ export const useDeleteUser = () => {
   return useMutation({
     mutationFn: deleteUser,
     onSuccess: (response) => {
-      console.log('탈퇴 성공:', response.message)
       logout()
       router.push(PATH.main)
-    },
-    onError: (error) => {
-      console.error('탈퇴 실패:', error)
     },
   })
 }
