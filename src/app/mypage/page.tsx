@@ -5,10 +5,9 @@ import { PATH } from '#app/routes'
 import { Settings, ToggleLeft, ToggleRight } from 'lucide-react'
 import CardTitle from '#components/_common/CardTitle'
 import { Button } from '#components/_common/Button'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import useTheme from '#contexts/ThemeProvider/hook'
-import { useRouter } from 'next/navigation'
 import { useToggleAlarmMutation } from '#apis/notiClient'
 import { useMyProfileQuery, useDeleteUser } from '#apis/userClient'
 import { ConfirmDialog } from '#components/ui/ConfirmDialog'
@@ -29,6 +28,7 @@ export default function MyPage() {
   const [showLogoutDialog, setShowLogoutDialog] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false)
   const handleLogout = useHandleLogout()
+
   if (!isLoggedIn || isProfileLoading) return null
 
   return (
