@@ -19,7 +19,6 @@ export const useToggleAlarmMutation = () => {
   return useMutation({
     mutationFn: patchUserAlarm,
     onSuccess: (response) => {
-      console.log('성공:', response)
       const updatedAlarm = response.data.alarm
       const { user } = useAuthStore.getState()
 
@@ -32,27 +31,6 @@ export const useToggleAlarmMutation = () => {
         nickName: user.nickName,
         alarm: !user.alarm, // toggle
       })
-      console.log(user)
-    },
-    onError: async (error) => {
-      console.error('알림 설정 변경 실패:', error)
-      const user = useAuthStore.getState().user
-      console.log(user)
-
-      if (error instanceof Error) {
-        console.log('error.message:', error.message)
-      }
-
-      if ('response' in error) {
-        try {
-          const res = await (error as any).response.json()
-          console.log('서버 에러 응답 본문:', res)
-        } catch {
-          console.warn('응답 바디를 JSON으로 파싱할 수 없음')
-        }
-      }
-
-      console.log('전체 에러 객체:', JSON.stringify(error, null, 2))
     },
   })
 }
@@ -92,7 +70,6 @@ export const useMarkAsRead = () => {
   return useMutation({
     mutationFn: markNotificationsAsRead,
     onSuccess: (_data, ids) => {
-      console.log(ids)
       queryClient.setQueryData(
         ['notifications', 'reminders', 10000, 10000],
         (oldData: any) => {

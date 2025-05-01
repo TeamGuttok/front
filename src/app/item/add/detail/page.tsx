@@ -67,7 +67,6 @@ export default function Page() {
     event.preventDefault()
 
     if (!isFormValid()) {
-      console.log('입력값이 유효하지 않음:', subscriptionData)
       return
     }
 
@@ -93,12 +92,8 @@ export default function Page() {
 
     mutation.mutate(payload, {
       onSuccess: (data) => {
-        console.log('구독 항목 생성 성공:', data)
         resetSubscriptionData()
         router.push(PATH.main)
-      },
-      onError: (error) => {
-        console.error('구독 항목 생성 실패:', error)
       },
     })
   }

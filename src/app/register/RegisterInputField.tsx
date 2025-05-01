@@ -67,10 +67,6 @@ export default function RegisterInputFiel({
     verifyEmail()
   }
 
-  useEffect(() => {
-    console.log('현재 user 상태:', user)
-  }, [user])
-
   return (
     <div className="flex flex-col gap-1 min-h-16">
       <div className="flex justify-between gap-3">

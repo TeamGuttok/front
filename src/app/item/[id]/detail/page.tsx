@@ -30,8 +30,6 @@ export default function SubscriptionDetailPage() {
 
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
-  console.log(item)
-
   const handleDelete = () => {
     deleteSubscription(
       { id: Number(itemId) },

@@ -46,8 +46,6 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
       document.head.appendChild(favicon)
     }
 
-    console.log('[파비콘 및 다크모드 설정]', { isDarkMode, href })
-
     if (theme === 'system') {
       localStorage.removeItem('theme')
     } else {
