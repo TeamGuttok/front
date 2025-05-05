@@ -7,7 +7,6 @@ const nextConfig: NextConfig = {
       ...(config.resolve.alias || {}),
       '#app': path.resolve(__dirname, 'src/app'),
       '#apis': path.resolve(__dirname, 'src/apis'),
-      '#apis/subscriptions': path.resolve(__dirname, 'src/apis/subscriptions'),
       '#components': path.resolve(__dirname, 'src/components'),
       '#hooks': path.resolve(__dirname, 'src/hooks'),
       '#constants': path.resolve(__dirname, 'src/constants'),
@@ -15,6 +14,9 @@ const nextConfig: NextConfig = {
       '#utils': path.resolve(__dirname, 'src/utils'),
       '#store': path.resolve(__dirname, 'src/store'),
       '#types': path.resolve(__dirname, 'src/types'),
+      '#schema': path.resolve(__dirname, 'src/schema'),
+      '#style': path.relative(__dirname, 'src/style'),
+      '#contexts': path.relative(__dirname, 'src/contests'),
     }
     return config
   },

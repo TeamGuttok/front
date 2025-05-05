@@ -27,12 +27,16 @@
 | 강주철 | 백엔드 개발자     | 기획, 디자인, 백엔드 개발, 서버 배포               |
 | 오상민 | 백엔드 개발자     | 기획, 디자인, 백엔드 개발, 서버 배포               |
 
+<br>
+
 # 사용 스택
 
 - **프레임워크 및 언어** : TypeScript, React, Next.js 15 (App Router 기반)
 - **상태 및 데이터 관리** : Zustand (+ persist), TanStack Query (v5)
 - **스타일 및 UI 구성, 유효성 검증** : Tailwind CSS, Radix UI, clsx, tailwind-variant, Zod
 - **개발 도구 및 협업 환경** : ESLint, Prettier, TypeScript, Jira, Discord
+
+<br>
 
 # 주요 기능
 
@@ -69,6 +73,8 @@
 - **CI/CD 자동화**
   - AWS Amplify를 사용하여 프론트엔드 자동 배포 파이프라인 구축
   - `main` 브랜치에 푸시하면 자동으로 빌드 및 최신 버전 배포 진행
+
+<br>
 
 # 서버 실행 방법
 
