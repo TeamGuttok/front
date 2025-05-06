@@ -6,6 +6,9 @@ import UnauthenticatedPage from '../components/Layout/Main/UnauthenticatedPage'
 import AuthenticatedPage from '../components/Layout/Main/AuthenticatedPage'
 import { Skeleton } from '../components/_common/Skeleton'
 
+// TODO
+// [ ] 클라이언트 상태가 아닌 쿠키 여부에 따라 다른 메인페이지 반환
+
 export default function Home() {
   const { isLoggedIn, setUser } = useAuthStore()
 

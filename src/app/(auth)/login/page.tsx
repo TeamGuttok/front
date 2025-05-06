@@ -47,6 +47,8 @@ export default function Login() {
     })
   }
 
+  // TODO
+  // [ ] 쿠키 여부에 따라 넘기기
   useEffect(() => {
     if (isLoggedIn) {
       router.replace(PATH.main)
@@ -73,6 +75,7 @@ export default function Login() {
               className="w-0 grow"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              autoComplete="current-email"
             />
           </div>
           <ErrorMessage errors={error?.email} className="ml-20" />
@@ -90,6 +93,7 @@ export default function Login() {
               className="w-0 grow"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
             />
           </div>
           <ErrorMessage errors={error?.password} className="ml-20" />
