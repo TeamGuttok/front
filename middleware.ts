@@ -9,7 +9,7 @@ export function middleware(request: NextRequest) {
 
   const session = request.cookies.get('SESSION')
 
-  if (!session) {
+  if (!session && request.nextUrl.pathname !== '/login') {
     console.log('미들웨어실행중')
     return NextResponse.redirect(new URL('/login', request.url))
   }
