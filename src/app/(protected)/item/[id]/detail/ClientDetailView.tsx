@@ -18,9 +18,10 @@ import { groupClassName, labelClassName } from '#style/style'
 import { ConfirmDialog } from '#components/ui/ConfirmDialog'
 import { useState } from 'react'
 
-export default function SubscriptionDetailPage() {
+export default function ClientDetailView() {
   const router = useRouter()
   const params = useParams<{ id: string }>()
+  if (!params?.id) return <p>잘못된 접근입니다.</p>
   const itemId = parseInt(params.id, 10)
   const { isLoading, error } = useSubscriptionItem(params.id)
   const { mutate: deleteSubscription } = useDeleteSubscription()

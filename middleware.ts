@@ -1,49 +1,18 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-const PUBLIC_PATHS = ['/', '/login', '/register', '/forgotPassword']
-
+export const config = {
+  matcher: ['/mypage', '/mypage/:path*', '/notification', '/item/:path*'],
+}
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl
+  console.log('미들웨어 실행중', request.nextUrl.pathname)
 
-  if (
-    PUBLIC_PATHS.includes(pathname) ||
-    pathname.startsWith('/_next') ||
-    pathname.startsWith('/static') ||
-    pathname.startsWith('/images/favicon') ||
-    pathname.startsWith('/favicon.png')
-  ) {
-    return NextResponse.next()
-  }
+  const session = request.cookies.get('SESSION')
 
-  const isLoggedIn = request.cookies.has('SESSION') // 또는 'auth'
-  if (!isLoggedIn) {
+  if (!session) {
+    console.log('미들웨어실행중')
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
   return NextResponse.next()
-}
-
-// Dynamic Route 예외처리
-//   const isItemDetailOrEdit = /^\/item\/\d+\/(detail|edit)$/.test(pathname)
-//   if (isItemDetailOrEdit) {
-//     const authCookie = request.cookies.get('SESSION')
-//     if (!authCookie) {
-//       const loginUrl = new URL('/login', request.url)
-//       return NextResponse.redirect(loginUrl)
-//     }
-//     return NextResponse.next()
-//   }
-
-//   const authCookie = request.cookies.get('SESSION')
-//   if (!authCookie) {
-//     const loginUrl = new URL('/login', request.url)
-//     return NextResponse.redirect(loginUrl)
-//   }
-
-//   return NextResponse.next()
-// }
-
-export const config = {
-  matcher: ['/((?!_next/static|_next/image).*)'],
 }

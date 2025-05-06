@@ -13,7 +13,9 @@ import { useMyProfileQuery, useDeleteUser } from '#apis/userClient'
 import { ConfirmDialog } from '#components/ui/ConfirmDialog'
 import { useHandleLogout } from '#hooks/useHandleLogout'
 
-export default function MyPage() {
+// [ ]
+// 에러 토스트 ui 유저친화적으로 구현
+export default function ClientMypage() {
   const { isLoading: isProfileLoading, isError: isProfileError } =
     useMyProfileQuery()
   const { mutate: deleteAccount, isPending: isDeletingAccount } =
@@ -57,11 +59,11 @@ export default function MyPage() {
         </div>
         <div className="flex justify-between mb-2">
           <p className="text-gray-600">닉네임</p>
-          <div>{user.nickName}</div>
+          <div>{user?.nickName}</div>
         </div>
         <div className="flex justify-between mb-2">
           <p className="text-gray-600">이메일</p>
-          <div>{user.email}</div>
+          <div>{user?.email}</div>
         </div>
       </div>
       <hr />
@@ -73,7 +75,7 @@ export default function MyPage() {
           <p className="text-gray-600">이메일 결제 리마인드</p>
           <div>
             <button onClick={() => toggleAlarm()} disabled={isTogglingAlarm}>
-              {user.alarm ? (
+              {user?.alarm ? (
                 <ToggleLeft
                   aria-label="이메일 결제 리마인드 동의"
                   className="w-[3rem] h-[3rem] fill-[hsl(var(--primary))] strokeWidth={0} stroke-[hsl(var(--background))]"
@@ -113,7 +115,7 @@ export default function MyPage() {
         <div className="flex justify-end mt-3">
           <Button
             onClick={() => setShowLogoutDialog(true)}
-            className="primary hopver:[hsl(var(--primary-hover))]"
+            className="primary popver:[hsl(var(--primary-hover))]"
           >
             <span>로그아웃</span>
           </Button>

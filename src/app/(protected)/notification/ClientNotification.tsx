@@ -8,33 +8,24 @@ import { useItemStore } from '#stores/subscriptions/useItemStore'
 import { useNotifications } from '#apis/notiAPI'
 import { useMarkAsRead, useDeleteNotification } from '#apis/notiClient'
 import StatusBadge from '#components/ui/StatusBadge'
+import { useToast } from '#hooks/useToast'
+import { useAuthStore } from '#stores/auth/useAuthStore'
+import { useRouter } from 'next/router'
+import { PATH } from '#app/routes'
 
-export default function NotificationList() {
+export default function ClientNotification() {
+  const router = useRouter
+  const { toast } = useToast()
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
   const { data, isLoading, error } = useNotifications({
     lastId: 10000,
     size: 10000,
   })
   const { mutate: markAsReadAPI } = useMarkAsRead()
   const { mutate: deleteAPI } = useDeleteNotification()
-
-  // TODO
-  // [ ]로그인하지 않고 접속하면 로그인 페이지로 이동시키기
   const items = useItemStore((state) => state.items)
-
-  // if (isLoading)
-  //   return (
-  //     <p className="text-center text-gray-500 mt-10">
-  //       📭 알림을 불러오는 중...
-  //     </p>
-  //   )
-  // if (error)
-  //   return (
-  //     <p className="text-center text-red-500 mt-10">
-  //       ⚠️ 알림을 불러오는 중 오류 발생
-  //     </p>
-  //   )
-  // if (!data || !data.contents.length)
-  //   return <p className="text-center text-gray-500 mt-10">📭 알림이 없습니다</p>
+  const isEmpty =
+    !data || !Array.isArray(data.contents) || data.contents.length === 0
 
   return (
     <CardTitle className="mx-auto lg:m-8 p-5 flex flex-col min-h-[calc(100vh-4.5rem)] pb-[3rem] mt-10">
@@ -55,15 +46,9 @@ export default function NotificationList() {
           </p>
         )}
 
-        {!isLoading &&
-          !error &&
-          (!data ||
-            !Array.isArray(data.contents) ||
-            data.contents.length === 0) && (
-            <p className="text-center text-gray-500 mt-10">
-              📭 알림이 없습니다
-            </p>
-          )}
+        {isEmpty && !isLoading && !error && (
+          <p className="text-center text-gray-500 mt-10">📭 알림이 없습니다</p>
+        )}
 
         {!isLoading && !error && data && data.contents.length > 0 && (
           <div className="grid grid-cols-1 gap-3 cursor-pointer">

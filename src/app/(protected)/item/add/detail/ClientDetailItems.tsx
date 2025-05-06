@@ -21,7 +21,7 @@ import { groupClassName, labelClassName, inputClassName } from '#style/style'
 import { Textarea } from '#components/_common/TextArea'
 import { PATH } from '#app/routes'
 
-export default function Page() {
+export default function ClientDetailItems() {
   const router = useRouter()
   const mutation = useCreateSubscription()
 

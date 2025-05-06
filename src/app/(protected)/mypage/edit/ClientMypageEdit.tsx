@@ -15,7 +15,7 @@ import {
 } from '#apis/userClient'
 import { nickNameSchema, passwordSchema } from '#schema/userSchema'
 
-export default function MyPage() {
+export default function ClientMypageEdit() {
   const { user, setUser } = useAuthStore()
   const { data: profile } = useMyProfileQuery()
   const [nickName, setNickName] = useState(user?.nickName ?? '')

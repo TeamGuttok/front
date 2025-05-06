@@ -15,7 +15,7 @@ import { useServiceStore } from '#stores/subscriptions/useServiceStore'
 import { ServiceItem, allServices } from '#types/subscription'
 import { useSubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
 
-export default function Page() {
+export default function ClientAddItems() {
   const { setSelectedService } = useServiceStore()
   const { searchQuery, setSearchQuery, setSearchResults, setIsSearching } =
     useSearchStore()
