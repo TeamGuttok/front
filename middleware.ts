@@ -2,7 +2,13 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export const config = {
-  matcher: ['/mypage', '/mypage/:path*', '/notification', '/item/:path*'],
+  matcher: [
+    '/mypage',
+    '/mypage/:path*',
+    '/notification',
+    '/item/:path*',
+    '/protected/:path',
+  ],
 }
 export function middleware(request: NextRequest) {
   console.log('미들웨어 실행중', request.nextUrl.pathname)
