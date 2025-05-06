@@ -10,6 +10,7 @@ import { BREAKPOINTS } from '#constants/breakpoints'
 
 export default function Layout({ children }: { children: ReactNode }) {
   const pathname = usePathname()
+
   const isMobile = useMediaQuery(`(max-width: ${BREAKPOINTS.sm})`)
   const [isMount, setIsMount] = useState(false)
 
@@ -22,9 +23,9 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <>
       {isMobile ? (
-        <NavigationBar pathname={pathname} />
+        <NavigationBar pathname={pathname ?? ''} />
       ) : (
-        <SideBar pathname={pathname} />
+        <SideBar pathname={pathname ?? ''} />
       )}
       {children}
     </>

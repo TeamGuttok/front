@@ -33,8 +33,9 @@
       "#types/*": ["./src/types/*"],
       "#queries/*": ["./src/queries/*"],
       "style/*": ["./src/styles/*"],
-      "schema/*": ["./src/shema/*"]
-    }
+      "schema/*": ["./src/schema/*"]
+    },
+    "strictNullChecks": true
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]

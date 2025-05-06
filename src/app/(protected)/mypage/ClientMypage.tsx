@@ -12,6 +12,8 @@ import { useToggleAlarmMutation } from '#apis/notiClient'
 import { useMyProfileQuery, useDeleteUser } from '#apis/userClient'
 import { ConfirmDialog } from '#components/ui/ConfirmDialog'
 import { useHandleLogout } from '#hooks/useHandleLogout'
+import { cn } from '#components/lib/utils'
+import { getMenuClassName } from '#style/style'
 
 // [ ]
 // 에러 토스트 ui 유저친화적으로 구현
@@ -115,7 +117,7 @@ export default function ClientMypage() {
         <div className="flex justify-end mt-3">
           <Button
             onClick={() => setShowLogoutDialog(true)}
-            className="primary popver:[hsl(var(--primary-hover))]"
+            className={cn(getMenuClassName())}
           >
             <span>로그아웃</span>
           </Button>
