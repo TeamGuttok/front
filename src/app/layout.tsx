@@ -8,22 +8,17 @@ import './globals.css'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 export const metadata: Metadata = {
-  title: {
-    template: '%s - 구똑',
-    default: '구똑',
-  },
+  title: '구똑',
   description: '구똑: 구독을 똑똑하게',
   icons: {
     icon: [
       {
         url: '/images/favicon/light_favicon.png',
         media: '(prefers-color-scheme: light)',
-        href: '/images/favicon/light_favicon.png',
       },
       {
         url: '/images/favicon/dark_favicon.png',
-        media: '(prefers-color-scheme: dark)',
-        href: '/images/favicon/dark_favicon.png',
+        href: '(prefers-color-scheme: dark)',
       },
     ],
   },
@@ -37,17 +32,19 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body>
-        <QueryProvider>
-          <ReactQueryDevtools />
-          <ThemeProvider>
+        <ThemeProvider>
+          <QueryProvider>
+            <ReactQueryDevtools />
             <Layout>
+              {/* TODO */}
+              {/* [ ] 스타일정리... */}
               <main className="relative flex flex-col w-full sm:w-[calc(100%-224px)] sm:float-right h-[calc(100vh-72px)] sm:h-[100vh] overflow-y-auto">
                 {children}
               </main>
             </Layout>
             <Toaster />
-          </ThemeProvider>
-        </QueryProvider>
+          </QueryProvider>
+        </ThemeProvider>
       </body>
     </html>
   )
