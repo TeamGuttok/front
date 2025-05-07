@@ -40,13 +40,7 @@ export default function RootLayout({
         <ThemeProvider>
           <QueryProvider>
             <ReactQueryDevtools />
-            <Layout>
-              {/* TODO */}
-              {/* [ ] 스타일정리... */}
-              <main className="relative flex flex-col w-full sm:w-[calc(100%-224px)] sm:float-right h-[calc(100vh-72px)] sm:h-[100vh] overflow-y-auto">
-                {children}
-              </main>
-            </Layout>
+            <Layout>{children}</Layout>
             <Toaster />
           </QueryProvider>
         </ThemeProvider>

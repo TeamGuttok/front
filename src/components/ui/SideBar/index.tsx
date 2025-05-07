@@ -20,7 +20,7 @@ export default function SideBar() {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
 
   return (
-    <aside className="fixed flex z-50 flex-col w-56 h-screen p-5 bg-secondary shadow-sm mb-5">
+    <aside className="flex flex-col w-56 h-screen p-5 bg-secondary shadow-sm">
       <span className="px-2 mb-5 text-[1.5rem] font-bold">
         <Link href="/">구똑</Link>
       </span>
