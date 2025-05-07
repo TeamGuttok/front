@@ -5,7 +5,7 @@ import { PATH } from '#app/routes'
 import { Settings, ToggleLeft, ToggleRight } from 'lucide-react'
 import CardTitle from '#components/_common/CardTitle'
 import { Button } from '#components/_common/Button'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import useTheme from '#contexts/ThemeProvider/hook'
 import { useToggleAlarmMutation } from '#apis/notiClient'
@@ -14,7 +14,7 @@ import { ConfirmDialog } from '#components/ui/ConfirmDialog'
 import { useHandleLogout } from '#hooks/useHandleLogout'
 import { cn } from '#components/lib/utils'
 import { getMenuClassName } from '#style/style'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 
 // [ ]
 // 에러 토스트 ui 유저친화적으로 구현
@@ -47,9 +47,11 @@ export default function ClientMypage() {
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false)
   const handleLogout = useHandleLogout()
 
-  if (!isLoggedIn || isProfileError) {
-    router.push(PATH.login)
-  }
+  useEffect(() => {
+    if (!isLoggedIn || isProfileError) {
+      router.push(PATH.login)
+    }
+  }, [isLoggedIn, isProfileError, router])
 
   return (
     <CardTitle>

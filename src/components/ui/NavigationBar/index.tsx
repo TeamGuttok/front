@@ -2,9 +2,11 @@ import Link from 'next/link'
 import { House, User, Bell } from 'lucide-react'
 import { PATH } from '#app/routes'
 import { cn } from '#components/lib/utils'
+import { usePathname } from 'next/navigation'
+import { getMobileIconClassName } from '#style/style'
 
-export default function NavigationBar({ pathname }: { pathname: string }) {
-  const itemClassName = 'flex flex-col items-center gap-1 w-24 text-gray-400'
+export default function NavigationBar() {
+  const pathname = usePathname()
 
   return (
     <footer className="fixed z-50 bottom-0 w-full h-[4.5rem] bg-secondary">
@@ -14,7 +16,7 @@ export default function NavigationBar({ pathname }: { pathname: string }) {
             <Link
               href={PATH.notification}
               className={cn(
-                itemClassName,
+                getMobileIconClassName(),
                 pathname === PATH.notification && 'text-foreground',
               )}
             >
@@ -26,7 +28,7 @@ export default function NavigationBar({ pathname }: { pathname: string }) {
             <Link
               href="/"
               className={cn(
-                itemClassName,
+                getMobileIconClassName(),
                 pathname === PATH.main && 'text-foreground',
               )}
             >
@@ -38,7 +40,7 @@ export default function NavigationBar({ pathname }: { pathname: string }) {
             <Link
               href={PATH.mypage}
               className={cn(
-                itemClassName,
+                getMobileIconClassName(),
                 pathname === PATH.mypage && 'text-foreground',
               )}
             >
