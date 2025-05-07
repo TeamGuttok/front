@@ -1,7 +1,7 @@
 'use client'
 
 import { useSubscriptionsClient } from '#apis/subscriptionClient'
-import ItemCard from './itemCard'
+import ItemCard from '../itemCard'
 
 export default function ItemList() {
   const { data, isLoading, error } = useSubscriptionsClient()

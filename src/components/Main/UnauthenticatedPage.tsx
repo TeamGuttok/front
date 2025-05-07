@@ -7,8 +7,11 @@ import { Bell, TextSearch, HandCoins, Mail } from 'lucide-react'
 import Carousel from '#components/ui/Carousel'
 import { Button } from '#components/_common/Button'
 import { buttonClassName, getIconClassName } from '#style/style'
+import { usePathname } from 'next/navigation'
 
-export default function Home({ pathname }: { pathname: string }) {
+export default function Home() {
+  const pathname = usePathname()
+
   return (
     <div className="pb-[7rem] background-color-[hsl(var(--background))] flex flex-col min-h-[calc(100vh-4.5rem)] my-auto 2xl:pb-[8rem]">
       <div className="mt-10">

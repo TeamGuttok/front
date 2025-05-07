@@ -13,6 +13,10 @@ export function getMenuClassName() {
   )
 }
 
+export function getMobileIconClassName() {
+  return twMerge('flex flex-col items-center gap-1 w-24 text-gray-400')
+}
+
 export const menuClassName =
   'flex items-center gap-2 p-3 text-sub hover:text-primary rounded-md'
 

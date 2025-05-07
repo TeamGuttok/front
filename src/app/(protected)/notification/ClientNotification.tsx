@@ -10,7 +10,7 @@ import { useMarkAsRead, useDeleteNotification } from '#apis/notiClient'
 import StatusBadge from '#components/ui/StatusBadge'
 import { useToast } from '#hooks/useToast'
 import { useAuthStore } from '#stores/auth/useAuthStore'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { PATH } from '#app/routes'
 
 export default function ClientNotification() {

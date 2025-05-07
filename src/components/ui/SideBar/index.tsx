@@ -10,9 +10,11 @@ import { getMenuClassName } from '#style/style'
 import { useState } from 'react'
 import { ConfirmDialog } from '#components/ui/ConfirmDialog'
 import { useHandleLogout } from '#hooks/useHandleLogout'
+import { usePathname } from 'next/navigation'
 
-export default function SideBar({ pathname }: { pathname: string }) {
+export default function SideBar() {
   const { theme, setTheme } = useTheme()
+  const pathname = usePathname()
   const [showLogoutDialog, setShowLogoutDialog] = useState(false)
   const handleLogout = useHandleLogout()
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn)

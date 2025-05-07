@@ -3,16 +3,28 @@
 import { Button } from '#components/_common/Button'
 import { PATH } from '#app/routes'
 import Link from 'next/link'
-import ItemList from '#components/Layout/ItemList'
+import ItemList from '#components/ui/itemList'
 import { Plus } from 'lucide-react'
 import { getGreeting } from '#hooks/getGreeting'
 import { useMyProfileQuery } from '#apis/userClient'
 import { useCurrentMonthPaymentTotal } from '#hooks/useTotalPayment'
+import { Skeleton } from '#components/_common/Skeleton'
 
 export default function Page() {
   const { data: userInfo, isLoading } = useMyProfileQuery()
   const nickName = userInfo?.nickName
   const monthlyTotal = useCurrentMonthPaymentTotal()
+
+  if (isLoading) {
+    return (
+      <main className="p-6 space-y-4">
+        <Skeleton className="h-12 w-3/4" />
+        <Skeleton className="h-6 w-5/6" />
+        <Skeleton className="h-6 w-2/3" />
+        <Skeleton className="h-40 w-full rounded-lg" />
+      </main>
+    )
+  }
 
   return (
     <div className="mx-auto p-5 flex flex-col min-h-[calc(100vh-4.5rem)] pb-[3rem]">
