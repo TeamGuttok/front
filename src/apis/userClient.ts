@@ -1,6 +1,6 @@
 'use client'
 
-import { useQuery, useMutation } from '@tanstack/react-query'
+import { useQuery, useMutation, UseQueryOptions } from '@tanstack/react-query'
 import {
   getUserInfo,
   patchUserNickName,
@@ -10,9 +10,12 @@ import {
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import { useRouter } from 'next/navigation'
 import { PATH } from '#app/routes'
+import { userInfo } from '#types/user'
 
 // 마이페이지 조회 get
-export const useMyProfileQuery = () => {
+export const useMyProfileQuery = (
+  options?: Partial<UseQueryOptions<userInfo>>,
+) => {
   const { setUser } = useAuthStore()
 
   return useQuery({
@@ -29,6 +32,7 @@ export const useMyProfileQuery = () => {
     },
     staleTime: 1000 * 60 * 5,
     retry: 1,
+    ...options,
   })
 }
 // 닉네임 변경 patch

@@ -18,16 +18,19 @@ import { getMenuClassName } from '#style/style'
 // [ ]
 // 에러 토스트 ui 유저친화적으로 구현
 export default function ClientMypage() {
-  const { isLoading: isProfileLoading, isError: isProfileError } =
-    useMyProfileQuery()
-  const { mutate: deleteAccount, isPending: isDeletingAccount } =
-    useDeleteUser()
   const { user } = useAuthStore()
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
-  const { theme, setTheme } = useTheme()
 
+  const { isLoading: isProfileLoading, isError: isProfileError } =
+    useMyProfileQuery({
+      enabled: isLoggedIn,
+    })
+  const { mutate: deleteAccount, isPending: isDeletingAccount } =
+    useDeleteUser()
   const { mutate: toggleAlarm, isPending: isTogglingAlarm } =
     useToggleAlarmMutation()
+
+  const { theme, setTheme } = useTheme()
 
   const [showLogoutDialog, setShowLogoutDialog] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false)
