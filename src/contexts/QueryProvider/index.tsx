@@ -16,6 +16,15 @@ const queryClient = new QueryClient({
     },
   },
   mutationCache: new MutationCache({
+    onSuccess: (_data, _variables, context: { successMessage?: string }) => {
+      const message = context?.successMessage
+      if (message) {
+        toast({
+          title: message,
+          variant: 'default',
+        })
+      }
+    },
     onError: (error) => {
       toast({
         title: error.message || '요청에 실패하였습니다.',

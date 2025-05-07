@@ -15,31 +15,23 @@ import { useHandleLogout } from '#hooks/useHandleLogout'
 import { cn } from '#components/lib/utils'
 import { getMenuClassName } from '#style/style'
 import { useRouter } from 'next/navigation'
+import { toast } from '#hooks/useToast'
 
-// [ ]
-// 에러 토스트 ui 유저친화적으로 구현
 export default function ClientMypage() {
   const router = useRouter()
-  // const { user } = useAuthStore()
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
 
   const {
     data: getMypage,
-    isLoading: isProfileLoading,
     isError: isProfileError,
+    refetch,
   } = useMyProfileQuery({
     enabled: isLoggedIn,
   })
-  const {
-    mutate: deleteAccount,
-    isPending: isDeletingAccount,
-    isError: isDeleteError,
-  } = useDeleteUser()
-  const {
-    mutate: toggleAlarm,
-    isPending: isTogglingAlarm,
-    isError: isToggleAlarmError,
-  } = useToggleAlarmMutation()
+  const { mutate: deleteAccount, isPending: isDeletingAccount } =
+    useDeleteUser()
+  const { mutate: toggleAlarm, isPending: isTogglingAlarm } =
+    useToggleAlarmMutation()
 
   const { theme, setTheme } = useTheme()
 
@@ -47,6 +39,8 @@ export default function ClientMypage() {
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false)
   const handleLogout = useHandleLogout()
 
+  // TODO
+  // [ ] 미들웨어 연결 후 삭제 (for SEO)
   useEffect(() => {
     if (!isLoggedIn || isProfileError) {
       router.push(PATH.login)
@@ -94,7 +88,30 @@ export default function ClientMypage() {
         <div className="flex justify-between mb-2">
           <p className="text-gray-600">이메일 결제 리마인드</p>
           <div>
-            <button onClick={() => toggleAlarm()} disabled={isTogglingAlarm}>
+            <button
+              onClick={() =>
+                toggleAlarm(undefined, {
+                  onSuccess: async (data) => {
+                    await refetch()
+                    const willSubscribe = !getMypage?.alarm
+                    toast({
+                      description: willSubscribe
+                        ? '이메일 알림 수신을 받지 않습니다.'
+                        : '이메일 알림 수신을 받습니다.',
+                      variant: 'default',
+                    })
+                  },
+                  onError: () => {
+                    toast({
+                      description:
+                        '이메일 수신 여부 변경 중 오류가 발생했습니다.',
+                      variant: 'destructive',
+                    })
+                  },
+                })
+              }
+              disabled={isTogglingAlarm}
+            >
               {getMypage?.alarm ? (
                 <ToggleLeft
                   aria-label="이메일 결제 리마인드 동의"
@@ -149,6 +166,7 @@ export default function ClientMypage() {
           <Button
             onClick={() => setShowDeleteDialog(true)}
             className="bg-red-400 hover:bg-red-500 ml-4"
+            disabled={isDeletingAccount}
           >
             <span>탈퇴하기</span>
           </Button>
@@ -159,7 +177,22 @@ export default function ClientMypage() {
         onOpenChange={setShowDeleteDialog}
         title="정말 탈퇴하시겠습니까?"
         description="탈퇴하시면 계정과 기록이 모두 삭제됩니다."
-        onConfirm={() => deleteAccount()}
+        onConfirm={() =>
+          deleteAccount(undefined, {
+            onSuccess: () => {
+              toast({
+                description: '계정이 성공적으로 삭제되었습니다.',
+                variant: 'default',
+              })
+            },
+            onError: () => {
+              toast({
+                description: '계정 삭제 중 오류가 발생했습니다.',
+                variant: 'destructive',
+              })
+            },
+          })
+        }
       />
     </CardTitle>
   )

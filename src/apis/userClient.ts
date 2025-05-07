@@ -11,6 +11,7 @@ import { useAuthStore } from '#stores/auth/useAuthStore'
 import { useRouter } from 'next/navigation'
 import { PATH } from '#app/routes'
 import { userInfo } from '#types/user'
+import { toast } from '#hooks/useToast'
 
 // 마이페이지 조회 get
 export const useMyProfileQuery = (
@@ -65,9 +66,16 @@ export const useDeleteUser = () => {
 
   return useMutation({
     mutationFn: deleteUser,
-    onSuccess: (response) => {
+    onSuccess: (_data, _variables, context) => {
       logout()
       router.push(PATH.main)
+
+      if (context && typeof context === 'object') {
+        const message = (context as any).successMessage
+        if (message) {
+          toast({ title: message }) // 수동 처리도 가능
+        }
+      }
     },
   })
 }

@@ -14,9 +14,16 @@ import { useRouter } from 'next/navigation'
 import { PATH } from '#app/routes'
 
 export default function ClientNotification() {
-  const router = useRouter
+  const router = useRouter()
   const { toast } = useToast()
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
+  // TODO
+  // [ ] 미들웨어 연결 후 삭제 (for SEO)
+  if (typeof window !== 'undefined' && !isLoggedIn) {
+    router.push(PATH.login)
+    return null
+  }
+
   const { data, isLoading, error } = useNotifications({
     lastId: 10000,
     size: 10000,
@@ -34,23 +41,17 @@ export default function ClientNotification() {
       </div>
 
       <div className="flex-1 overflow-auto mt-10">
-        {isLoading && (
+        {isLoading ? (
           <p className="text-center text-gray-500 mt-10">
             📭 알림을 불러오는 중...
           </p>
-        )}
-
-        {error && (
+        ) : error ? (
           <p className="text-center text-red-500 mt-10">
             ⚠️ 알림을 불러오는 중 오류 발생
           </p>
-        )}
-
-        {isEmpty && !isLoading && !error && (
+        ) : isEmpty ? (
           <p className="text-center text-gray-500 mt-10">📭 알림이 없습니다</p>
-        )}
-
-        {!isLoading && !error && data && data.contents.length > 0 && (
+        ) : (
           <div className="grid grid-cols-1 gap-3 cursor-pointer">
             {data.contents
               .filter((n) => n.category === 'REMINDER')
