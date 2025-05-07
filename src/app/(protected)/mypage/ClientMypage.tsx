@@ -14,21 +14,32 @@ import { ConfirmDialog } from '#components/ui/ConfirmDialog'
 import { useHandleLogout } from '#hooks/useHandleLogout'
 import { cn } from '#components/lib/utils'
 import { getMenuClassName } from '#style/style'
+import { useRouter } from 'next/router'
 
 // [ ]
 // 에러 토스트 ui 유저친화적으로 구현
 export default function ClientMypage() {
-  const { user } = useAuthStore()
+  const router = useRouter()
+  // const { user } = useAuthStore()
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
 
-  const { isLoading: isProfileLoading, isError: isProfileError } =
-    useMyProfileQuery({
-      enabled: isLoggedIn,
-    })
-  const { mutate: deleteAccount, isPending: isDeletingAccount } =
-    useDeleteUser()
-  const { mutate: toggleAlarm, isPending: isTogglingAlarm } =
-    useToggleAlarmMutation()
+  const {
+    data: getMypage,
+    isLoading: isProfileLoading,
+    isError: isProfileError,
+  } = useMyProfileQuery({
+    enabled: isLoggedIn,
+  })
+  const {
+    mutate: deleteAccount,
+    isPending: isDeletingAccount,
+    isError: isDeleteError,
+  } = useDeleteUser()
+  const {
+    mutate: toggleAlarm,
+    isPending: isTogglingAlarm,
+    isError: isToggleAlarmError,
+  } = useToggleAlarmMutation()
 
   const { theme, setTheme } = useTheme()
 
@@ -36,7 +47,9 @@ export default function ClientMypage() {
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false)
   const handleLogout = useHandleLogout()
 
-  if (!isLoggedIn || isProfileLoading) return null
+  if (!isLoggedIn || isProfileError) {
+    router.push(PATH.login)
+  }
 
   return (
     <CardTitle>
@@ -64,11 +77,11 @@ export default function ClientMypage() {
         </div>
         <div className="flex justify-between mb-2">
           <p className="text-gray-600">닉네임</p>
-          <div>{user?.nickName}</div>
+          <div>{getMypage?.nickName}</div>
         </div>
         <div className="flex justify-between mb-2">
           <p className="text-gray-600">이메일</p>
-          <div>{user?.email}</div>
+          <div>{getMypage?.email}</div>
         </div>
       </div>
       <hr />
@@ -80,7 +93,7 @@ export default function ClientMypage() {
           <p className="text-gray-600">이메일 결제 리마인드</p>
           <div>
             <button onClick={() => toggleAlarm()} disabled={isTogglingAlarm}>
-              {user?.alarm ? (
+              {getMypage?.alarm ? (
                 <ToggleLeft
                   aria-label="이메일 결제 리마인드 동의"
                   className="w-[3rem] h-[3rem] fill-[hsl(var(--primary))] strokeWidth={0} stroke-[hsl(var(--background))]"
