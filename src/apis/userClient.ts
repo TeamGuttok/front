@@ -1,6 +1,6 @@
 'use client'
 
-import { useQuery, useMutation, UseQueryOptions } from '@tanstack/react-query'
+import { useMutation, UseQueryOptions } from '@tanstack/react-query'
 import {
   getUserInfo,
   patchUserNickName,
@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation'
 import { PATH } from '#app/routes'
 import { userInfo } from '#types/user'
 import { toast } from '#hooks/useToast'
+import { useIsLoggedInQuery } from '#hooks/useIsLoggedInQuery'
 
 // 마이페이지 조회 get
 export const useMyProfileQuery = (
@@ -19,9 +20,9 @@ export const useMyProfileQuery = (
 ) => {
   const { setUser } = useAuthStore()
 
-  return useQuery({
-    queryKey: ['myProfile'],
-    queryFn: async () => {
+  return useIsLoggedInQuery(
+    ['myProfile'],
+    async () => {
       const data = await getUserInfo()
       setUser({
         id: data.id,
@@ -31,11 +32,14 @@ export const useMyProfileQuery = (
       })
       return data
     },
-    staleTime: 1000 * 60 * 5,
-    retry: 1,
-    ...options,
-  })
+    {
+      staleTime: 1000 * 60 * 5,
+      retry: 1,
+      ...options,
+    },
+  )
 }
+
 // 닉네임 변경 patch
 export const usePatchNickNameMutation = () => {
   const { setUser, user } = useAuthStore()
@@ -73,7 +77,7 @@ export const useDeleteUser = () => {
       if (context && typeof context === 'object') {
         const message = (context as any).successMessage
         if (message) {
-          toast({ title: message }) // 수동 처리도 가능
+          toast({ title: message })
         }
       }
     },

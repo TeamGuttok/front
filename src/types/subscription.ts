@@ -92,15 +92,9 @@ export interface SubscriptionRequest {
   memo?: string
 }
 
-export interface SubscriptionContents {
+export interface SubscriptionContents extends SubscriptionRequest {
   id: number
-  title: string
-  subscription: ServiceId
-  paymentAmount: number
-  paymentMethod: PaymentMethod
   paymentStatus: paymentStatus
-  paymentCycle: PaymentCycle
-  paymentDay: number
   memo?: string
   registerData: string
   updateData: string

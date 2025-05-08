@@ -6,6 +6,7 @@ import { BASE_URL } from '#constants/url'
 import { verifyRegisterCode, verifyPasswordCode } from './authAPI'
 import type { userInfo, LoginInput } from '#types/user'
 
+// 회원가입 post
 export const useRegister = () => {
   return useMutation({
     mutationFn: async ({
@@ -28,14 +29,17 @@ export const useRegister = () => {
 
       if (!res.ok) {
         const errorData = await res.json()
-        throw new Error(errorData.message || '회원가입 실패')
+        throw new Error(errorData.message || '회원가입에 실패했습니다.')
       }
+
+      return await res.json()
     },
   })
 }
 
 // 로그인 post
 export function useLoginClient() {
+  const { login } = useAuthStore()
   return useMutation<userInfo, Error, LoginInput>({
     mutationFn: async ({ email, password }) => {
       const res = await fetch(`${BASE_URL}/api/users/signin`, {
@@ -57,6 +61,14 @@ export function useLoginClient() {
       }
 
       return data.data as userInfo
+    },
+    onSuccess: (data) => {
+      login({
+        id: data.id,
+        email: data.email,
+        nickName: data.nickName,
+        alarm: data.alarm,
+      })
     },
   })
 }
@@ -85,6 +97,7 @@ export const useLogoutClient = () => {
   return useMutation({
     mutationFn: logout,
     onSuccess: () => {
+      clearSession()
       useAuthStore.persist.clearStorage()
     },
     onError: (error) => {

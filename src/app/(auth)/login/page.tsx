@@ -48,7 +48,7 @@ export default function Login() {
   }
 
   // TODO
-  // [ ] 쿠키 여부에 따라 넘기기
+  // [ ] 미들웨어 연결 후 삭제 (for SEO)
   useEffect(() => {
     if (isLoggedIn) {
       router.replace(PATH.main)

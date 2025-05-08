@@ -2,7 +2,7 @@
 
 'use client'
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   patchUserAlarm,
   fetchNotifications,
@@ -11,10 +11,11 @@ import {
 } from './notiAPI'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import type { PageRequest } from '#types/notification'
+import { useIsLoggedInQuery } from '#hooks/useIsLoggedInQuery'
 
 // 알림 상태 변경 patch
 export const useToggleAlarmMutation = () => {
-  const { user, setUser } = useAuthStore()
+  const { setUser } = useAuthStore()
 
   return useMutation({
     mutationFn: patchUserAlarm,
@@ -29,7 +30,7 @@ export const useToggleAlarmMutation = () => {
       useAuthStore.getState().setUser({
         email: user.email,
         nickName: user.nickName,
-        alarm: !user.alarm, // toggle
+        alarm: !user.alarm,
       })
     },
   })
@@ -37,19 +38,13 @@ export const useToggleAlarmMutation = () => {
 
 // 알림 리스트 조회 get
 export const useNotifications = (pageRequest: PageRequest) => {
-  return useQuery({
-    queryKey: [
-      'notifications',
-      'reminders',
-      pageRequest.lastId,
-      pageRequest.size,
-    ],
-    queryFn: async () => {
+  return useIsLoggedInQuery(
+    ['notifications', 'reminders', pageRequest.lastId, pageRequest.size],
+    async () => {
       const allNotifications = await fetchNotifications(pageRequest)
       const filteredContents = allNotifications.contents.filter(
         (noti) => noti.category === 'REMINDER',
       )
-      console.log(allNotifications)
       return {
         ...allNotifications,
         contents: filteredContents,
@@ -57,10 +52,12 @@ export const useNotifications = (pageRequest: PageRequest) => {
         hasNext: false,
       }
     },
-    staleTime: 1000 * 60 * 3,
-    placeholderData: undefined,
-    retry: 1,
-  })
+    {
+      staleTime: 1000 * 60 * 3,
+      placeholderData: undefined,
+      retry: 1,
+    },
+  )
 }
 
 // 알림 읽음 처리 put
@@ -78,7 +75,6 @@ export const useMarkAsRead = () => {
           const updated = oldData.contents.map((noti: any) =>
             ids.includes(noti.id) ? { ...noti, status: 'READ' } : noti,
           )
-
           return { ...oldData, contents: updated }
         },
       )

@@ -1,5 +1,3 @@
-import { FETCH_ALL } from '#constants/pagination'
-
 // 알림 상태
 export type NotificationStatus = 'READ' | 'UNREAD'
 
@@ -38,8 +36,8 @@ export interface PageRequest {
 }
 
 export const fetchNotiRequest: PageRequest = {
-  lastId: FETCH_ALL,
-  size: FETCH_ALL,
+  lastId: Number.MAX_SAFE_INTEGER,
+  size: Number.MAX_SAFE_INTEGER,
 }
 
 // 알림 페이징 응답
