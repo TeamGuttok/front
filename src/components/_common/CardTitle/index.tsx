@@ -1,6 +1,9 @@
 import * as React from 'react'
 import { cn } from '#components/lib/utils'
 
+// TODO
+// [ ] CardTitle 위에 붙은거 고치기
+
 interface TitleProps {
   className?: string
   children: React.ReactNode

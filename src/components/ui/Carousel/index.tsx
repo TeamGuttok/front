@@ -1,6 +1,6 @@
 import React from 'react'
 import { KNOWN_SERVICES } from '#constants/knownServices'
-import { Card } from '../../_common/Card'
+import { Card } from '#components/_common/Card'
 
 export default function Carousel() {
   const duplicatedServices = [...KNOWN_SERVICES, ...KNOWN_SERVICES]

@@ -96,8 +96,8 @@ export default function ClientMypage() {
                     const willSubscribe = !getMypage?.alarm
                     toast({
                       description: willSubscribe
-                        ? '이메일 알림 수신을 받지 않습니다.'
-                        : '이메일 알림 수신을 받습니다.',
+                        ? '이메일 알림 수신을 받습니다.'
+                        : '이메일 알림 수신을 받지 않습니다.',
                       variant: 'default',
                     })
                   },
@@ -113,12 +113,12 @@ export default function ClientMypage() {
               disabled={isTogglingAlarm}
             >
               {getMypage?.alarm ? (
-                <ToggleLeft
+                <ToggleRight
                   aria-label="이메일 결제 리마인드 동의"
                   className="w-[3rem] h-[3rem] fill-[hsl(var(--primary))] strokeWidth={0} stroke-[hsl(var(--background))]"
                 />
               ) : (
-                <ToggleRight
+                <ToggleLeft
                   aria-label="이메일 결제 리마인드 미동의"
                   className="w-[3rem] h-[3rem] fill-[hsl(var(--primary))] strokeWidth={0} stroke-[hsl(var(--background))]"
                 />

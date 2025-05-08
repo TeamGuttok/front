@@ -3,6 +3,7 @@ import { SubscriptionStore } from './useSubscriptionStore'
 import { persist } from 'zustand/middleware'
 import { isSameDay, getDate, getMonth, getYear } from 'date-fns'
 import { KNOWN_SERVICES } from '#constants/knownServices'
+import { createJSONStorage } from 'zustand/middleware'
 
 export type SubscriptionItem = SubscriptionStore & {
   useId: string
@@ -19,6 +20,7 @@ export type ItemState = {
   updateItem: (id: string, updatedItem: Partial<SubscriptionItem>) => void // 수정(put)
   removeItem: (id: string) => void // 삭제(delete)
   getTotalPaymentAmount: () => number
+  reset: () => void
 }
 
 export const useItemStore = create<ItemState>()(
@@ -94,9 +96,12 @@ export const useItemStore = create<ItemState>()(
           })
           .reduce((sum, item) => sum + item.paymentAmount, 0)
       },
+      reset: () => set({ items: [] }),
     }),
+
     {
       name: 'subscription-items',
+      storage: createJSONStorage(() => sessionStorage),
     },
   ),
 )

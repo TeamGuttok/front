@@ -1,23 +1,23 @@
 'use client'
 
 import { BASE_URL } from '#constants/url'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   getSubscriptions,
   updataSubscription,
   deleteSubscription,
 } from '#apis/subscriptionAPI'
 import { paymentStatus, SubscriptionContents } from '#types/subscription'
+import { useIsLoggedInQuery } from '#hooks/useIsLoggedInQuery'
 
-//구독 서비스 생성 (post)
+// 전체 서비스 조회 (/)
 export const useSubscriptionsClient = (
   lastId = Number.MAX_SAFE_INTEGER,
   size = Number.MAX_SAFE_INTEGER,
 ) => {
-  return useQuery({
-    queryKey: ['subscriptions', lastId],
-    queryFn: () => getSubscriptions(lastId, size),
-  })
+  return useIsLoggedInQuery(['subscriptions', lastId], () =>
+    getSubscriptions(lastId, size),
+  )
 }
 
 // 구독 서비스 개별 조회 (/detail)
@@ -25,24 +25,14 @@ export function useSubscriptionItem(
   id: string,
   options?: { enabled?: boolean },
 ) {
-  const queryClient = useQueryClient()
-
-  return useQuery({
-    queryKey: ['subscription', id],
-    queryFn: async () => {
-      const listData: any = queryClient.getQueryData(['subscriptions'])
-      if (listData) {
-        const found = listData.contents.find((i: any) => String(i.id) === id)
-        if (found) return found
-      }
-
-      const data = await getSubscriptions()
-      const item = data.contents.find((i) => String(i.id) === id)
-      if (!item) return null
-      return item
-    },
-    enabled: options?.enabled ?? true,
-  })
+  return useIsLoggedInQuery(
+    ['subscription', id],
+    () =>
+      getSubscriptions().then(
+        (data) => data.contents.find((i) => String(i.id) === id) ?? null,
+      ),
+    options,
+  )
 }
 
 // 구독 서비스 수정 (patch)
