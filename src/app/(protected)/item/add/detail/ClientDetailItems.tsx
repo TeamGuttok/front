@@ -27,11 +27,8 @@ export default function ClientDetailItems() {
 
   const {
     subscriptionData,
-    setSubscriptionData,
-    updatePaymentCycle,
-    updatePaymentDay,
-    updatePaymentMethod,
-    updateMemo,
+    updateField,
+    // setSubscriptionData,
     resetSubscriptionData,
     paymentMethodOptions,
     paymentCycleOptions,
@@ -129,7 +126,7 @@ export default function ClientDetailItems() {
                 value={isCustom ? title : computedTitle}
                 onChange={(e) => {
                   if (isCustom) {
-                    setSubscriptionData({ title: e.target.value })
+                    updateField('title', e.target.value)
                   }
                 }}
                 readOnly={!isCustom}
@@ -158,7 +155,7 @@ export default function ClientDetailItems() {
                 aria-describedby="subscriptionAmount-required"
                 value={paymentAmount}
                 onChange={(e) =>
-                  setSubscriptionData({ paymentAmount: Number(e.target.value) })
+                  updateField('paymentAmount', Number(e.target.value))
                 }
                 placeholder="금액을 입력하세요"
                 className={cn(inputClassName)}
@@ -187,7 +184,9 @@ export default function ClientDetailItems() {
                 >
                   매
                 </label>
-                <Select onValueChange={(value) => updatePaymentCycle(value)}>
+                <Select
+                  onValueChange={(value) => updateField('paymentCycle', value)}
+                >
                   <SelectTrigger
                     id="paymentCycle"
                     aria-labelledby="paymentCycleLabel cyclePrefixLabel"
@@ -215,7 +214,9 @@ export default function ClientDetailItems() {
                   </SelectTrigger>
                 </Select>
                 <Select
-                  onValueChange={(value) => updatePaymentDay(Number(value))}
+                  onValueChange={(value) =>
+                    updateField('paymentDay', Number(value))
+                  }
                 >
                   <SelectTrigger
                     id="paymentDay"
@@ -269,7 +270,9 @@ export default function ClientDetailItems() {
                   필수
                 </span>
               </SelectLabel>
-              <Select onValueChange={(value) => updatePaymentMethod(value)}>
+              <Select
+                onValueChange={(value) => updateField('paymentMethod', value)}
+              >
                 <SelectTrigger
                   id="paymentMethod"
                   aria-labelledby="paymentMethodLabel"
@@ -302,7 +305,7 @@ export default function ClientDetailItems() {
               <Textarea
                 placeholder="메모를 입력하세요"
                 maxLength={200}
-                onChange={(e) => updateMemo(e.target.value)}
+                onChange={(e) => updateField('memo', e.target.value)}
                 value={memo}
                 className="p-2 w-[12.5rem] sm:max-w-[12.5rem] sm:min-w-[12.5rem]  text-sm sm:text-base block 
                 bg-white text-black dark:bg-[hsl(var(--secondary))] placeholder-[hsl(var(--muted-foreground))]

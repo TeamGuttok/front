@@ -9,6 +9,12 @@ export interface ServiceItem {
   isCustom: boolean
 }
 
+export interface SubscriptionItem extends SubscriptionContents {
+  useId: string
+  iconUrl?: string
+  createdAt?: string
+}
+
 export const allServices: ServiceItem[] = [
   {
     id: 'custom',

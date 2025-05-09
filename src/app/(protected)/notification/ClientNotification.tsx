@@ -4,7 +4,6 @@ import CardTitle from '#components/_common/CardTitle'
 import { Card } from '#components/_common/Card'
 import { cn } from '#components/lib/utils'
 import { Trash2 } from 'lucide-react'
-import { useItemStore } from '#stores/subscriptions/useItemStore'
 import { useNotifications } from '#apis/notiAPI'
 import { useMarkAsRead, useDeleteNotification } from '#apis/notiClient'
 import StatusBadge from '#components/ui/StatusBadge'
@@ -17,6 +16,7 @@ export default function ClientNotification() {
   const router = useRouter()
   const { toast } = useToast()
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
+
   // TODO
   // [ ] 미들웨어 연결 후 삭제 (for SEO)
   if (typeof window !== 'undefined' && !isLoggedIn) {
@@ -30,7 +30,6 @@ export default function ClientNotification() {
   })
   const { mutate: markAsReadAPI } = useMarkAsRead()
   const { mutate: deleteAPI } = useDeleteNotification()
-  const items = useItemStore((state) => state.items)
   const isEmpty =
     !data || !Array.isArray(data.contents) || data.contents.length === 0
 
@@ -56,7 +55,6 @@ export default function ClientNotification() {
             {data.contents
               .filter((n) => n.category === 'REMINDER')
               .map((n) => {
-                const item = items.find((i) => i.title === n.message)
                 return (
                   <Card
                     key={n.id}
