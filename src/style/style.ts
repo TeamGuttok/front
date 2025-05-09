@@ -26,7 +26,7 @@ export const labelClassName =
   'block mb-1 sm:mb-0 tracking-wide text-lg font-medium text-nowrap'
 
 export const inputClassName =
-  'block w-[12.5rem] sm:max-w-[12.5rem] sm:min-w-[12.5rem] pl-2 text-sm sm:text-base placeholder-[hsl(var(--muted-foreground))]'
+  'w-[12.5rem] sm:max-w-[12.5rem] sm:min-w-[12.5rem] p-2 h-10 text-sm sm:text-base rounded-md border border-gray-300 shadow-sm bg-white dark:bg-[hsl(var(--secondary))] dark:text-white placeholder-[hsl(var(--muted-foreground))]'
 
 export const buttonClassName =
   'w-20 bg-primary text-white rounded-md shadow hover:bg-[hsl(var(--primary-hover))]'

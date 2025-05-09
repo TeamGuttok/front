@@ -107,7 +107,7 @@ export default function Page() {
   }
 
   return (
-    <CardTitle className="flex flex-col max-w-[40rem] sm:max-w-[52rem] sm:p-8 sm:rounded-md sm:border sm:border-border m-auto -translate-y-8 px-4">
+    <CardTitle className="mx-auto lg:m-8 p-5 flex flex-col min-h-[calc(100vh-4.5rem)] pb-[3rem] mt-10">
       <h1 className="text-3xl font-bold justify-center text-center  ">
         구독 서비스 수정
       </h1>
