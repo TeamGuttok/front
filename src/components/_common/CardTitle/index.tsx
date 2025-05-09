@@ -1,9 +1,6 @@
 import * as React from 'react'
 import { cn } from '#components/lib/utils'
 
-// TODO
-// [ ] CardTitle 위에 붙은거 고치기
-
 interface TitleProps {
   className?: string
   children: React.ReactNode
@@ -13,7 +10,7 @@ export default function CardTitle({ className, children }: TitleProps) {
   return (
     <div
       className={cn(
-        'flex flex-col items-center sm:m-auto sm:-translate-y-12',
+        'flex flex-col items-center sm:m-auto sm:-translate-y-12 mt-6',
         className,
       )}
     >

@@ -5,7 +5,6 @@ import {
   createJSONStorage,
 } from 'zustand/middleware'
 import type { userInfo } from '#types/user'
-import { useItemStore } from '#stores/subscriptions/useItemStore'
 
 interface AuthState {
   isLoggedIn: boolean
@@ -42,7 +41,6 @@ export const useAuthStore = create<AuthState>()(
       logout: () => {
         useAuthStore.getState().reset()
         useAuthStore.persist.clearStorage()
-        useItemStore.getState().reset()
       },
 
       setUser: (user) =>

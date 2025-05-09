@@ -47,25 +47,15 @@ export default function Page() {
 
   const {
     setSubscriptionData,
-    updatePaymentCycle,
-    updatePaymentDay,
-    updatePaymentMethod,
+    updateField,
     paymentMethodOptions,
     paymentCycleOptions,
     paymentDayOptions,
-    updateMemo,
     resetSubscriptionData,
   } = useSubscriptionStore()
 
-  const {
-    title,
-    paymentAmount,
-    paymentCycle,
-    paymentDay,
-    paymentMethod,
-    memo,
-    paymentStatus,
-  } = subscriptionData
+  const { paymentAmount, paymentCycle, paymentDay, paymentMethod, memo } =
+    subscriptionData
 
   useEffect(() => {
     if (item) {
@@ -117,7 +107,7 @@ export default function Page() {
   }
 
   return (
-    <CardTitle className="flex flex-col max-w-[40rem] sm:max-w-[52rem] sm:p-8 sm:rounded-md sm:border sm:border-border m-auto -translate-y-8 px-4">
+    <CardTitle className="mx-auto lg:m-8 p-5 flex flex-col min-h-[calc(100vh-4.5rem)] pb-[3rem] mt-10">
       <h1 className="text-3xl font-bold justify-center text-center  ">
         구독 서비스 수정
       </h1>
@@ -146,7 +136,7 @@ export default function Page() {
                 value={computedTitle}
                 onChange={(e) => {
                   if (subscriptionData.subscription === 'CUSTOM_INPUT') {
-                    setSubscriptionData({ title: e.target.value })
+                    updateField('title', e.target.value)
                   }
                 }}
                 readOnly={subscriptionData.subscription !== 'CUSTOM_INPUT'}
@@ -179,7 +169,7 @@ export default function Page() {
                 aria-describedby="subscriptionAmount-required"
                 value={paymentAmount}
                 onChange={(e) =>
-                  setSubscriptionData({ paymentAmount: Number(e.target.value) })
+                  updateField('paymentAmount', Number(e.target.value))
                 }
                 placeholder="금액을 입력하세요"
                 className={cn(inputClassName)}
@@ -208,7 +198,9 @@ export default function Page() {
                 >
                   매
                 </label>
-                <Select onValueChange={(value) => updatePaymentCycle(value)}>
+                <Select
+                  onValueChange={(value) => updateField('paymentCycle', value)}
+                >
                   <SelectTrigger
                     id="paymentCycle"
                     aria-labelledby="paymentCycleLabel cyclePrefixLabel"
@@ -236,7 +228,9 @@ export default function Page() {
                   </SelectTrigger>
                 </Select>
                 <Select
-                  onValueChange={(value) => updatePaymentDay(Number(value))}
+                  onValueChange={(value) =>
+                    updateField('paymentDay', Number(value))
+                  }
                 >
                   <SelectTrigger
                     id="paymentDay"
@@ -290,7 +284,9 @@ export default function Page() {
                   필수
                 </span>
               </SelectLabel>
-              <Select onValueChange={(value) => updatePaymentMethod(value)}>
+              <Select
+                onValueChange={(value) => updateField('paymentMethod', value)}
+              >
                 <SelectTrigger
                   id="paymentMethod"
                   aria-labelledby="paymentMethodLabel"
@@ -323,7 +319,7 @@ export default function Page() {
               <Textarea
                 placeholder="메모를 입력하세요"
                 maxLength={200}
-                onChange={(e) => updateMemo(e.target.value)}
+                onChange={(e) => updateField('memo', e.target.value)}
                 value={memo}
                 className="p-2 w-[12.5rem] sm:max-w-[12.5rem] sm:min-w-[12.5rem]  text-sm sm:text-base block 
                 bg-white text-black dark:bg-[hsl(var(--secondary))] placeholder-[hsl(var(--muted-foreground))]

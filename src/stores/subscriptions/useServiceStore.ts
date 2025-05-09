@@ -1,14 +1,12 @@
 import { create } from 'zustand'
 import { useSubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
 import { serviceNameLabels } from '#types/subscription'
+import type { ServiceItem } from '#types/subscription'
+import { PATH } from '#app/routes'
 
-export type ServiceStore = {
-  id: string
-  title: string
-  name: string
+export type ServiceStore = ServiceItem & {
   href: string
   iconUrl: React.ReactNode | string
-  isCustom: boolean
 }
 
 export type ServiceState = {
@@ -25,7 +23,7 @@ export const useServiceStore = create<ServiceState>((set) => ({
     set({
       selectedService: {
         ...service,
-        href: 'add/detail',
+        href: PATH.addDetail,
       },
     })
 

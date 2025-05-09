@@ -55,8 +55,8 @@ export default function ClientMypageEdit() {
   }, [profile])
 
   return (
-    <CardTitle>
-      <div className="flex flex-col items-center w-full mt-5">
+    <CardTitle className="mx-auto lg:mt-10 p-5 flex flex-col min-h-[calc(100vh-4.5rem)] pb-[3rem]">
+      <div className="flex flex-col items-center w-full ">
         <h1 className="text-3xl sm:text-3xl font-bold">마이페이지 수정</h1>
       </div>
       <div className="w-full h-[1px] bg-border mt-5"></div>
@@ -64,7 +64,7 @@ export default function ClientMypageEdit() {
       <div className="w-full p-5">
         <form className="grid grid-cols-1 gap-4">
           <div className="grid grid-cols-1 flex-col gap-2 sm:gap-4">
-            <h2 className="text-lg font-semibold">프로필 정보</h2>
+            <h2 className="text-lg font-semibold mb-3">프로필 정보</h2>
             <SelectGroup className={cn(groupClassName)}>
               <SelectLabel
                 aria-labelledby="mypageNickname"
@@ -92,7 +92,8 @@ export default function ClientMypageEdit() {
             >
               <span>{isNickNameUpdating ? '저장 중...' : '저장하기'}</span>
             </Button>
-            <SelectGroup className={cn(groupClassName)}>
+
+            <SelectGroup className={cn(groupClassName, 'mt-5')}>
               <SelectLabel
                 aria-labelledby="mypagePassword"
                 aria-describedby="mypagePassword-required"

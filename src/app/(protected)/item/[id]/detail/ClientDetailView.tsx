@@ -17,6 +17,7 @@ import {
 import { groupClassName, labelClassName } from '#style/style'
 import { ConfirmDialog } from '#components/ui/ConfirmDialog'
 import { useState } from 'react'
+import { CardTitle } from '#components/_common/Card'
 
 export default function ClientDetailView() {
   const router = useRouter()
@@ -60,17 +61,19 @@ export default function ClientDetailView() {
   }
 
   return (
-    <>
+    <CardTitle className="mx-auto lg:m-8 p-5 flex flex-col min-h-[calc(100vh-4.5rem)] pb-[3rem] mt-10">
       <div className="flex dark:text-black bg-white rounded-xl flex-col max-w-[30rem] sm:max-w-[42rem] p-8 sm:rounded-md sm:border sm:border-border m-auto -translate-y-8 px-10 pb-8">
         <h1 className="text-3xl font-bold justify-center text-center">
           구독 서비스 상세 정보
         </h1>
+        <div className="w-full h-[1px] bg-border mt-5"></div>
+
         <div className="flex flex-col justify-center mt-8">
           <form className="grid grid-cols-1 gap-6">
             <div className="grid grid-cols-1 flex-col gap-2 sm:gap-4">
               <div className={cn(groupClassName)}>
                 <span className={cn(labelClassName)}>구독 서비스</span>
-                <span className="text-lg">
+                <span className="text-base">
                   {item.title?.trim()
                     ? item.title
                     : serviceNameLabels[item.subscription]}
@@ -78,11 +81,11 @@ export default function ClientDetailView() {
               </div>
               <div className={cn(groupClassName)}>
                 <span className={cn(labelClassName)}>결제 금액</span>
-                <span className="text-lg">{item.paymentAmount}</span>
+                <span className="text-base">{item.paymentAmount}</span>
               </div>
               <div className={cn(groupClassName)}>
                 <span className={cn(labelClassName)}>결제 주기</span>
-                <span className="text-lg">
+                <span className="text-base">
                   {' '}
                   매{paymentCycleLabels[item.paymentCycle]} {item.paymentDay}일
                 </span>
@@ -90,14 +93,16 @@ export default function ClientDetailView() {
 
               <div className={cn(groupClassName)}>
                 <span className={cn(labelClassName)}>결제 수단</span>
-                <span className="text-lg">
+                <span className="text-base">
                   {paymentMethodLabels[item.paymentMethod] ??
                     item.paymentMethod}
                 </span>
               </div>
               <div className={cn(groupClassName)}>
                 <span className={cn(labelClassName)}>메모</span>
-                <span className="text-lg max-w-60 text-right">{item.memo}</span>
+                <span className="text-base max-w-40 text-right">
+                  {item.memo}
+                </span>
               </div>
             </div>
             <div className="flex justify-end pb-1">
@@ -131,6 +136,6 @@ export default function ClientDetailView() {
           </form>
         </div>
       </div>
-    </>
+    </CardTitle>
   )
 }
