@@ -1,7 +1,10 @@
 import { z } from 'zod'
 
 export const emailSchema = z.object({
-  email: z.string().email('유효한 이메일 주소를 입력하세요.'),
+  email: z
+    .string()
+    .nonempty('이메일을 입력해 주세요.')
+    .email('유효한 이메일 주소를 입력하세요.'),
 })
 
 export const nickNameSchema = z
@@ -19,8 +22,11 @@ export const loginSchema = z.object({
 
 export const registerSchema = z
   .object({
-    nickName: z.string().min(1, '닉네임은 2자 이상 입력해 주세요.'),
-    email: z.string().email('유효한 이메일 주소를 입력하세요.'),
+    nickName: z.string().min(2, '닉네임은 2자 이상 입력해 주세요.'),
+    email: z
+      .string()
+      .nonempty('이메일을 입력해 주세요.')
+      .email('유효한 이메일 주소를 입력하세요.'),
     password: z
       .string()
       .min(

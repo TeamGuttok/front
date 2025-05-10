@@ -9,9 +9,9 @@ import {
 import { cn } from '#components/lib/utils'
 import { Button } from '#components/_common/Button'
 import { useSendCertificationCode } from '#apis/authClient'
-import { ErrorMessage } from '#components/_common/ErrorMessage'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import type { UseMutationResult } from '@tanstack/react-query'
+import { toast } from '#hooks/useToast'
 
 const TIME_LIMIT_SECONDS = 10 * 60 // 10분
 
@@ -33,7 +33,7 @@ export default function OTPForm({
   onSuccess,
   className,
   resetTrigger,
-  verifyMutation: { mutate: verify, isPending: isLoading, isSuccess, reset },
+  verifyMutation: { mutate: verify, isPending: isLoading, reset },
 }: OTPFormProps) {
   const { verifyEmail } = useAuthStore()
   const inputRef = useRef<HTMLInputElement>(null)
@@ -74,6 +74,17 @@ export default function OTPForm({
     return () => clearInterval(timer)
   }, [startTime])
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter' && otp.length === 6 && !isLoading) {
+        handleVerifyOTP()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [otp, isLoading])
+
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60)
     const secs = seconds % 60
@@ -103,10 +114,6 @@ export default function OTPForm({
       return
     }
 
-    if (isSubmitted) return
-
-    setIsSubmitted(true)
-
     verify(
       { email, certificationNumber: otp },
       {
@@ -115,7 +122,23 @@ export default function OTPForm({
           onSuccess(data.session)
         },
         onError: (err: any) => {
-          setErrors([err.message || '인증 실패'])
+          const status = err?.response?.status
+
+          let message = '인증에 실패했습니다. 다시 시도해 주세요.'
+          if (status === 401) {
+            message = '올바른 인증 코드를 입력해주세요.'
+          } else if (status === 410) {
+            message = '인증 시간이 만료되었습니다. 인증 코드를 재전송해 주세요.'
+          } else if (err.message) {
+            message = err.message
+          }
+
+          toast({
+            title: '인증에 실패했습니다.',
+            description: message,
+            variant: 'destructive',
+          })
+          setErrors([])
         },
       },
     )
@@ -152,17 +175,16 @@ export default function OTPForm({
         <Button
           type="button"
           onClick={handleVerifyOTP}
-          disabled={isLoading}
+          disabled={isLoading || otp.length !== 6}
           className="w-32 mt-5 mb-3"
         >
           {timeLeft === 0
-            ? '다시 요청'
+            ? '재요청'
             : isLoading
               ? '인증중...'
-              : isSuccess
+              : isLoading
                 ? '인증완료'
                 : '인증하기'}
-          <ErrorMessage errors={errors} className="mt-2" />
         </Button>
       </div>
 

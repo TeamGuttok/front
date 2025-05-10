@@ -15,6 +15,7 @@ interface AuthState {
   reset: () => void // 세션 만료
   setUser: (user: Partial<userInfo>) => void
   verifyEmail: () => void
+  resetEmailVerification: () => void
 }
 
 const buildUserState = (user?: Partial<userInfo>): userInfo => ({

@@ -1,23 +1,33 @@
 import { useState, useEffect } from 'react'
 import { useAuthStore } from '#stores/auth/useAuthStore'
-import { Label } from '#components/_common/Label'
 import { Input } from '#components/_common/Input'
-import { ErrorMessage } from '#components/_common/ErrorMessage'
 import { Button } from '#components/_common/Button'
 import OTPForm from '#components/ui/OTPForm'
 import { useSendCertificationCode, useVerifyOTP } from '#apis/authClient'
 import { emailSchema } from '#schema/userSchema'
+import { groupClassName, labelClassName, inputClassName } from '#style/style'
+import { cn } from '#components/lib/utils'
+import { SelectLabel, SelectGroup } from '#components/_common/Select'
+import { ErrorMessage } from '#components/_common/ErrorMessage'
 
 interface RegisterInputFieldProps {
   email: string
   onChangeEmail: (e: React.ChangeEvent<HTMLInputElement>) => void
+  errorEmail?: string[]
 }
 
-export default function RegisterInputFiel({
+export default function RegisterInputField({
   email,
   onChangeEmail,
+  errorEmail,
 }: RegisterInputFieldProps) {
-  const { user, setUser, verifyEmail } = useAuthStore()
+  const {
+    user,
+    setUser,
+    verifyEmail,
+    isEmailVerified,
+    resetEmailVerification,
+  } = useAuthStore()
   const [errors, setErrors] = useState<string[]>([])
   const [isOTPOpen, setIsOTPOpen] = useState<boolean>(false)
   const [otpReset, setOtpReset] = useState(0)
@@ -41,6 +51,8 @@ export default function RegisterInputFiel({
       const errorMessages = result.error.errors.map((err) => err.message)
       setErrors(errorMessages)
     }
+
+    console.log(errors)
   }
 
   const handleSendCertificationCode = () => {
@@ -52,6 +64,7 @@ export default function RegisterInputFiel({
 
     sendCertificationCode(email, {
       onSuccess: () => {
+        resetEmailVerification()
         setErrors([])
         setIsOTPOpen(true)
         setOtpReset((prev) => prev + 1)
@@ -67,46 +80,65 @@ export default function RegisterInputFiel({
     verifyEmail()
   }
 
+  useEffect(() => {
+    resetEmailVerification()
+  }, [email])
+
   return (
-    <div className="flex flex-col gap-1 min-h-16">
-      <div className="flex justify-between gap-3">
-        <div className="flex items-center grow">
-          <Label htmlFor="email" className="w-14 mr-6">
-            <span className="text-base font-medium">이메일</span>
-          </Label>
+    <>
+      <SelectGroup
+        className={cn(
+          groupClassName,
+          'flex-wrap sm:flex-nowrap mt-2 items-start sm:items-center gap-5',
+        )}
+      >
+        <div className="flex grow items-center gap-2">
+          <SelectLabel
+            aria-labelledby="registerNickname"
+            aria-describedby="registerNickname-required"
+            aria-required="true"
+            className={cn(labelClassName, 'w-[3.46rem] mr-10')}
+          >
+            이메일
+          </SelectLabel>
           <Input
             name="email"
+            type="email"
+            aria-labelledby="registerEmail"
+            aria-describedby="registerEmail-required"
             placeholder="이메일을 입력하세요"
-            className="w-0 grow read-only:opacity-50 read-only:pointer-events-none"
+            className="grow"
             value={user?.email}
             onChange={handleEmailChange}
             readOnly={isSuccess}
           />
         </div>
-        <Button
-          type="button"
-          onClick={handleSendCertificationCode}
-          className="rounded-lg"
-          disabled={isPending}
-        >
-          {isSuccess
-            ? '인증 완료'
-            : isOTPOpen
-              ? '다시 보내기'
-              : '인증번호 발송'}
-        </Button>
-      </div>
-      <ErrorMessage errors={errors} className="ml-20" />
+        <div className="w-full sm:w-auto flex justify-end sm:justify-start">
+          <Button
+            type="button"
+            onClick={handleSendCertificationCode}
+            className="rounded-lg grow sm:w-auto"
+            disabled={isPending}
+          >
+            {isEmailVerified
+              ? '인증 완료'
+              : isOTPOpen
+                ? '인증번호 재발송'
+                : '인증번호 발송'}
+          </Button>
+        </div>
+      </SelectGroup>
 
       {isOTPOpen && (
         <OTPForm
           email={email}
           resetTrigger={otpReset}
           onSuccess={handleOtpSuccess}
-          className="mt-2 mb-3 space-y-4"
+          className="mt-6 mb-6 space-y-4"
           verifyMutation={verifyMutation}
         />
       )}
-    </div>
+      <ErrorMessage errors={errorEmail} className="ml-20" />
+    </>
   )
 }
