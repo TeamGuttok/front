@@ -1,1 +1,4 @@
-export const FETCH_ALL = Number.MAX_SAFE_INTEGER
+export const FETCH_ALL = {
+  lastId: Number.MAX_SAFE_INTEGER,
+  size: Number.MAX_SAFE_INTEGER,
+}

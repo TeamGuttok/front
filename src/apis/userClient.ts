@@ -13,15 +13,17 @@ import { PATH } from '#app/routes'
 import { userInfo } from '#types/user'
 import { toast } from '#hooks/useToast'
 import { useIsLoggedInQuery } from '#hooks/useIsLoggedInQuery'
+import { useUserId } from '#hooks/useUserId'
 
 // 마이페이지 조회 get
 export const useMyProfileQuery = (
   options?: Partial<UseQueryOptions<userInfo>>,
 ) => {
   const { setUser } = useAuthStore()
+  const userId = useUserId()
 
   return useIsLoggedInQuery(
-    ['myProfile'],
+    ['myProfile', userId],
     async () => {
       const data = await getUserInfo()
       setUser({
@@ -42,7 +44,7 @@ export const useMyProfileQuery = (
 
 // 닉네임 변경 patch
 export const usePatchNickNameMutation = () => {
-  const { setUser, user } = useAuthStore()
+  const { setUser } = useAuthStore()
 
   return useMutation({
     mutationFn: patchUserNickName,

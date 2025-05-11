@@ -3,6 +3,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { SubscriptionRequest, SubscriptionContents } from '#types/subscription'
 import { BASE_URL } from '#constants/url'
+import { useUserId } from '#hooks/useUserId'
+import { FETCH_ALL } from '#constants/pagination'
 
 // 구독 서비스 리스트 검색
 export async function searchService(name: string) {
@@ -28,6 +30,7 @@ export async function searchService(name: string) {
 // 구독 서비스 생성 (post)
 export const useCreateSubscription = () => {
   const queryClient = useQueryClient()
+  const userId = useUserId()
 
   return useMutation({
     mutationFn: async (payload: SubscriptionRequest) => {
@@ -49,19 +52,18 @@ export const useCreateSubscription = () => {
       return result
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['subscriptions'] })
+      queryClient.invalidateQueries({ queryKey: ['subscriptions', userId] })
     },
   })
 }
 
 // 구독서비스 조회 api (get)
 export async function getSubscriptions(
-  lastId = Number.MAX_SAFE_INTEGER,
-  size = 100_000,
+  pageRequest: { lastId: number; size: number } = FETCH_ALL,
 ) {
   const query = new URLSearchParams({
-    lastId: String(lastId),
-    size: String(size),
+    lastId: String(pageRequest.lastId),
+    size: String(pageRequest.size),
   })
 
   const res = await fetch(
@@ -84,7 +86,6 @@ export async function getSubscriptions(
 }
 
 // 구독서비스 수정 api (patch)
-
 export const updataSubscription = async (
   id: number,
   payload: Partial<SubscriptionContents>,

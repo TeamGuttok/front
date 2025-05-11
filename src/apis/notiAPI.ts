@@ -1,9 +1,8 @@
 // 알림 리스트 조회, 알림 읽음 처리, 알림 삭제
 
 import { BASE_URL } from '#constants/url'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import type { PageRequest, NotificationResponse } from '#types/notification'
-import { FETCH_ALL } from '#constants/pagination'
 
 // 알림 가져오기 get
 export const fetchNotifications = async (

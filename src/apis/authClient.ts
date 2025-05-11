@@ -5,6 +5,7 @@ import { useMutation } from '@tanstack/react-query'
 import { BASE_URL } from '#constants/url'
 import { verifyRegisterCode, verifyPasswordCode } from './authAPI'
 import type { userInfo, LoginInput } from '#types/user'
+import { queryClient } from '#contexts/QueryProvider'
 
 // 회원가입 post
 export const useRegister = () => {
@@ -40,6 +41,7 @@ export const useRegister = () => {
 // 로그인 post
 export function useLoginClient() {
   const { login } = useAuthStore()
+
   return useMutation<userInfo, Error, LoginInput>({
     mutationFn: async ({ email, password }) => {
       const res = await fetch(`${BASE_URL}/api/users/signin`, {
@@ -63,6 +65,7 @@ export function useLoginClient() {
       return data.data as userInfo
     },
     onSuccess: (data) => {
+      queryClient.clear()
       login({
         id: data.id,
         email: data.email,
@@ -99,6 +102,7 @@ export const useLogoutClient = () => {
     onSuccess: () => {
       clearSession()
       useAuthStore.persist.clearStorage()
+      queryClient.clear()
     },
     onError: (error) => {
       console.error('로그아웃 실패:', error)
