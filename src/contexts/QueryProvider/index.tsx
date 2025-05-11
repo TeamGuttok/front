@@ -7,8 +7,9 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query'
 import { toast } from '#hooks/useToast'
+import { useMyProfileQuery } from '#apis/userClient'
 
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       throwOnError: true,
@@ -36,6 +37,13 @@ const queryClient = new QueryClient({
 
 export default function QueryProvider({ children }: { children: ReactNode }) {
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      <WrappedWithUserProfile>{children}</WrappedWithUserProfile>
+    </QueryClientProvider>
   )
+}
+
+function WrappedWithUserProfile({ children }: { children: ReactNode }) {
+  useMyProfileQuery()
+  return <>{children}</>
 }

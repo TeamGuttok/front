@@ -9,14 +9,21 @@ import {
 } from '#apis/subscriptionAPI'
 import { paymentStatus, SubscriptionContents } from '#types/subscription'
 import { useIsLoggedInQuery } from '#hooks/useIsLoggedInQuery'
+import { useUserId } from '#hooks/useUserId'
 
 // 전체 서비스 조회 (/)
 export const useSubscriptionsClient = (
   lastId = Number.MAX_SAFE_INTEGER,
   size = Number.MAX_SAFE_INTEGER,
 ) => {
-  return useIsLoggedInQuery(['subscriptions', lastId], () =>
-    getSubscriptions(lastId, size),
+  const userId = useUserId()
+
+  return useIsLoggedInQuery(
+    ['subscriptions', userId, lastId],
+    () => getSubscriptions({ lastId, size }),
+    {
+      enabled: !!userId,
+    },
   )
 }
 
@@ -25,19 +32,24 @@ export function useSubscriptionItem(
   id: string,
   options?: { enabled?: boolean },
 ) {
+  const userId = useUserId()
+
   return useIsLoggedInQuery(
-    ['subscription', id],
-    () =>
-      getSubscriptions().then(
-        (data) => data.contents.find((i) => String(i.id) === id) ?? null,
-      ),
-    options,
+    ['subscription', userId, id],
+    async () => {
+      const data = await getSubscriptions()
+      return data.contents.find((i) => String(i.id) === id) ?? null
+    },
+    {
+      enabled: !!userId && !!id && (options?.enabled ?? true),
+    },
   )
 }
 
 // 구독 서비스 수정 (patch)
 export const useUpdateSubscription = () => {
   const queryClient = useQueryClient()
+  const userId = useUserId()
 
   return useMutation({
     mutationFn: ({
@@ -49,7 +61,7 @@ export const useUpdateSubscription = () => {
     }) => updataSubscription(id, payload),
 
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['subscriptions'] })
+      queryClient.invalidateQueries({ queryKey: ['subscriptions', userId] })
     },
   })
 }
@@ -57,12 +69,14 @@ export const useUpdateSubscription = () => {
 // 결제 서비스 삭제 (delete)
 export function useDeleteSubscription() {
   const queryClient = useQueryClient()
+  const userId = useUserId()
 
   return useMutation({
     mutationFn: ({ id }: { id: number }) => deleteSubscription(id),
 
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['subscriptions'] })
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: ['subscriptions', userId] })
+      queryClient.invalidateQueries({ queryKey: ['subscriptions', userId, id] })
     },
   })
 }
@@ -70,6 +84,7 @@ export function useDeleteSubscription() {
 // 결제완료/대기 상태 변경 hook (수정 patch)
 export function usePatchPaymentStatus() {
   const queryClient = useQueryClient()
+  const userId = useUserId()
 
   return useMutation({
     mutationFn: async ({
@@ -94,8 +109,9 @@ export function usePatchPaymentStatus() {
 
       return res.json()
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['subscriptions'] })
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: ['subscriptions', userId] })
+      queryClient.invalidateQueries({ queryKey: ['subscription', userId, id] })
     },
   })
 }

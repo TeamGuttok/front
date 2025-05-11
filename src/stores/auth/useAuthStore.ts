@@ -19,6 +19,7 @@ interface AuthState {
 }
 
 const buildUserState = (user?: Partial<userInfo>): userInfo => ({
+  id: user?.id ?? 0,
   email: user?.email ?? '',
   nickName: user?.nickName ?? '',
   alarm: user?.alarm ?? true,
@@ -47,6 +48,7 @@ export const useAuthStore = create<AuthState>()(
       setUser: (user) =>
         set((state) => ({
           user: {
+            id: user.id ?? state.user?.id ?? 0,
             email: user.email ?? state.user?.email ?? '',
             nickName: user.nickName ?? state.user?.nickName ?? '',
             alarm: user.alarm ?? state.user?.alarm ?? true,
