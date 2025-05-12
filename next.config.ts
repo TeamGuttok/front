@@ -3,6 +3,10 @@ import path from 'path'
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  env: {
+    BASE_URL: process.env.BASE_URL,
+    NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  },
   webpack: (config: any) => {
     config.resolve.alias = {
       ...(config.resolve.alias || {}),
