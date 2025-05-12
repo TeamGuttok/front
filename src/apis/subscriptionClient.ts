@@ -21,10 +21,10 @@ export const useSubscriptionsClient = (
   const userEmail = useAuthStore((state) => state.user?.email)
 
   return useIsLoggedInQuery(
-    ['subscriptions', userId, lastId],
+    ['subscriptions', userId, userEmail],
     () => getSubscriptions({ lastId, size }),
     {
-      enabled: !!userId,
+      enabled: !!userId && !!userEmail,
     },
   )
 }
