@@ -10,6 +10,7 @@ import {
 import { paymentStatus, SubscriptionContents } from '#types/subscription'
 import { useIsLoggedInQuery } from '#hooks/useIsLoggedInQuery'
 import { useUserId } from '#hooks/useUserId'
+import { useAuthStore } from '#stores/auth/useAuthStore'
 
 // 전체 서비스 조회 (/)
 export const useSubscriptionsClient = (
@@ -17,6 +18,7 @@ export const useSubscriptionsClient = (
   size = Number.MAX_SAFE_INTEGER,
 ) => {
   const userId = useUserId()
+  const userEmail = useAuthStore((state) => state.user?.email)
 
   return useIsLoggedInQuery(
     ['subscriptions', userId, lastId],
