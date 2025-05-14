@@ -42,11 +42,11 @@ export default function ClientMypage() {
 
   // TODO
   // [ ] 미들웨어 연결 후 삭제 (for SEO)
-  useEffect(() => {
-    if (!isLoggedIn || isProfileError) {
-      router.push(PATH.login)
-    }
-  }, [isLoggedIn, isProfileError, router])
+  // useEffect(() => {
+  //   if (!isLoggedIn || isProfileError) {
+  //     router.push(PATH.login)
+  //   }
+  // }, [isLoggedIn, isProfileError, router])
 
   return (
     <CardTitle className="mx-auto lg:mt-10 p-5 flex flex-col min-h-[calc(100vh-4.5rem)] pb-[3rem]">
