@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import { Label } from '#components/_common/Label'
 import { Input } from '#components/_common/Input'
 import { Button } from '#components/_common/Button'
 import { ErrorMessage } from '#components/_common/ErrorMessage'
@@ -11,6 +10,9 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { loginSchema } from '#schema/userSchema'
 import { useLoginClient } from '#apis/authClient'
+import { groupClassName, labelClassName, inputClassName } from '#style/style'
+import { SelectLabel, SelectGroup } from '#components/_common/Select'
+import { cn } from '#components/lib/utils'
 
 export default function Login() {
   const router = useRouter()
@@ -56,48 +58,56 @@ export default function Login() {
   }, [isLoggedIn, router])
 
   return (
-    <div className="flex flex-col justify-center items-center">
-      <div className="flex flex-col items-center w-full mt-5">
-        <span className="text-3xl font-bold ">로그인</span>
-      </div>
+    <div className="flex flex-col items-center w-full">
+      <h1 className="text-3xl sm:text-3xl font-bold ">로그인</h1>
       <div className="w-full h-[1px] bg-border mt-5"></div>
 
-      <form onSubmit={handleSubmit} className="w-full max-w-lg mt-10 px-10">
-        <div className="flex flex-col gap-1 min-h-16">
-          <div className="flex items-center">
-            <Label htmlFor="email" className="w-20">
-              <span className="text-base font-medium">이메일</span>
-            </Label>
-            <Input
-              name="email"
-              type="email"
-              placeholder="이메일을 입력하세요"
-              className="w-0 grow"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              autoComplete="current-email"
-            />
-          </div>
-          <ErrorMessage errors={error?.email} className="ml-20" />
-        </div>
+      <form onSubmit={handleSubmit} className="w-full max-w-lg mt-10 px-10 ">
+        <SelectGroup className={cn(groupClassName)}>
+          <SelectLabel
+            aria-labelledby="loginEmailLabel"
+            aria-describedby="loginEmailLabel-required"
+            aria-required="true"
+            className={cn(labelClassName, 'w-[3.46rem] mr-12')}
+          >
+            이메일
+          </SelectLabel>
+          <Input
+            name="email"
+            type="email"
+            aria-labelledby="loginEmailInput"
+            aria-describedby="loginEmailInput-required"
+            placeholder="이메일을 입력하세요"
+            className="grow"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            autoComplete="current-email"
+          />
+        </SelectGroup>
+        <ErrorMessage errors={error?.email} className="ml-20" />
 
-        <div className="flex flex-col gap-1 min-h-16">
-          <div className="flex items-center">
-            <Label htmlFor="password" className="w-20">
-              <span className="text-base font-medium">비밀번호</span>
-            </Label>
-            <Input
-              name="password"
-              type="password"
-              placeholder="비밀번호를 입력하세요"
-              className="w-0 grow"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoComplete="current-password"
-            />
-          </div>
-          <ErrorMessage errors={error?.password} className="ml-20" />
-        </div>
+        <SelectGroup className={cn(groupClassName, 'mt-5 mb-3')}>
+          <SelectLabel
+            aria-labelledby="loginPasswordLabel"
+            aria-describedby="loginPasswordLabel-required"
+            aria-required="true"
+            className={cn(labelClassName, 'w-[3.46rem] mr-12')}
+          >
+            비밀번호
+          </SelectLabel>
+          <Input
+            name="password"
+            type="password"
+            aria-labelledby="loginPasswordInput"
+            aria-describedby="loginPasswordInput-required"
+            placeholder="비밀번호를 입력하세요"
+            className="grow"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
+          />
+        </SelectGroup>
+        <ErrorMessage errors={error?.password} className="ml-20" />
 
         <div className="flex justify-center items-center">
           <Button
