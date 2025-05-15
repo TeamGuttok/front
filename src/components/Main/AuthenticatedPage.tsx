@@ -27,7 +27,7 @@ export default function Page() {
   }
 
   return (
-    <div className="mx-auto p-5 flex flex-col min-h-[calc(100vh-4.5rem)] pb-[3rem]">
+    <div className="mx-auto p-4 flex flex-col min-h-[calc(100vh-4.5rem)] pb-[3rem]">
       <div className="flex justify-between mb-6">
         <div className="flex flex-col">
           <h1 className="text-xl font-semibold flex flex-row">
@@ -41,7 +41,7 @@ export default function Page() {
         </div>
       </div>
 
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto mb-9">
         <ItemList />
       </div>
 

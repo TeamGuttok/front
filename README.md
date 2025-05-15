@@ -31,10 +31,11 @@
 
 # 사용 스택
 
-- **프레임워크 및 언어** : TypeScript, React, Next.js 15 (App Router 기반)
-- **상태 및 데이터 관리** : Zustand (+ persist), TanStack Query (v5)
-- **스타일 및 UI 구성, 유효성 검증** : Tailwind CSS, Radix UI, clsx, tailwind-variant, Zod
-- **개발 도구 및 협업 환경** : ESLint, Prettier, TypeScript, Jira, Discord
+- **언어, 프레임워크** : TypeScript, React, Next.js 15
+- **배포 및 도메인 관리** : Vercel, AWS Route 53
+- **상태 및 데이터 관리** : Zustand, TanStack Query
+- **스타일 및 UI 구성, 유효성 검증** : Tailwind, Radix UI, clsx, Zod
+- **개발 도구 및 협업 환경** : ESLint, Prettier, Jira, Discord
 
 <br>
 
@@ -71,8 +72,8 @@
   - AWS Route 53을 통해 도메인 등록
   - AWS ACM으로 SSL 인증서 적용 및 HTTPS 설정 완료
 - **CI/CD 자동화**
-  - AWS Amplify를 사용하여 프론트엔드 자동 배포 파이프라인 구축
-  - `main` 브랜치에 푸시하면 자동으로 빌드 및 최신 버전 배포 진행
+  - Vercel을 사용해서 배포해서 CI/CD 자동화 및 배포 시간 50% 단축
+  - AWS Amplify를 사용하다가 마이그레이션
 
 <br>
 

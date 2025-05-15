@@ -13,7 +13,7 @@ export default function Home() {
   const pathname = usePathname()
 
   return (
-    <div className="pb-[7rem] background-color-[hsl(var(--background))] flex flex-col min-h-[calc(100vh-4.5rem)] my-auto 2xl:pb-[8rem]">
+    <div className="pb-[10rem] background-color-[hsl(var(--background))] flex flex-col min-h-[calc(100vh-4.5rem)] 2xl:pb-[8rem]">
       <div className="mt-10">
         <Carousel />
       </div>
@@ -49,7 +49,7 @@ export default function Home() {
           </Link>
         </div>
         <div>
-          <h2 className="block text-lg text-center">
+          <h2 className="block text-base text-center">
             <span className="font-semibold">관리의 새로운 시작,</span>{' '}
             <span className="font-medium whitespace-nowrap">
               구똑과 함께 스마트한 구독 생활을 시작해보세요
@@ -57,7 +57,7 @@ export default function Home() {
           </h2>
         </div>
 
-        <div className="m-10 grid lg:grid-cols-4 md:grid-cols-2 grid-cols-2 gap-x-11 gap-y-16 auto-rows-[8rem] auto-cols-auto-[8rem] justify-items">
+        <div className="mx-10 mb-10 mt-12 grid lg:grid-cols-4 md:grid-cols-2 grid-cols-2 gap-x-11 gap-y-16 auto-rows-[8rem] auto-cols-auto-[8rem] justify-items">
           <div className="text-center aspect-w-1 aspect-h-1">
             <HandCoins
               aria-label="구독비 절약 아이콘"
@@ -88,7 +88,7 @@ export default function Home() {
             />
             <h3 className="my-2 text-lg font-medium">메일 알림</h3>
             <p className="text-sm lg:px-8 break-keep-all">
-              결제 일정을 메일으로 받아보세요
+              결제 당일에 메일으로 결제 알림을 받아보세요
             </p>
           </div>
           <div className="text-center">
@@ -97,9 +97,11 @@ export default function Home() {
               className={getIconClassName()}
               strokeWidth={2.2}
             />
-            <h3 className="my-2 text-lg font-medium">구독 서비스 검색</h3>
-            <p className="text-sm lg:px-8 break-keep-all">
-              저장된 구독 서비스 중 사용 중인 서비스를 선택하세요
+            <h3 className="my-2 text-lg font-medium break-keep-all">
+              구독 서비스 검색
+            </h3>
+            <p className="text-sm lg:px-8 ">
+              저장된 구독 서비스 중 사용 중인 서비스를 저장하세요
             </p>
           </div>
         </div>

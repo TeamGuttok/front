@@ -11,7 +11,6 @@ import { registerSchema } from '#schema/userSchema'
 import { useRegister } from '#apis/authClient'
 import { useRouter } from 'next/navigation'
 import { PATH } from '#app/routes'
-import CardTitle from '#components/_common/CardTitle'
 import { SelectLabel, SelectGroup } from '#components/_common/Select'
 import { groupClassName, labelClassName, inputClassName } from '#style/style'
 import { cn } from '#components/lib/utils'
@@ -157,15 +156,13 @@ export default function Register() {
           />
           <Button
             type="submit"
-            className="flex justify-self-center w-full h-10 text-md rounded-lg mt-10"
+            className="flex justify-self-center w-full h-10 text-md rounded-lg mb-20"
             disabled={isRegistering}
           >
             회원가입
           </Button>
         </form>
       </div>
-      {/* </div> */}
-      {/* </div> */}
     </>
   )
 }

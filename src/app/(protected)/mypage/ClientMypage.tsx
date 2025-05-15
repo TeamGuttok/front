@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { PATH } from '#app/routes'
-import { Settings, ToggleLeft, ToggleRight } from 'lucide-react'
+import { Settings } from 'lucide-react'
 import CardTitle from '#components/_common/CardTitle'
 import { Button } from '#components/_common/Button'
 import { useState, useEffect } from 'react'
@@ -16,6 +16,7 @@ import { cn } from '#components/lib/utils'
 import { getMenuClassName } from '#style/style'
 import { useRouter } from 'next/navigation'
 import { toast } from '#hooks/useToast'
+import { Switch } from '#components/_common/Switch'
 
 export default function ClientMypage() {
   const router = useRouter()
@@ -41,11 +42,11 @@ export default function ClientMypage() {
 
   // TODO
   // [ ] 미들웨어 연결 후 삭제 (for SEO)
-  useEffect(() => {
-    if (!isLoggedIn || isProfileError) {
-      router.push(PATH.login)
-    }
-  }, [isLoggedIn, isProfileError, router])
+  // useEffect(() => {
+  //   if (!isLoggedIn || isProfileError) {
+  //     router.push(PATH.login)
+  //   }
+  // }, [isLoggedIn, isProfileError, router])
 
   return (
     <CardTitle className="mx-auto lg:mt-10 p-5 flex flex-col min-h-[calc(100vh-4.5rem)] pb-[3rem]">
@@ -88,10 +89,12 @@ export default function ClientMypage() {
         <div className="flex justify-between mb-2">
           <p className="text-gray-600">이메일 결제 리마인드</p>
           <div>
-            <button
-              onClick={() =>
+            <Switch
+              aria-label="이메일 알림 수신 여부 설정 토글"
+              checked={getMypage?.alarm}
+              onCheckedChange={() =>
                 toggleAlarm(undefined, {
-                  onSuccess: async (data) => {
+                  onSuccess: async () => {
                     await refetch()
                     const willSubscribe = !getMypage?.alarm
                     toast({
@@ -111,19 +114,7 @@ export default function ClientMypage() {
                 })
               }
               disabled={isTogglingAlarm}
-            >
-              {getMypage?.alarm ? (
-                <ToggleRight
-                  aria-label="이메일 결제 리마인드 동의"
-                  className="w-[3rem] h-[3rem] fill-[hsl(var(--primary))] strokeWidth={0} stroke-[hsl(var(--background))]"
-                />
-              ) : (
-                <ToggleLeft
-                  aria-label="이메일 결제 리마인드 미동의"
-                  className="w-[3rem] h-[3rem] fill-[hsl(var(--primary))] strokeWidth={0} stroke-[hsl(var(--background))]"
-                />
-              )}
-            </button>
+            />
           </div>
         </div>
       </div>
@@ -132,21 +123,22 @@ export default function ClientMypage() {
         <div className="flex justify-between items-center mb-4">
           <p className="text-lg font-semibold">시스템 설정</p>
         </div>
-        <div className="flex justify-between mb-2">
+        <div className="flex justify-between mb-8">
           <p className="text-gray-600">다크모드</p>
-          <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
-            {theme === 'dark' ? (
-              <ToggleRight
-                aria-label="다크모드 버튼 아이콘"
-                className="w-[3rem] h-[3rem] fill-[hsl(var(--primary))] strokeWidth={0} stroke-[hsl(var(--background))]"
-              />
-            ) : (
-              <ToggleLeft
-                aria-label="라이트모드 버튼 아이콘"
-                className="w-[3rem] h-[3rem] fill-[hsl(var(--primary))] strokeWidth={0} stroke-[hsl(var(--background))]"
-              />
-            )}
-          </button>
+          <Switch
+            aria-label="다크모드 설정 토글"
+            checked={theme === 'dark'}
+            onCheckedChange={(checked) => {
+              const newTheme = checked ? 'dark' : 'light'
+              setTheme(newTheme)
+
+              toast({
+                description: checked
+                  ? '다크 모드로 전환되었습니다.'
+                  : '라이트 모드로 전환되었습니다.',
+              })
+            }}
+          />
         </div>
 
         <div className="flex justify-end mt-3">
