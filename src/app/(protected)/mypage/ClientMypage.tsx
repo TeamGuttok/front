@@ -146,7 +146,7 @@ export default function ClientMypage() {
             onClick={() => setShowLogoutDialog(true)}
             className={cn(getMenuClassName())}
           >
-            <span>로그아웃</span>
+            <span className="text-white">로그아웃</span>
           </Button>
           <ConfirmDialog
             open={showLogoutDialog}

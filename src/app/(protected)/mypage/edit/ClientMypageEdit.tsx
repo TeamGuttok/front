@@ -56,15 +56,14 @@ export default function ClientMypageEdit() {
 
   return (
     <CardTitle className="mx-auto lg:mt-10 p-5 flex flex-col min-h-[calc(100vh-4.5rem)] pb-[3rem]">
-      <div className="flex flex-col items-center w-full">
-        <h1 className="text-3xl sm:text-3xl font-bold">마이페이지 수정</h1>
-      </div>
+      <h1 className="text-3xl font-bold justify-center text-center">
+        마이페이지 수정
+      </h1>
       <div className="w-full h-[1px] bg-border mt-5"></div>
 
-      <div className="w-full p-5">
+      <div className="w-full px-5 py-10">
         <form className="grid grid-cols-1 gap-4">
-          <div className="grid grid-cols-1 flex-col gap-2 sm:gap-4">
-            <h2 className="text-lg font-semibold mb-3">프로필 정보</h2>
+          <div className="grid grid-cols-1 flex-col gap-3 sm:gap-4">
             <SelectGroup className={cn(groupClassName)}>
               <SelectLabel
                 aria-labelledby="mypageNickname"
@@ -90,10 +89,10 @@ export default function ClientMypageEdit() {
               disabled={isNickNameUpdating}
               className="w-full bg-primary text-white hover:bg-[hsl(var(--primary-hover))]"
             >
-              <span>{isNickNameUpdating ? '저장 중...' : '저장하기'}</span>
+              <span>{isNickNameUpdating ? '저장 중...' : '닉네임 수정'}</span>
             </Button>
 
-            <SelectGroup className={cn(groupClassName, 'mt-5')}>
+            <SelectGroup className={cn(groupClassName, 'mt-8')}>
               <SelectLabel
                 aria-labelledby="mypagePassword"
                 aria-describedby="mypagePassword-required"
@@ -118,7 +117,7 @@ export default function ClientMypageEdit() {
               disabled={isPasswordUpdating}
               className="w-full bg-primary text-white hover:bg-[hsl(var(--primary-hover))]"
             >
-              <span>{isPasswordUpdating ? '저장 중...' : '비밀번호 변경'}</span>
+              <span>{isPasswordUpdating ? '저장 중...' : '비밀번호 수정'}</span>
             </Button>
           </div>
         </form>
