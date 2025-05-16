@@ -73,7 +73,7 @@ export default function ClientDetailView() {
             <div className="grid grid-cols-1 flex-col gap-2 sm:gap-4">
               <div className={cn(groupClassName)}>
                 <span className={cn(labelClassName)}>구독 서비스</span>
-                <span className="text-base">
+                <span className="font-light text-base">
                   {item.title?.trim()
                     ? item.title
                     : serviceNameLabels[item.subscription]}
@@ -81,11 +81,13 @@ export default function ClientDetailView() {
               </div>
               <div className={cn(groupClassName)}>
                 <span className={cn(labelClassName)}>결제 금액</span>
-                <span className="text-base">{item.paymentAmount}</span>
+                <span className="font-light text-base">
+                  {item.paymentAmount}
+                </span>
               </div>
               <div className={cn(groupClassName)}>
                 <span className={cn(labelClassName)}>결제 주기</span>
-                <span className="text-base">
+                <span className="font-light text-base">
                   {' '}
                   매{paymentCycleLabels[item.paymentCycle]} {item.paymentDay}일
                 </span>
@@ -93,14 +95,14 @@ export default function ClientDetailView() {
 
               <div className={cn(groupClassName)}>
                 <span className={cn(labelClassName)}>결제 수단</span>
-                <span className="text-base">
+                <span className="font-light text-base">
                   {paymentMethodLabels[item.paymentMethod] ??
                     item.paymentMethod}
                 </span>
               </div>
               <div className={cn(groupClassName)}>
                 <span className={cn(labelClassName)}>메모</span>
-                <span className="text-base max-w-40 text-right">
+                <span className="font-light text-base max-w-40 text-right">
                   {item.memo}
                 </span>
               </div>
