@@ -100,6 +100,7 @@ export default function ClientDetailItems() {
         구독 서비스 세부설정
       </h1>
       <div className="w-full h-[1px] bg-border mt-5"></div>
+
       <div className="flex flex-col justify-center items-center my-8">
         <form className="grid grid-cols-1 gap-4" onSubmit={handleSave}>
           <div className="grid grid-cols-1 flex-col gap-2 sm:gap-4">

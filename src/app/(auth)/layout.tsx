@@ -11,9 +11,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
       <p className="hidden sm:block text-lg text-sub mb-20">
         스마트한 구독 생활을 위한 최고의 선택
       </p>
-      {/* <div className="w-full sm:w-[60vw] sm:max-w-[832px] sm:p-8 sm:rounded-md sm:border sm:border-border"> */}
       <CardTitle>{children}</CardTitle>
-      {/* </div> */}
     </div>
   )
 }

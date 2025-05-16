@@ -119,7 +119,7 @@ export default function ClientMypage() {
         </div>
       </div>
       <hr />
-      <div className="w-full p-5">
+      <div className="w-full p-5 ">
         <div className="flex justify-between items-center mb-4">
           <p className="text-lg font-semibold">시스템 설정</p>
         </div>
@@ -141,7 +141,7 @@ export default function ClientMypage() {
           />
         </div>
 
-        <div className="flex justify-end mt-3">
+        <div className="flex justify-end mt-3 mb-9">
           <Button
             onClick={() => setShowLogoutDialog(true)}
             className={cn(getMenuClassName())}

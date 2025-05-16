@@ -48,3 +48,9 @@ export interface NotificationResponse {
   status: string
   message?: string
 }
+
+export interface NotiListProps {
+  notifications: Notification[]
+  onDelete: (id: number) => void
+  onMarkAsRead: (id: number) => void
+}
