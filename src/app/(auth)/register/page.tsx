@@ -14,6 +14,7 @@ import { PATH } from '#app/routes'
 import { SelectLabel, SelectGroup } from '#components/_common/Select'
 import { groupClassName, labelClassName, inputClassName } from '#style/style'
 import { cn } from '#components/lib/utils'
+import { CardTitle } from '#components/_common/Card'
 
 //const RegisterSuccess = dynamic(() => import('./success/page'))
 
@@ -70,15 +71,15 @@ export default function Register() {
   }
 
   return (
-    <>
+    <CardTitle className="mx-auto lg:mt-10 p-5 flex flex-col min-h-[calc(100vh-4.5rem)] pb-[3rem]">
       <div className="flex flex-col items-center w-full">
-        <h1 className="text-3xl sm:text-3xl font-bold ">회원가입</h1>
+        <h1 className="text-3xl sm:text-3xl font-bold">회원가입</h1>
       </div>
       <div className="w-full h-[1px] bg-border mt-5"></div>
 
-      <div className="w-full p-5">
+      <div className="flex flex-col justify-center items-center my-8">
         <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-1.5">
-          <SelectGroup className={cn(groupClassName, 'mt-5 mb-3')}>
+          <SelectGroup className={cn(groupClassName)}>
             <SelectLabel
               aria-labelledby="registerNickname"
               aria-describedby="registerNickname-required"
@@ -129,7 +130,7 @@ export default function Register() {
           </SelectGroup>
           <ErrorMessage errors={error?.password} className="ml-20" />
 
-          <SelectGroup className={cn(groupClassName, 'mt-5')}>
+          <SelectGroup className={cn(groupClassName, 'mt-3')}>
             <SelectLabel
               aria-labelledby="registerPasswordConfirm"
               aria-describedby="registerPasswordConfirm-required"
@@ -156,13 +157,13 @@ export default function Register() {
           />
           <Button
             type="submit"
-            className="flex justify-self-center w-full h-10 text-md rounded-lg mb-20"
+            className="flex justify-self-center w-full h-10 text-md rounded-lg mb-10"
             disabled={isRegistering}
           >
             회원가입
           </Button>
         </form>
       </div>
-    </>
+    </CardTitle>
   )
 }

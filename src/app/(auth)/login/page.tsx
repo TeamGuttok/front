@@ -13,6 +13,7 @@ import { useLoginClient } from '#apis/authClient'
 import { groupClassName, labelClassName, inputClassName } from '#style/style'
 import { SelectLabel, SelectGroup } from '#components/_common/Select'
 import { cn } from '#components/lib/utils'
+import { CardTitle } from '#components/_common/Card'
 
 export default function Login() {
   const router = useRouter()
@@ -58,8 +59,10 @@ export default function Login() {
   }, [isLoggedIn, router])
 
   return (
-    <div className="flex flex-col items-center w-full">
-      <h1 className="text-3xl sm:text-3xl font-bold ">로그인</h1>
+    <CardTitle className="pb-[10rem] background-color-[hsl(var(--background))] flex flex-col min-h-[calc(100vh-4.5rem)] 2xl:pb-[8rem]">
+      <div className="flex flex-col items-center w-full">
+        <h1 className="text-3xl sm:text-3xl font-bold">로그인</h1>
+      </div>
       <div className="w-full h-[1px] bg-border mt-5"></div>
 
       <form onSubmit={handleSubmit} className="w-full max-w-lg mt-10 px-10 ">
@@ -143,6 +146,6 @@ export default function Login() {
           </Button>
         </Link>
       </div>
-    </div>
+    </CardTitle>
   )
 }

@@ -117,7 +117,7 @@ export default function RegisterInputField({
           <Button
             type="button"
             onClick={handleSendCertificationCode}
-            className="rounded-lg grow sm:w-auto"
+            className="rounded-lg grow sm:w-auto mb-5"
             disabled={isPending}
           >
             {isEmailVerified

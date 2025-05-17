@@ -51,7 +51,7 @@ export default function ClientMypage() {
   return (
     <CardTitle className="mx-auto lg:mt-10 p-5 flex flex-col min-h-[calc(100vh-4.5rem)] pb-[3rem]">
       <div className="flex flex-col items-center w-full">
-        <h2 className="text-3xl sm:text-3xl font-bold">마이페이지</h2>
+        <h1 className="text-3xl sm:text-3xl font-bold">마이페이지</h1>
       </div>
       <div className="w-full h-[1px] bg-border mt-5"></div>
 
