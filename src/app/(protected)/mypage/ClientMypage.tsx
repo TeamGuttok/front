@@ -49,11 +49,9 @@ export default function ClientMypage() {
   // }, [isLoggedIn, isProfileError, router])
 
   return (
-    <CardTitle className="mx-auto lg:mt-10 p-5 flex flex-col min-h-[calc(100vh-4.5rem)] pb-[3rem]">
-      <div className="flex flex-col items-center w-full">
-        <h2 className="text-3xl sm:text-3xl font-bold">마이페이지</h2>
-      </div>
-      <div className="w-full h-[1px] bg-border mt-5"></div>
+    <CardTitle>
+      <CardTitle.Heading>마이페이지</CardTitle.Heading>
+      <CardTitle.Divider />
 
       <div className="w-full p-5">
         <div className="flex justify-between items-center mb-4">
@@ -119,7 +117,7 @@ export default function ClientMypage() {
         </div>
       </div>
       <hr />
-      <div className="w-full p-5">
+      <div className="w-full p-5 ">
         <div className="flex justify-between items-center mb-4">
           <p className="text-lg font-semibold">시스템 설정</p>
         </div>
@@ -141,7 +139,7 @@ export default function ClientMypage() {
           />
         </div>
 
-        <div className="flex justify-end mt-3">
+        <div className="flex justify-end mt-3 mb-9">
           <Button
             onClick={() => setShowLogoutDialog(true)}
             className={cn(getMenuClassName())}

@@ -54,12 +54,13 @@ export default function ClientMypageEdit() {
     }
   }, [profile])
 
+  // TODO
+  // [ ] input 반응형 스타일 수정
+
   return (
-    <CardTitle className="mx-auto lg:mt-10 p-5 flex flex-col min-h-[calc(100vh-4.5rem)] pb-[3rem]">
-      <h1 className="text-3xl font-bold justify-center text-center">
-        마이페이지 수정
-      </h1>
-      <div className="w-full h-[1px] bg-border mt-5"></div>
+    <CardTitle>
+      <CardTitle.Heading>마이페이지 수정</CardTitle.Heading>
+      <CardTitle.Divider />
 
       <div className="w-full px-5 py-10">
         <form className="grid grid-cols-1 gap-4">

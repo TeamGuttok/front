@@ -42,7 +42,6 @@ export default function ItemCard({ item }: Props) {
         {...swipeHandlers}
         className={cn(
           'flex justify-between items-center p-4 rounded-lg shadow-md dark:bg-gray-800 bg-white hover:bg-slate-200 hover:dark:bg-gray-700',
-          //item.paymentStatus === 'PENDING' ? 'bg-red-100' :
           'bg-white',
         )}
       >
@@ -66,10 +65,6 @@ export default function ItemCard({ item }: Props) {
               {item.title?.trim()
                 ? item.title
                 : (serviceNameLabels[item.subscription] ?? '알 수 없음')}
-              {/* <StatusBadge
-                status={item.paymentStatus}
-                paymentDay={item.paymentDay}
-              /> */}
             </h3>
             <p className="text-xs dark:text-gray-500">
               {item.paymentCycle

@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { Label } from '#components/_common/Label'
 import { Input } from '#components/_common/Input'
 import { Button } from '#components/_common/Button'
 import { ErrorMessage } from '#components/_common/ErrorMessage'
@@ -14,6 +13,7 @@ import { PATH } from '#app/routes'
 import { SelectLabel, SelectGroup } from '#components/_common/Select'
 import { groupClassName, labelClassName, inputClassName } from '#style/style'
 import { cn } from '#components/lib/utils'
+import { CardTitle } from '#components/_common/CardTitle'
 
 //const RegisterSuccess = dynamic(() => import('./success/page'))
 
@@ -69,16 +69,16 @@ export default function Register() {
     )
   }
 
+  // TODO
+  // [ ] 모바일 input 간격 맞추기
   return (
-    <>
-      <div className="flex flex-col items-center w-full">
-        <h1 className="text-3xl sm:text-3xl font-bold ">회원가입</h1>
-      </div>
-      <div className="w-full h-[1px] bg-border mt-5"></div>
+    <CardTitle>
+      <CardTitle.Heading>회원가입</CardTitle.Heading>
+      <CardTitle.Divider />
 
-      <div className="w-full p-5">
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-1.5">
-          <SelectGroup className={cn(groupClassName, 'mt-5 mb-3')}>
+      <div className="flex flex-col justify-center items-center my-8">
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-1.5 px-5">
+          <SelectGroup className={cn(groupClassName)}>
             <SelectLabel
               aria-labelledby="registerNickname"
               aria-describedby="registerNickname-required"
@@ -98,7 +98,7 @@ export default function Register() {
               className="grow"
             />
           </SelectGroup>
-          <ErrorMessage errors={error?.nickName} className="ml-20" />
+          <ErrorMessage errors={error?.nickName} className="ml-2" />
 
           <RegisterInputField
             email={user?.email ?? ''}
@@ -106,7 +106,7 @@ export default function Register() {
             errorEmail={error?.email}
           />
 
-          <SelectGroup className={cn(groupClassName, 'mt-5')}>
+          <SelectGroup className={cn(groupClassName)}>
             <SelectLabel
               aria-labelledby="registerPassword"
               aria-describedby="registerPassword-required"
@@ -127,9 +127,9 @@ export default function Register() {
               className="grow"
             />
           </SelectGroup>
-          <ErrorMessage errors={error?.password} className="ml-20" />
+          <ErrorMessage errors={error?.password} className="ml-2" />
 
-          <SelectGroup className={cn(groupClassName, 'mt-5')}>
+          <SelectGroup className={cn(groupClassName)}>
             <SelectLabel
               aria-labelledby="registerPasswordConfirm"
               aria-describedby="registerPasswordConfirm-required"
@@ -152,17 +152,17 @@ export default function Register() {
           </SelectGroup>
           <ErrorMessage
             errors={error?.passwordConfirm || []}
-            className="ml-20"
+            className="ml-2"
           />
           <Button
             type="submit"
-            className="flex justify-self-center w-full h-10 text-md rounded-lg mb-20"
+            className="flex justify-self-center w-full h-10 text-md rounded-lg mb-10 "
             disabled={isRegistering}
           >
             회원가입
           </Button>
         </form>
       </div>
-    </>
+    </CardTitle>
   )
 }

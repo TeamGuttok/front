@@ -89,7 +89,7 @@ export default function RegisterInputField({
       <SelectGroup
         className={cn(
           groupClassName,
-          'flex-wrap sm:flex-nowrap mt-2 items-start sm:items-center gap-5',
+          'flex-wrap sm:flex-nowrap items-start sm:items-center gap-3 mt-2 mb-2',
         )}
       >
         <div className="flex grow items-center gap-2">
@@ -113,11 +113,12 @@ export default function RegisterInputField({
             readOnly={isSuccess}
           />
         </div>
+
         <div className="w-full sm:w-auto flex justify-end sm:justify-start">
           <Button
             type="button"
             onClick={handleSendCertificationCode}
-            className="rounded-lg grow sm:w-auto"
+            className="rounded-lg grow sm:w-auto mb-2 sm:mb-0"
             disabled={isPending}
           >
             {isEmailVerified
@@ -128,17 +129,17 @@ export default function RegisterInputField({
           </Button>
         </div>
       </SelectGroup>
+      <ErrorMessage errors={errorEmail} className="ml-2" />
 
       {isOTPOpen && (
         <OTPForm
           email={email}
           resetTrigger={otpReset}
           onSuccess={handleOtpSuccess}
-          className="mt-6 mb-6 space-y-4"
+          className="space-y-4"
           verifyMutation={verifyMutation}
         />
       )}
-      <ErrorMessage errors={errorEmail} className="ml-20" />
     </>
   )
 }

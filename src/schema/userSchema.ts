@@ -9,11 +9,14 @@ export const emailSchema = z.object({
 
 export const nickNameSchema = z
   .string()
-  .min(2, '닉네임은 2자 이상 입력해 주세요.')
+  .min(2, '닉네임을 2자 이상 입력해 주세요.')
 
 export const passwordSchema = z
   .string()
-  .min(12, '비밀번호는 12자 이상 입력해 주세요요.')
+  .min(
+    12,
+    '비밀번호를 특수문자(@&!%*?&#)와 소문자 영어를 포함하여 12자 이상 입력해 주세요.',
+  )
 
 export const loginSchema = z.object({
   email: z.string().email('올바른 이메일을 입력해주세요.'),
@@ -22,16 +25,16 @@ export const loginSchema = z.object({
 
 export const registerSchema = z
   .object({
-    nickName: z.string().min(2, '닉네임은 2자 이상 입력해 주세요.'),
+    nickName: z.string().min(2, '닉네임을 2자 이상 입력해 주세요.'),
     email: z
       .string()
       .nonempty('이메일을 입력해 주세요.')
-      .email('유효한 이메일 주소를 입력하세요.'),
+      .email('유효한 이메일 주소를 입력해 주세요.'),
     password: z
       .string()
       .min(
         12,
-        '비밀번호는 특수문자(@&!%*?&#)와 영어 소문자를 포함하여 12자 이상 입력해 주세요.',
+        '비밀번호를 특수문자(@&!%*?&#)와 소문자 영어를 포함하여 12자 이상 입력해 주세요.',
       )
       .regex(
         /^(?=.*[a-z])(?=.*[@$!%*?&#]).{12,}$/,

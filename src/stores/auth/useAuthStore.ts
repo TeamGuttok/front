@@ -5,6 +5,7 @@ import {
   createJSONStorage,
 } from 'zustand/middleware'
 import type { userInfo } from '#types/user'
+import { useSubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
 
 interface AuthState {
   isLoggedIn: boolean
@@ -34,15 +35,24 @@ export const useAuthStore = create<AuthState>()(
       resetEmailVerification: () => set({ isEmailVerified: false }),
       verifyEmail: () => set({ isEmailVerified: true }),
 
-      login: (user) =>
+      login: (user) => {
+        useSubscriptionStore.getState().resetSubscriptionData()
         set({
           user: buildUserState(user),
           isLoggedIn: true,
-        }),
+        })
+      },
 
       logout: () => {
         useAuthStore.getState().reset()
         useAuthStore.persist.clearStorage()
+        useSubscriptionStore.getState().resetSubscriptionData()
+
+        // import('#stores/subscriptions/useSubscriptionStore').then(
+        //   ({ useSubscriptionStore }) => {
+        //     useSubscriptionStore.getState().resetSubscriptionData()
+        //   },
+        // )
       },
 
       setUser: (user) =>

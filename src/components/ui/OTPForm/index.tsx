@@ -145,7 +145,7 @@ export default function OTPForm({
   }
 
   return (
-    <div className={cn('space-y-8 mt-10', className)}>
+    <div className={cn('space-y-8', className)}>
       <div className="text-center">
         <p className="text-md text-sub">
           <span className="font-semibold">{email}</span> 로 전송된 코드를 입력해
@@ -176,7 +176,7 @@ export default function OTPForm({
           type="button"
           onClick={handleVerifyOTP}
           disabled={isLoading || otp.length !== 6}
-          className="w-32 mt-5 mb-3"
+          className="w-32 mt-10"
         >
           {timeLeft === 0
             ? '재요청'
