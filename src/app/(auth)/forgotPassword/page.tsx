@@ -12,6 +12,7 @@ import { groupClassName, labelClassName, inputClassName } from '#style/style'
 import { cn } from '#components/lib/utils'
 import { useRouter } from 'next/navigation'
 import { PATH } from '#app/routes'
+import { CardTitle } from '#components/_common/CardTitle'
 
 export default function ForgotPassword() {
   const passwordOTP = usePasswordOTP()
@@ -48,21 +49,23 @@ export default function ForgotPassword() {
   }
 
   return (
-    <div>
-      <div className="justify-center text-center">
-        <h1 className="text-3xl font-bold mt-10">비밀번호 찾기</h1>
-        <p className="text-sm mt-3">가입하셨던 이메일 주소를 입력해주세요.</p>
-      </div>
+    <CardTitle>
+      <CardTitle.Heading>비밀번호 찾기</CardTitle.Heading>
+      <CardTitle.Divider />
 
-      <div className="flex flex-col justify-center items-center my-8">
+      <div className="items-center grid">
+        <p className="text-lg text-sub mt-10 mb-5 text-center">
+          가입하셨던 이메일 주소를 입력해주세요.
+        </p>
+
         <form className="grid grid-cols-1 gap-4">
-          <div className="grid grid-cols-1 flex-col gap-2 sm:gap-4">
+          <div className="grid grid-cols-1 flex-col ">
             <SelectGroup className={cn(groupClassName)}>
               <SelectLabel
                 aria-labelledby="emailForFindingPassword"
                 aria-describedby="emailForFindingPassword-required"
                 aria-required="true"
-                className={cn(labelClassName, 'mr-5')}
+                className={cn(labelClassName)}
               >
                 이메일{' '}
               </SelectLabel>
@@ -74,22 +77,26 @@ export default function ForgotPassword() {
                 readOnly={isOTPOpen}
                 className={cn(inputClassName)}
               />
-              {errors?.email && (
-                <ErrorMessage errors={errors.email} className="ml-20" />
-              )}
             </SelectGroup>
+            {errors?.email && (
+              <ErrorMessage
+                errors={errors.email}
+                className="flex flex-col ml-2 mt-3"
+              />
+            )}
           </div>
           <Button
             type="button"
             onClick={handleRequestOTP}
             disabled={isSending}
+            className="mt-1"
             aria-label="emailForFindingPassword"
             aria-labelledby="certificationCode"
           >
             {isSending ? '인증번호 발송 중...' : '인증번호 받기'}
           </Button>
           {isOTPOpen && (
-            <div className="w-full max-w-lg mt-10 px-10">
+            <div className="w-full max-w-lg">
               <OTPForm
                 email={email}
                 resetTrigger={otpReset}
@@ -100,12 +107,12 @@ export default function ForgotPassword() {
                 verifyMutation={passwordOTP}
               />
               {otpErrors.length > 0 && (
-                <ErrorMessage errors={otpErrors} className="ml-20 mt-2" />
+                <ErrorMessage errors={otpErrors} className="flex ml-2 mt-2" />
               )}
             </div>
           )}
         </form>
       </div>
-    </div>
+    </CardTitle>
   )
 }

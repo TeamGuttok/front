@@ -107,10 +107,9 @@ export default function Page() {
   }
 
   return (
-    <CardTitle className="mx-auto lg:m-8 p-5 flex flex-col min-h-[calc(100vh-4.5rem)] pb-[3rem] mt-10">
-      <h1 className="text-3xl font-bold justify-center text-center  ">
-        구독 서비스 수정
-      </h1>
+    <CardTitle>
+      <CardTitle.Heading>구독 서비스 수정</CardTitle.Heading>
+      <CardTitle.Divider />
       <div className="flex flex-col justify-center items-center my-8">
         <form className="grid grid-cols-1 gap-4">
           <div className="grid grid-cols-1 flex-col gap-2 sm:gap-4">

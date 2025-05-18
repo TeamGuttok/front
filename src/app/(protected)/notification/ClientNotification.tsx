@@ -29,9 +29,9 @@ export default function ClientNotification() {
   const { mutate: deleteAPI } = useDeleteNotification()
 
   return (
-    <CardTitle className="mx-auto lg:mt-10 p-5 flex flex-col min-h-[calc(100vh-4.5rem)] pb-[3rem]">
-      <h1 className="text-3xl font-bold justify-center text-center">알림</h1>
-      <div className="w-full h-[1px] bg-border mt-5"></div>
+    <CardTitle>
+      <CardTitle.Heading>알림</CardTitle.Heading>
+      <CardTitle.Divider />
 
       <div className="flex-1 overflow-auto my-7">
         <div className="grid grid-cols-1 gap-3 cursor-pointer mb-5"></div>

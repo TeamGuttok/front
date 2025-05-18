@@ -95,11 +95,9 @@ export default function ClientDetailItems() {
   }
 
   return (
-    <CardTitle className="mx-auto lg:mt-10 p-5 flex flex-col min-h-[calc(100vh-4.5rem)] pb-[3rem]">
-      <h1 className="text-3xl font-bold justify-center text-center">
-        구독 서비스 세부설정
-      </h1>
-      <div className="w-full h-[1px] bg-border mt-5"></div>
+    <CardTitle>
+      <CardTitle.Heading>구독 서비스 세부설정</CardTitle.Heading>
+      <CardTitle.Divider />
 
       <div className="flex flex-col justify-center items-center my-8">
         <form className="grid grid-cols-1 gap-4" onSubmit={handleSave}>
