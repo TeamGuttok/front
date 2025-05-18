@@ -153,9 +153,10 @@ export default function ClientDetailItems() {
                 aria-labelledby="subscriptionAmount"
                 aria-describedby="subscriptionAmount-required"
                 value={paymentAmount}
-                onChange={(e) =>
-                  updateField('paymentAmount', Number(e.target.value))
-                }
+                onChange={(e) => {
+                  const value = e.target.value
+                  updateField('paymentAmount', value === '' ? 1 : Number(value))
+                }}
                 placeholder="금액을 입력하세요"
                 className={cn(inputClassName)}
               />

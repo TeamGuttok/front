@@ -45,11 +45,13 @@ export default function ClientAddItems() {
     }
     setSelectedService(selectedService)
 
-    useSubscriptionStore
-      .getState()
-      .updateSubscription(selectedService.isCustom, selectedService.id)
+    const store = useSubscriptionStore.getState()
 
-    router.push('add/detail')
+    store.resetSubscriptionData()
+    store.updateSubscription(selectedService.isCustom, selectedService.id)
+    setSelectedService(selectedService)
+
+    router.push(PATH.addDetail)
   }
   return (
     <div className="flex flex-col m-4 ">
