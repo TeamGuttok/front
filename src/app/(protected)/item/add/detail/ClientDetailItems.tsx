@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import { Input } from '#components/_common/Input'
 import { Button } from '#components/_common/Button'
 import { cn } from '#components/lib/utils'
+import { useEffect } from 'react'
 import {
   Select,
   SelectTrigger,
@@ -20,10 +21,12 @@ import { KNOWN_SERVICES } from '#constants/knownServices'
 import { groupClassName, labelClassName, inputClassName } from '#style/style'
 import { Textarea } from '#components/_common/TextArea'
 import { PATH } from '#app/routes'
+import { useAuthStore } from '#stores/auth/useAuthStore'
 
 export default function ClientDetailItems() {
   const router = useRouter()
   const mutation = useCreateSubscription()
+  const userId = useAuthStore((state) => state.user?.id)
 
   const {
     subscriptionData,
@@ -32,6 +35,7 @@ export default function ClientDetailItems() {
     paymentMethodOptions,
     paymentCycleOptions,
     paymentDayOptions,
+    saveSubscriptionDataForUser,
   } = useSubscriptionStore((state: any) => state)
 
   const {
@@ -93,6 +97,20 @@ export default function ClientDetailItems() {
       },
     })
   }
+
+  // useEffect(() => {
+  //   const handleBeforeUnload = () => {
+  //     if (userId) {
+  //       saveSubscriptionDataForUser(String(userId))
+  //     }
+  //   }
+
+  //   window.addEventListener('beforeunload', handleBeforeUnload)
+  //   return () => {
+  //     handleBeforeUnload()
+  //     window.removeEventListener('beforeunload', handleBeforeUnload)
+  //   }
+  // }, [userId])
 
   return (
     <CardTitle>
