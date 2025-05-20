@@ -82,7 +82,13 @@ export const deleteUser = async (): Promise<{
   })
 
   if (!response.ok) {
-    const errorData = await response.json()
+    let errorData: { message?: string } = {}
+    try {
+      errorData = await response.json()
+    } catch {
+      errorData = { message: '응답 본문 없음 (500 오류)' }
+    }
+    console.error('회원 탈퇴 실패 응답:', errorData)
     throw new Error(errorData.message || '회원 탈퇴 실패')
   }
 
