@@ -5,7 +5,6 @@ import ThemeProvider from '#contexts/ThemeProvider'
 import Layout from '#components/Layout'
 import { Toaster } from '#components/_common/Toast/toaster'
 import './globals.css'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 export const metadata: Metadata = {
   title: '구똑',
@@ -39,7 +38,6 @@ export default function RootLayout({
       <body>
         <ThemeProvider>
           <QueryProvider>
-            <ReactQueryDevtools />
             <Layout>{children}</Layout>
             <Toaster />
           </QueryProvider>
