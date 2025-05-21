@@ -13,7 +13,7 @@ export default function Home() {
   const pathname = usePathname()
 
   return (
-    <div className="pb-[10rem] background-color-[hsl(var(--background))] flex flex-col min-h-[calc(100vh-4.5rem)] 2xl:pb-[8rem]">
+    <div className="pb-[13rem] sm:pb-[2rem] background-color-[hsl(var(--background))] flex flex-col min-h-[calc(100vh-4.5rem)] 2xl:pb-[8rem]">
       <div className="mt-10">
         <Carousel />
       </div>
