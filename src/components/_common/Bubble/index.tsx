@@ -10,7 +10,7 @@ export default function FeedbackButton() {
   if (!visible) return null
 
   return (
-    <div className="fixed sm:bottom-6 bottom-[5.5rem] right-6 z-50 group ">
+    <div className="fixed sm:bottom-6 bottom-[5.5rem] left-5 sm:left-60 z-50 group ">
       <Link
         href="https://docs.google.com/forms/d/e/1FAIpQLSdeV-8mvo3COEiIIMArbABfbqm1T5LuyNgXPUjpMXnl5T35hg/viewform"
         target="_blank"
