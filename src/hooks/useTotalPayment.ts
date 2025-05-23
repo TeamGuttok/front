@@ -1,11 +1,11 @@
 'use client'
 
 import { useMemo } from 'react'
-import { useSubscriptionsClient } from '#apis/subscriptionClient'
+import { useGetItemsClient } from '#apis/subscriptionClient'
 import { parseISO } from 'date-fns'
 
 export function useCurrentMonthPaymentTotal() {
-  const { data } = useSubscriptionsClient()
+  const { data } = useGetItemsClient()
   const items = data?.contents ?? []
   const now = new Date()
 

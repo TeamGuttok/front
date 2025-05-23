@@ -3,10 +3,10 @@
 import { useMutation, UseQueryOptions } from '@tanstack/react-query'
 import {
   getUserInfo,
-  patchUserNickName,
-  patchUserPassword,
+  patchNickname,
+  patchPassword,
   deleteUser,
-} from './userAPI'
+} from '#apis/userAPI'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import { useRouter } from 'next/navigation'
 import { PATH } from '#app/routes'
@@ -16,7 +16,7 @@ import { useIsLoggedInQuery } from '#hooks/useIsLoggedInQuery'
 import { useUserId } from '#hooks/useUserId'
 
 // 마이페이지 조회 get
-export const useMyProfileQuery = (
+export const useGetUserInfoClient = (
   options?: Partial<UseQueryOptions<userInfo>>,
 ) => {
   const { setUser } = useAuthStore()
@@ -43,11 +43,11 @@ export const useMyProfileQuery = (
 }
 
 // 닉네임 변경 patch
-export const usePatchNickNameMutation = () => {
+export const usePatchNicknameClient = () => {
   const { setUser } = useAuthStore()
 
   return useMutation({
-    mutationFn: patchUserNickName,
+    mutationFn: patchNickname,
     onSuccess: (response, nickName) => {
       const updatedNickName = response.data?.nickName ?? nickName
       setUser({ nickName: updatedNickName })
@@ -59,9 +59,9 @@ export const usePatchNickNameMutation = () => {
 }
 
 // 비밀번호 변경 patch
-export const usePatchPasswordMutation = () => {
+export const usePatchPasswordClient = () => {
   return useMutation({
-    mutationFn: patchUserPassword,
+    mutationFn: patchPassword,
   })
 }
 

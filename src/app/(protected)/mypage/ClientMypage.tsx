@@ -8,8 +8,8 @@ import { Button } from '#components/_common/Button'
 import { useState, useEffect } from 'react'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import useTheme from '#contexts/ThemeProvider/hook'
-import { useToggleAlarmMutation } from '#apis/notiClient'
-import { useMyProfileQuery, useDeleteUser } from '#apis/userClient'
+import { usepatchAlarmClient } from '#apis/notiClient'
+import { useGetUserInfoClient, useDeleteUser } from '#apis/userClient'
 import { ConfirmDialog } from '#components/ui/ConfirmDialog'
 import { useHandleLogout } from '#hooks/useHandleLogout'
 import { cn } from '#components/lib/utils'
@@ -26,13 +26,13 @@ export default function ClientMypage() {
     data: getMypage,
     isError: isProfileError,
     refetch,
-  } = useMyProfileQuery({
+  } = useGetUserInfoClient({
     enabled: isLoggedIn,
   })
   const { mutate: deleteAccount, isPending: isDeletingAccount } =
     useDeleteUser()
   const { mutate: toggleAlarm, isPending: isTogglingAlarm } =
-    useToggleAlarmMutation()
+    usepatchAlarmClient()
 
   const { theme, setTheme } = useTheme()
 

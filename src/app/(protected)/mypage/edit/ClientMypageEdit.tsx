@@ -9,22 +9,22 @@ import { SelectLabel, SelectGroup } from '#components/_common/Select'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import { groupClassName, labelClassName, inputClassName } from '#style/style'
 import {
-  useMyProfileQuery,
-  usePatchNickNameMutation,
-  usePatchPasswordMutation,
+  useGetUserInfoClient,
+  usePatchNicknameClient,
+  usePatchPasswordClient,
 } from '#apis/userClient'
 import { nickNameSchema, passwordSchema } from '#schema/userSchema'
 
 export default function ClientMypageEdit() {
   const { user, setUser } = useAuthStore()
-  const { data: profile } = useMyProfileQuery()
+  const { data: profile } = useGetUserInfoClient()
   const [nickName, setNickName] = useState(user?.nickName ?? '')
   const [password, setPassword] = useState('')
 
   const { mutate: updateNickName, isPending: isNickNameUpdating } =
-    usePatchNickNameMutation()
+    usePatchNicknameClient()
   const { mutate: updatePassword, isPending: isPasswordUpdating } =
-    usePatchPasswordMutation()
+    usePatchPasswordClient()
 
   const nickNameUpdateSubmit = () => {
     const parsed = nickNameSchema.safeParse(nickName)

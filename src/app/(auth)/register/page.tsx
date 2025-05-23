@@ -7,7 +7,7 @@ import { ErrorMessage } from '#components/_common/ErrorMessage'
 import RegisterInputField from './RegisterInputField'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import { registerSchema } from '#schema/userSchema'
-import { useRegister } from '#apis/authClient'
+import { useRegisterClient } from '#apis/authClient'
 import { useRouter } from 'next/navigation'
 import { PATH } from '#app/routes'
 import { SelectLabel, SelectGroup } from '#components/_common/Select'
@@ -22,7 +22,7 @@ export default function Register() {
   const [password, setPassword] = useState<string>('')
   const [passwordConfirm, setPasswordConfirm] = useState<string>('')
   const [error, setError] = useState<Record<string, string[]>>({})
-  const { mutate: registerUser, isPending: isRegistering } = useRegister()
+  const { mutate: registerUser, isPending: isRegistering } = useRegisterClient()
   const router = useRouter()
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {

@@ -1,7 +1,7 @@
 import UnauthenticatedPage from '#components/Main/UnauthenticatedPage'
 import AuthenticatedPage from '#components/Main/AuthenticatedPage'
 import { cookies } from 'next/headers'
-import Bubble from '#components/_common/Bubble'
+import FeedbackButton from '#components/_common/FeedbackButton'
 
 export default async function Main() {
   const cookie = await cookies()
@@ -13,7 +13,7 @@ export default async function Main() {
       <main>
         {isLoggedIn ? <AuthenticatedPage /> : <UnauthenticatedPage />}
       </main>
-      <Bubble />
+      <FeedbackButton />
     </>
   )
 }

@@ -11,7 +11,7 @@ import {
 } from '#types/subscription'
 import { KNOWN_SERVICES } from '#constants/knownServices'
 
-type SubscriptionPerUser = Record<string, SubscriptionStore>
+// type SubscriptionPerUser = Record<string, SubscriptionStore>
 
 export const paymentMethodOptions = Object.entries(paymentMethodLabels).map(
   ([key, label]) => ({ value: key as PaymentMethod, label }),
@@ -38,11 +38,11 @@ export const subscriptionOptions = KNOWN_SERVICES.map((service) => ({
 export const initialState = {
   title: '',
   subscription: '',
-  paymentAmount: 0,
+  paymentAmount: '',
   paymentMethod: '',
   paymentStatus: '',
   paymentCycle: '',
-  paymentDay: 1,
+  paymentDay: '',
   memo: '',
   iconUrl: '',
 }
@@ -60,7 +60,7 @@ export type SubscriptionState = {
   ) => void
 
   saveSubscriptionDataForUser: (userId: string) => void
-  loadSubscriptionDataForUser: (userId: string) => void
+  getSubscriptionDataForUser: (userId: string) => void
 
   paymentMethodOptions: typeof paymentMethodOptions
   paymentStatusOptions: typeof paymentStatusOptions
@@ -85,7 +85,7 @@ export const useSubscriptionStore = create<SubscriptionState>((set, get) => ({
     )
   },
 
-  loadSubscriptionDataForUser: (userId) => {
+  getSubscriptionDataForUser: (userId) => {
     const raw = sessionStorage.getItem(`subscriptionData-${userId}`)
     if (raw) {
       try {

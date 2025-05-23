@@ -1,11 +1,11 @@
 // 알림 리스트 조회, 알림 읽음 처리, 알림 삭제
 
 import { BASE_URL } from '#constants/url'
-import { useQuery } from '@tanstack/react-query'
 import type { PageRequest, NotificationResponse } from '#types/notification'
+import { useQuery, useMutation } from '@tanstack/react-query'
 
-// 알림 가져오기 get
-export const fetchNotifications = async (
+// 알림 조회 get
+export const getNotis = async (
   pageRequest: PageRequest,
 ): Promise<NotificationResponse> => {
   const query = new URLSearchParams()
@@ -33,22 +33,8 @@ export const fetchNotifications = async (
   return res.json()
 }
 
-export const useNotifications = (pageRequest: PageRequest) => {
-  console.log('queryKey', [
-    'notifications',
-    'reminders',
-    pageRequest.lastId,
-    pageRequest.size,
-  ])
-  return useQuery({
-    queryKey: ['notifications', pageRequest],
-    queryFn: () => fetchNotifications(pageRequest),
-    staleTime: Infinity,
-  })
-}
-
 // 알림 상태 (사용/미사용) 변경 patch
-export const patchUserAlarm = async () => {
+export const patchAlarm = async () => {
   const res = await fetch(`${BASE_URL}/api/users/alarm`, {
     method: 'PATCH',
     headers: {
@@ -68,7 +54,7 @@ export const patchUserAlarm = async () => {
 }
 
 // 알림 읽음 처리 put
-export const markNotificationsAsRead = async (ids: number[]) => {
+export const putNotis = async (ids: number[]) => {
   const res = await fetch(`${BASE_URL}/api/notifications`, {
     method: 'PUT',
     headers: {
@@ -84,7 +70,7 @@ export const markNotificationsAsRead = async (ids: number[]) => {
 }
 
 // 알림 삭제 delete
-export const deleteNotifications = async (ids: number[] | number) => {
+export const deleteNotis = async (ids: number[] | number) => {
   const idsArray = Array.isArray(ids) ? ids : [ids]
   const res = await fetch(`${BASE_URL}/api/notifications`, {
     method: 'DELETE',

@@ -10,10 +10,7 @@ import {
   serviceNameLabels,
 } from '#types/subscription'
 import { useRouter, useParams } from 'next/navigation'
-import {
-  useSubscriptionItem,
-  useDeleteSubscription,
-} from '#apis/subscriptionClient'
+import { useGetDetailClient, useDeleteItems } from '#apis/subscriptionClient'
 import { groupClassName, labelClassName } from '#style/style'
 import { ConfirmDialog } from '#components/ui/ConfirmDialog'
 import { useState } from 'react'
@@ -22,11 +19,13 @@ import { CardTitle } from '#components/_common/Card'
 export default function ClientDetailView() {
   const router = useRouter()
   const params = useParams<{ id: string }>()
+  // TODO
+  // [ ] 리팩토링
   if (!params?.id) return <p>잘못된 접근입니다.</p>
   const itemId = parseInt(params.id, 10)
-  const { isLoading, error } = useSubscriptionItem(params.id)
-  const { mutate: deleteSubscription } = useDeleteSubscription()
-  const { data: item } = useSubscriptionItem(String(itemId), {
+  const { isLoading, error } = useGetDetailClient(params.id)
+  const { mutate: deleteSubscription } = useDeleteItems()
+  const { data: item } = useGetDetailClient(String(itemId), {
     enabled: !!itemId && typeof window !== 'undefined',
   })
 

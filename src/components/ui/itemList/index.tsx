@@ -1,10 +1,10 @@
 'use client'
 
-import { useSubscriptionsClient } from '#apis/subscriptionClient'
+import { useGetItemsClient } from '#apis/subscriptionClient'
 import ItemCard from '#components/ui/itemCard'
 
 export default function ItemList() {
-  const { data, isLoading, error } = useSubscriptionsClient()
+  const { data, isLoading, error } = useGetItemsClient()
   const items = data?.contents ?? []
 
   if (isLoading) {

@@ -22,7 +22,7 @@ export const getUserInfo = async (): Promise<userInfo> => {
 }
 
 // 닉네임 변경 patch
-export const patchUserNickName = async (nickName: string) => {
+export const patchNickname = async (nickName: string) => {
   const response = await fetch(`${BASE_URL}/api/users/nickname`, {
     method: 'PATCH',
     credentials: 'include',
@@ -43,7 +43,7 @@ export const patchUserNickName = async (nickName: string) => {
 }
 
 // 비밀번호 변경 patch
-export const patchUserPassword = async (
+export const patchPassword = async (
   password: string,
 ): Promise<{
   message: string
