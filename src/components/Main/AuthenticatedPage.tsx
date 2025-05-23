@@ -6,12 +6,12 @@ import Link from 'next/link'
 import ItemList from '#components/ui/itemList'
 import { Plus } from 'lucide-react'
 import { getGreeting } from '#hooks/getGreeting'
-import { useMyProfileQuery } from '#apis/userClient'
+import { useGetUserInfoClient } from '#apis/userClient'
 import { useCurrentMonthPaymentTotal } from '#hooks/useTotalPayment'
 import { Skeleton } from '#components/_common/Skeleton'
 
-export default function Page() {
-  const { data: userInfo, isLoading } = useMyProfileQuery()
+export default function AuthenficatedPage() {
+  const { data: userInfo, isLoading } = useGetUserInfoClient()
   const nickName = userInfo?.nickName
   const monthlyTotal = useCurrentMonthPaymentTotal()
 

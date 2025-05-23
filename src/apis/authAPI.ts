@@ -3,36 +3,8 @@
 import { BASE_URL } from '#constants/url'
 import type { userInfo } from '#types/user'
 
-// 회원가입 post
-// export async function register({
-//   email,
-//   password,
-//   nickName,
-//   alarm = true,
-// }: Omit<userInfo, 'nickName'> & { password: string; nickName: string }) {
-//   const response = await fetch(`${BASE_URL}/api/users/signup`, {
-//     method: 'POST',
-//     credentials: 'include',
-//     headers: { 'Content-Type': 'application/json' },
-//     body: JSON.stringify({ email, password, nickName, alarm }),
-//   })
-
-//   if (!response.ok) {
-//     const errorData = await response.json()
-//     throw new Error(errorData.message || '회원가입 요청 실패')
-//   }
-
-//   const data = await response.json()
-
-//   if (data.status !== '100 CONTINUE') {
-//     throw new Error('회원가입 실패. 다시 시도해주세요.')
-//   }
-
-//   return data
-// }
-
 // 로그인 post
-export async function useLogin({
+export async function Login({
   email,
   password,
 }: {
@@ -62,7 +34,7 @@ export async function useLogin({
 }
 
 // 회원가입 인증번호 검증 post
-export async function verifyRegisterCode({
+export async function verifyOTP({
   email,
   certificationNumber,
 }: {
@@ -87,7 +59,7 @@ export async function verifyRegisterCode({
 }
 
 // 비밀번호 찾기 인증번호 검증 post
-export async function verifyPasswordCode({
+export async function verifyPasswordOTP({
   email,
   certificationNumber,
 }: {

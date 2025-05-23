@@ -11,7 +11,7 @@ import {
   serviceNameLabels,
 } from '#types/subscription'
 import { KNOWN_SERVICES } from '#constants/knownServices'
-import { usePatchPaymentStatus } from '#apis/subscriptionClient'
+import { usePatchPaymentStatusClient } from '#apis/subscriptionClient'
 
 type Props = {
   item: SubscriptionContents
@@ -21,7 +21,7 @@ export default function ItemCard({ item }: Props) {
   const service = KNOWN_SERVICES.find((s) => s.id === item.subscription)
   const iconUrl = service?.iconUrl ?? ''
 
-  const patchStatus = usePatchPaymentStatus()
+  const patchStatus = usePatchPaymentStatusClient()
 
   const swipeHandlers = useSwipeable({
     onSwipedRight: () => {

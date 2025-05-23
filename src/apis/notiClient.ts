@@ -2,13 +2,8 @@
 
 'use client'
 
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import {
-  patchUserAlarm,
-  fetchNotifications,
-  markNotificationsAsRead,
-  deleteNotifications,
-} from './notiAPI'
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query'
+import { patchAlarm, getNotis, putNotis, deleteNotis } from '#apis/notiAPI'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import type { PageRequest } from '#types/notification'
 import { useIsLoggedInQuery } from '#hooks/useIsLoggedInQuery'
@@ -16,11 +11,11 @@ import { useUserId } from '#hooks/useUserId'
 import { FETCH_ALL } from '#constants/pagination'
 
 // 알림 상태 변경 patch
-export const useToggleAlarmMutation = () => {
+export const usepatchAlarmClient = () => {
   const { setUser } = useAuthStore()
 
   return useMutation({
-    mutationFn: patchUserAlarm,
+    mutationFn: patchAlarm,
     onSuccess: (response) => {
       const updatedAlarm = response.data.alarm
       const { user } = useAuthStore.getState()
@@ -38,6 +33,21 @@ export const useToggleAlarmMutation = () => {
   })
 }
 
+// 알림 조회 get
+export const useNotisClient = (pageRequest: PageRequest) => {
+  console.log('queryKey', [
+    'notifications',
+    'reminders',
+    pageRequest.lastId,
+    pageRequest.size,
+  ])
+  return useQuery({
+    queryKey: ['notifications', pageRequest],
+    queryFn: () => getNotis(pageRequest),
+    staleTime: Infinity,
+  })
+}
+
 // 알림 리스트 조회 get
 export const useNotifications = (pageRequest: PageRequest = FETCH_ALL) => {
   const userId = useUserId()
@@ -45,7 +55,7 @@ export const useNotifications = (pageRequest: PageRequest = FETCH_ALL) => {
   return useIsLoggedInQuery(
     ['notifications', userId, pageRequest.lastId, pageRequest.size],
     async () => {
-      const allNotifications = await fetchNotifications(pageRequest)
+      const allNotifications = await getNotis(pageRequest)
       const filteredContents = allNotifications.contents
 
       return {
@@ -55,22 +65,16 @@ export const useNotifications = (pageRequest: PageRequest = FETCH_ALL) => {
         hasNext: false,
       }
     },
-    {
-      enabled: !!userId,
-      staleTime: 1000 * 60 * 3,
-      placeholderData: undefined,
-      retry: 1,
-    },
   )
 }
 
 // 알림 읽음 처리 put
-export const useMarkAsRead = () => {
+export const usePutNotisClient = () => {
   const queryClient = useQueryClient()
   const userId = useUserId()
 
   return useMutation({
-    mutationFn: markNotificationsAsRead,
+    mutationFn: putNotis,
     onSuccess: (_data, ids) => {
       queryClient.setQueryData(
         ['notifications', userId, FETCH_ALL.lastId, FETCH_ALL.size],
@@ -88,12 +92,12 @@ export const useMarkAsRead = () => {
 }
 
 // 알림 삭제 delete
-export const useDeleteNotification = () => {
+export const useDeleteNotis = () => {
   const queryClient = useQueryClient()
   const userId = useUserId()
 
   return useMutation({
-    mutationFn: deleteNotifications,
+    mutationFn: deleteNotis,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications', userId] })
     },

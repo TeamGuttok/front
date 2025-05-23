@@ -85,10 +85,10 @@ export type paymentStatus = keyof typeof paymentStatusLabels
 export interface SubscriptionRequest {
   title: string
   subscription: ServiceId
-  paymentAmount: number
+  paymentAmount: string
   paymentMethod: PaymentMethod
   paymentCycle: PaymentCycle
-  paymentDay: number
+  paymentDay: string
   memo?: string
 }
 

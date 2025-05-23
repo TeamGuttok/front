@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Input } from '#components/_common/Input'
 import { Button } from '#components/_common/Button'
 import { ErrorMessage } from '#components/_common/ErrorMessage'
-import { usePatchPasswordMutation } from '#apis/userClient'
+import { usePatchPasswordClient } from '#apis/userClient'
 import { passwordSchema } from '#schema/userSchema'
 import { CardTitle } from '#components/_common/CardTitle'
 import { SelectLabel, SelectGroup } from '#components/_common/Select'
@@ -16,7 +16,7 @@ export default function ResetPasswordPage() {
   const [errors, setErrors] = useState<string[]>([])
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
 
-  const { mutate: patchPassword, isPending } = usePatchPasswordMutation()
+  const { mutate: patchPassword, isPending } = usePatchPasswordClient()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()

@@ -1,8 +1,8 @@
 'use client'
 
 import CardTitle from '#components/_common/CardTitle'
-import { useNotifications } from '#apis/notiAPI'
-import { useMarkAsRead, useDeleteNotification } from '#apis/notiClient'
+import { useNotisClient } from '#apis/notiClient'
+import { usePutNotisClient, useDeleteNotis } from '#apis/notiClient'
 import { useToast } from '#hooks/useToast'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import { useRouter } from 'next/navigation'
@@ -30,8 +30,7 @@ export default function ClientNotification() {
 
   const size = 50
 
-  // [2] 알림 조회 API 요청
-  const { data, isLoading, error } = useNotifications({
+  const { data, isLoading, error } = useNotisClient({
     lastId,
     size,
   })
@@ -48,8 +47,8 @@ export default function ClientNotification() {
     }
   }, [data])
 
-  const { mutate: markAsReadAPI } = useMarkAsRead()
-  const { mutate: deleteAPI } = useDeleteNotification()
+  const { mutate: markAsReadAPI } = usePutNotisClient()
+  const { mutate: deleteAPI } = useDeleteNotis()
 
   return (
     <CardTitle>

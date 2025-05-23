@@ -28,7 +28,7 @@ export async function searchService(name: string) {
 }
 
 // 구독 서비스 생성 (post)
-export const useCreateSubscription = () => {
+export const createItems = () => {
   const queryClient = useQueryClient()
   const userId = useUserId()
 
@@ -58,7 +58,7 @@ export const useCreateSubscription = () => {
 }
 
 // 구독서비스 조회 api (get)
-export async function getSubscriptions(
+export async function getItems(
   pageRequest: { lastId: number; size: number } = FETCH_ALL,
 ) {
   const query = new URLSearchParams({
@@ -86,7 +86,7 @@ export async function getSubscriptions(
 }
 
 // 구독서비스 수정 api (patch)
-export const updataSubscription = async (
+export const patchItems = async (
   id: number,
   payload: Partial<SubscriptionContents>,
 ) => {
@@ -108,7 +108,7 @@ export const updataSubscription = async (
 }
 
 // 구독 서비스 삭제 api (delete)
-export const deleteSubscription = async (id: number) => {
+export const deleteItems = async (id: number) => {
   const res = await fetch(`${BASE_URL}/api/subscriptions/${id}`, {
     method: 'DELETE',
     credentials: 'include',

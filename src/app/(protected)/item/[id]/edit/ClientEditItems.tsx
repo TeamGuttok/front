@@ -25,10 +25,7 @@ import {
 } from '#types/subscription'
 import { groupClassName, inputClassName, labelClassName } from '#style/style'
 import { useEffect } from 'react'
-import {
-  useUpdateSubscription,
-  useSubscriptionItem,
-} from '#apis/subscriptionClient'
+import { useUpdateItems, useGetDetailClient } from '#apis/subscriptionClient'
 import { Textarea } from '#components/_common/TextArea'
 
 export default function Page() {
@@ -39,9 +36,9 @@ export default function Page() {
     data: item,
     isLoading,
     error,
-  } = useSubscriptionItem(String(subscriptionId))
+  } = useGetDetailClient(String(subscriptionId))
 
-  const patchMutation = useUpdateSubscription()
+  const patchMutation = useUpdateItems()
   const { selectedService } = useServiceStore()
   const { subscriptionData } = useSubscriptionStore()
 
@@ -167,9 +164,7 @@ export default function Page() {
                 aria-labelledby="subscriptionAmount"
                 aria-describedby="subscriptionAmount-required"
                 value={paymentAmount}
-                onChange={(e) =>
-                  updateField('paymentAmount', Number(e.target.value))
-                }
+                onChange={(e) => updateField('paymentAmount', e.target.value)}
                 placeholder="금액을 입력하세요"
                 className={cn(inputClassName)}
               />
@@ -227,9 +222,7 @@ export default function Page() {
                   </SelectTrigger>
                 </Select>
                 <Select
-                  onValueChange={(value) =>
-                    updateField('paymentDay', Number(value))
-                  }
+                  onValueChange={(value) => updateField('paymentDay', value)}
                 >
                   <SelectTrigger
                     id="paymentDay"
@@ -242,7 +235,7 @@ export default function Page() {
                   >
                     {
                       paymentDayOptions.find(
-                        (option) => option.value === paymentDay,
+                        (option) => String(option.value) === paymentDay,
                       )?.label
                     }
                     <SelectContent
@@ -287,6 +280,7 @@ export default function Page() {
                 onValueChange={(value) => updateField('paymentMethod', value)}
               >
                 <SelectTrigger
+                  aria-placeholder="결제수단을 선택하세요"
                   id="paymentMethod"
                   aria-labelledby="paymentMethodLabel"
                   role="combobox"

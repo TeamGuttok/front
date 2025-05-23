@@ -7,7 +7,7 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query'
 import { toast } from '#hooks/useToast'
-import { useMyProfileQuery } from '#apis/userClient'
+import { useGetUserInfoClient } from '#apis/userClient'
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -44,6 +44,6 @@ export default function QueryProvider({ children }: { children: ReactNode }) {
 }
 
 function WrappedWithUserProfile({ children }: { children: ReactNode }) {
-  useMyProfileQuery()
+  useGetUserInfoClient()
   return <>{children}</>
 }

@@ -15,7 +15,7 @@ import {
 } from '#components/_common/Select'
 import CardTitle from '#components/_common/CardTitle'
 import { useSubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
-import { useCreateSubscription } from '#apis/subscriptionAPI'
+import { createItems } from '#apis/subscriptionAPI'
 import { SubscriptionRequest } from '#types/subscription'
 import { KNOWN_SERVICES } from '#constants/knownServices'
 import { groupClassName, labelClassName, inputClassName } from '#style/style'
@@ -25,8 +25,7 @@ import { useAuthStore } from '#stores/auth/useAuthStore'
 
 export default function ClientDetailItems() {
   const router = useRouter()
-  const mutation = useCreateSubscription()
-  const userId = useAuthStore((state) => state.user?.id)
+  const mutation = createItems()
 
   const {
     subscriptionData,

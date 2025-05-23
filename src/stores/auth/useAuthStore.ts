@@ -37,7 +37,7 @@ export const useAuthStore = create<AuthState>()(
 
       login: (user) => {
         const userId = String(user.id)
-        useSubscriptionStore.getState().loadSubscriptionDataForUser(userId)
+        useSubscriptionStore.getState().getSubscriptionDataForUser(userId)
 
         // useSubscriptionStore.getState().resetSubscriptionData()
         set({

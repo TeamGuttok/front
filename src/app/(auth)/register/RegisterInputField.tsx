@@ -3,9 +3,9 @@ import { useAuthStore } from '#stores/auth/useAuthStore'
 import { Input } from '#components/_common/Input'
 import { Button } from '#components/_common/Button'
 import OTPForm from '#components/ui/OTPForm'
-import { useSendCertificationCode, useVerifyOTP } from '#apis/authClient'
+import { useSendCodeClient, useVerifyOTPClient } from '#apis/authClient'
 import { emailSchema } from '#schema/userSchema'
-import { groupClassName, labelClassName, inputClassName } from '#style/style'
+import { groupClassName, labelClassName } from '#style/style'
 import { cn } from '#components/lib/utils'
 import { SelectLabel, SelectGroup } from '#components/_common/Select'
 import { ErrorMessage } from '#components/_common/ErrorMessage'
@@ -36,8 +36,8 @@ export default function RegisterInputField({
     mutate: sendCertificationCode,
     isPending,
     isSuccess,
-  } = useSendCertificationCode()
-  const verifyMutation = useVerifyOTP()
+  } = useSendCodeClient()
+  const verifyMutation = useVerifyOTPClient()
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value

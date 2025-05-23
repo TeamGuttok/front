@@ -3,12 +3,12 @@
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import { useMutation } from '@tanstack/react-query'
 import { BASE_URL } from '#constants/url'
-import { verifyRegisterCode, verifyPasswordCode } from './authAPI'
+import { verifyOTP, verifyPasswordOTP } from '#apis/authAPI'
 import type { userInfo, LoginInput } from '#types/user'
 import { queryClient } from '#contexts/QueryProvider'
 
 // 회원가입 post
-export const useRegister = () => {
+export const useRegisterClient = () => {
   return useMutation({
     mutationFn: async ({
       email,
@@ -111,7 +111,7 @@ export const useLogoutClient = () => {
 }
 
 // 인증번호 발송 post
-export const useSendCertificationCode = () => {
+export const useSendCodeClient = () => {
   return useMutation({
     mutationFn: async (email: string) => {
       const res = await fetch(`${BASE_URL}/api/mail/certification`, {
@@ -130,7 +130,7 @@ export const useSendCertificationCode = () => {
 }
 
 // 회원가입 인증번호 검증 post
-export function useVerifyOTP() {
+export function useVerifyOTPClient() {
   return useMutation({
     mutationFn: ({
       email,
@@ -138,12 +138,12 @@ export function useVerifyOTP() {
     }: {
       email: string
       certificationNumber: string
-    }) => verifyRegisterCode({ email, certificationNumber }),
+    }) => verifyOTP({ email, certificationNumber }),
   })
 }
 
 // 비밀번호 찾기 인증번호 검증 post
-export function usePasswordOTP() {
+export function usePasswordOTPClient() {
   return useMutation({
     mutationFn: ({
       email,
@@ -151,6 +151,6 @@ export function usePasswordOTP() {
     }: {
       email: string
       certificationNumber: string
-    }) => verifyPasswordCode({ email, certificationNumber }),
+    }) => verifyPasswordOTP({ email, certificationNumber }),
   })
 }

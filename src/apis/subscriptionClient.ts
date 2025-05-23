@@ -2,18 +2,14 @@
 
 import { BASE_URL } from '#constants/url'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import {
-  getSubscriptions,
-  updataSubscription,
-  deleteSubscription,
-} from '#apis/subscriptionAPI'
+import { getItems, patchItems, deleteItems } from '#apis/subscriptionAPI'
 import { paymentStatus, SubscriptionContents } from '#types/subscription'
 import { useIsLoggedInQuery } from '#hooks/useIsLoggedInQuery'
 import { useUserId } from '#hooks/useUserId'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 
 // 전체 서비스 조회 (/)
-export const useSubscriptionsClient = (
+export const useGetItemsClient = (
   lastId = Number.MAX_SAFE_INTEGER,
   size = Number.MAX_SAFE_INTEGER,
 ) => {
@@ -22,7 +18,7 @@ export const useSubscriptionsClient = (
 
   return useIsLoggedInQuery(
     ['subscriptions', userId, userEmail],
-    () => getSubscriptions({ lastId, size }),
+    () => getItems({ lastId, size }),
     {
       enabled: !!userId && !!userEmail,
     },
@@ -30,7 +26,7 @@ export const useSubscriptionsClient = (
 }
 
 // 구독 서비스 개별 조회 (/detail)
-export function useSubscriptionItem(
+export function useGetDetailClient(
   id: string,
   options?: { enabled?: boolean },
 ) {
@@ -39,7 +35,7 @@ export function useSubscriptionItem(
   return useIsLoggedInQuery(
     ['subscription', userId, id],
     async () => {
-      const data = await getSubscriptions()
+      const data = await getItems()
       return data.contents.find((i) => String(i.id) === id) ?? null
     },
     {
@@ -49,7 +45,7 @@ export function useSubscriptionItem(
 }
 
 // 구독 서비스 수정 (patch)
-export const useUpdateSubscription = () => {
+export const useUpdateItems = () => {
   const queryClient = useQueryClient()
   const userId = useUserId()
 
@@ -60,7 +56,7 @@ export const useUpdateSubscription = () => {
     }: {
       id: number
       payload: Partial<SubscriptionContents>
-    }) => updataSubscription(id, payload),
+    }) => patchItems(id, payload),
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['subscriptions', userId] })
@@ -69,12 +65,12 @@ export const useUpdateSubscription = () => {
 }
 
 // 결제 서비스 삭제 (delete)
-export function useDeleteSubscription() {
+export function useDeleteItems() {
   const queryClient = useQueryClient()
   const userId = useUserId()
 
   return useMutation({
-    mutationFn: ({ id }: { id: number }) => deleteSubscription(id),
+    mutationFn: ({ id }: { id: number }) => deleteItems(id),
 
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: ['subscriptions', userId] })
@@ -84,7 +80,7 @@ export function useDeleteSubscription() {
 }
 
 // 결제완료/대기 상태 변경 hook (수정 patch)
-export function usePatchPaymentStatus() {
+export function usePatchPaymentStatusClient() {
   const queryClient = useQueryClient()
   const userId = useUserId()
 

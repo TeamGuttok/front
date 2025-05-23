@@ -9,7 +9,7 @@ import { Button } from '#components/_common/Button'
 import { buttonClassName, getIconClassName } from '#style/style'
 import { usePathname } from 'next/navigation'
 
-export default function Home() {
+export default function UnauthenticatedPage() {
   const pathname = usePathname()
 
   return (
