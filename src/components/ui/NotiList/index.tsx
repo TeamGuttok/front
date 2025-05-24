@@ -31,7 +31,7 @@ export default function NotiList({
   }
 
   return (
-    <div className="grid grid-cols-1 gap-3 cursor-pointer">
+    <div className="grid grid-cols-1 gap-3 cursor-pointer mb-5">
       {notifications.map((item) => (
         <NotiCard
           key={item.id}

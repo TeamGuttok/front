@@ -8,7 +8,7 @@ import {
 } from '#components/_common/InputOtp'
 import { cn } from '#components/lib/utils'
 import { Button } from '#components/_common/Button'
-import { useSendCertificationCode } from '#apis/authClient'
+import { useSendCodeClient } from '#apis/authClient'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import type { UseMutationResult } from '@tanstack/react-query'
 import { toast } from '#hooks/useToast'
@@ -43,7 +43,7 @@ export default function OTPForm({
   const [startTime, setStartTime] = useState(() => performance.now())
   const [isSubmitted, setIsSubmitted] = useState(false)
 
-  const { mutate: resendCertificationCode } = useSendCertificationCode()
+  const { mutate: resendCertificationCode } = useSendCodeClient()
 
   useEffect(() => {
     setOtp('')
@@ -145,7 +145,7 @@ export default function OTPForm({
   }
 
   return (
-    <div className={cn('space-y-8', className)}>
+    <div className={cn('space-y-8 mb-4', className)}>
       <div className="text-center">
         <p className="text-md text-sub">
           <span className="font-semibold">{email}</span> 로 전송된 코드를 입력해
@@ -164,6 +164,7 @@ export default function OTPForm({
           onChange={(value) => setOtp(value)}
           containerClassName="justify-center"
           disabled={isLoading || timeLeft === 0}
+          inputMode="text"
         >
           <InputOTPGroup>
             {Array.from({ length: 6 }).map((_, index) => (
@@ -176,7 +177,7 @@ export default function OTPForm({
           type="button"
           onClick={handleVerifyOTP}
           disabled={isLoading || otp.length !== 6}
-          className="w-32 mt-10"
+          className="w-32 mt-5"
         >
           {timeLeft === 0
             ? '재요청'

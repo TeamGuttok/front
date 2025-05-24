@@ -12,7 +12,6 @@ import { useMemo, useState, useEffect } from 'react'
 
 export default function ClientNotification() {
   const router = useRouter()
-  const { toast } = useToast()
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
   const [notifications, setNotifications] = useState<any[]>([])
 
@@ -51,13 +50,11 @@ export default function ClientNotification() {
   const { mutate: deleteAPI } = useDeleteNotis()
 
   return (
-    <CardTitle>
+    <div className="mx-auto p-4 flex flex-col min-h-[calc(100vh-4.5rem)] pb-[3rem]">
       <CardTitle.Heading>알림</CardTitle.Heading>
       <CardTitle.Divider />
 
-      <div className="flex-1 overflow-auto my-7">
-        <div className="grid grid-cols-1 gap-3 cursor-pointer mb-5"></div>
-
+      <div className="flex-1 overflow-auto my-6">
         <div className="grid grid-cols-1 gap-3 cursor-pointer">
           <NotiList
             notifications={data?.contents ?? []}
@@ -68,6 +65,6 @@ export default function ClientNotification() {
           />
         </div>
       </div>
-    </CardTitle>
+    </div>
   )
 }
