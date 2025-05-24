@@ -107,7 +107,7 @@ export default function Page() {
     <CardTitle>
       <CardTitle.Heading>구독 서비스 수정</CardTitle.Heading>
       <CardTitle.Divider />
-      <div className="flex flex-col justify-center items-center my-8">
+      <div className="flex flex-col justify-center items-center my-8 font-medium">
         <form className="grid grid-cols-1 gap-4">
           <div className="grid grid-cols-1 flex-col gap-2 sm:gap-4">
             <SelectGroup className={cn(groupClassName)}>

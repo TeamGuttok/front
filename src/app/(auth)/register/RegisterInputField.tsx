@@ -131,15 +131,15 @@ export default function RegisterInputField({
       </SelectGroup>
       <ErrorMessage errors={errorEmail} className="ml-2" />
 
-      {isOTPOpen && (
-        <OTPForm
-          email={email}
-          resetTrigger={otpReset}
-          onSuccess={handleOtpSuccess}
-          className="space-y-4"
-          verifyMutation={verifyMutation}
-        />
-      )}
+      {/* {isOTPOpen && ( */}
+      <OTPForm
+        email={email}
+        resetTrigger={otpReset}
+        onSuccess={handleOtpSuccess}
+        className="space-y-4"
+        verifyMutation={verifyMutation}
+      />
+      {/* )} */}
     </>
   )
 }

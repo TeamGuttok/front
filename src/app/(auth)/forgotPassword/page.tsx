@@ -5,7 +5,7 @@ import { Input } from '#components/_common/Input'
 import { ErrorMessage } from '#components/_common/ErrorMessage'
 import { Button } from '#components/_common/Button'
 import OTPForm from '#components/ui/OTPForm'
-import { usePasswordOTP, useSendCertificationCode } from '#apis/authClient'
+import { usePasswordOTPClient, useSendCodeClient } from '#apis/authClient'
 import { emailSchema } from '#schema/userSchema'
 import { SelectLabel, SelectGroup } from '#components/_common/Select'
 import { groupClassName, labelClassName, inputClassName } from '#style/style'
@@ -15,7 +15,7 @@ import { PATH } from '#app/routes'
 import { CardTitle } from '#components/_common/CardTitle'
 
 export default function ForgotPassword() {
-  const passwordOTP = usePasswordOTP()
+  const passwordOTP = usePasswordOTPClient()
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [errors, setErrors] = useState<Record<string, string[]> | null>(null)
@@ -24,7 +24,7 @@ export default function ForgotPassword() {
   const [otpReset, setOtpReset] = useState(0)
 
   const { mutate: sendCertificationCode, isPending: isSending } =
-    useSendCertificationCode()
+    useSendCodeClient()
 
   const handleRequestOTP = () => {
     const parsed = emailSchema.safeParse({ email })

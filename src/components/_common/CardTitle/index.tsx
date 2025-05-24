@@ -1,25 +1,15 @@
 import * as React from 'react'
-import { cn } from '#components/lib/utils'
 
 interface TitleProps {
-  // className?: string
   children: React.ReactNode
 }
 
 export default function CardTitle({ children }: TitleProps) {
   return (
-    // <div className="flex flex-col items-center sm:m-auto ">
     <div className="sm:-translate-y-12 lg:mt-10 flex flex-col items-center sm:m-auto mx-auto mt-8 sm:px-28 sm:py-20 sm:rounded-md sm:border sm:border-border mb-20">
       <hr className="w-full h-[1px] bg-border sm:display-none" />
-      {/* <div className="flex flex-col justify-center items-center w-full mt-5"> */}
       {children}
-      {/* <hr className="w-full h-[1px] bg-border mt-5" /> */}
-      {/* <div className="flex flex-col items-center w-full mt-5"></div>
-          <div className="w-full h-[1px] bg-border mt-5"></div> */}
-      {/* <div className="w-full mt-5"></div> */}
     </div>
-    //</div>
-    // </div>
   )
 }
 

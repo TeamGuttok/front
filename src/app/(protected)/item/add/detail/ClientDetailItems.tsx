@@ -4,7 +4,6 @@ import { useRouter } from 'next/navigation'
 import { Input } from '#components/_common/Input'
 import { Button } from '#components/_common/Button'
 import { cn } from '#components/lib/utils'
-import { useEffect } from 'react'
 import {
   Select,
   SelectTrigger,
@@ -21,7 +20,6 @@ import { KNOWN_SERVICES } from '#constants/knownServices'
 import { groupClassName, labelClassName, inputClassName } from '#style/style'
 import { Textarea } from '#components/_common/TextArea'
 import { PATH } from '#app/routes'
-import { useAuthStore } from '#stores/auth/useAuthStore'
 
 export default function ClientDetailItems() {
   const router = useRouter()
@@ -97,26 +95,12 @@ export default function ClientDetailItems() {
     })
   }
 
-  // useEffect(() => {
-  //   const handleBeforeUnload = () => {
-  //     if (userId) {
-  //       saveSubscriptionDataForUser(String(userId))
-  //     }
-  //   }
-
-  //   window.addEventListener('beforeunload', handleBeforeUnload)
-  //   return () => {
-  //     handleBeforeUnload()
-  //     window.removeEventListener('beforeunload', handleBeforeUnload)
-  //   }
-  // }, [userId])
-
   return (
     <CardTitle>
       <CardTitle.Heading>구독 서비스 세부설정</CardTitle.Heading>
       <CardTitle.Divider />
 
-      <div className="flex flex-col justify-center items-center my-8">
+      <div className="flex flex-col justify-center items-center my-8 font-medium">
         <form className="grid grid-cols-1 gap-4" onSubmit={handleSave}>
           <div className="grid grid-cols-1 flex-col gap-2 sm:gap-4">
             <SelectGroup className={cn(groupClassName)}>
@@ -146,7 +130,9 @@ export default function ClientDetailItems() {
                   }
                 }}
                 readOnly={!isCustom}
-                placeholder={isCustom ? '구독명을 입력하세요' : computedTitle}
+                placeholder={
+                  isCustom ? '예: 넷플릭스, 유튜브 프리미엄' : computedTitle
+                }
                 className={cn(inputClassName)}
               />
             </SelectGroup>
@@ -220,7 +206,7 @@ export default function ClientDetailItems() {
                     }
                     <SelectContent
                       id="paymentCycle-options"
-                      className="border px-2 py-1 mr-10 rounded-md dark:text-black"
+                      className="border px-2 py-1 mr-10 rounded-md sm:text-base dark:text-black"
                     >
                       {paymentCycleOptions.map(({ value, label }) => (
                         <SelectItem key={value} value={value}>
@@ -251,7 +237,7 @@ export default function ClientDetailItems() {
                     }
                     <SelectContent
                       id="paymentDay"
-                      className="border px-2 py-1 mr-10 rounded-md dark:text-black block"
+                      className="border px-2 py-1 mr-10 rounded-md sm:text-base dark:text-black block"
                     >
                       {paymentDayOptions.map(({ value, label }) => (
                         <SelectItem key={value} value={String(value)}>
@@ -291,6 +277,7 @@ export default function ClientDetailItems() {
                 onValueChange={(value) => updateField('paymentMethod', value)}
               >
                 <SelectTrigger
+                  aria-placeholder="결제수단을 선택하세요"
                   id="paymentMethod"
                   aria-labelledby="paymentMethodLabel"
                   role="combobox"
@@ -299,11 +286,15 @@ export default function ClientDetailItems() {
                   className="w-[12.5rem] sm:max-w-[12.5rem] sm:min-w-[12.5rem] 
                 pl-2 flex tracking-wide text-lg font-medium text-nowrap"
                 >
-                  {
+                  {paymentMethod ? (
                     paymentMethodOptions.find(
                       (option) => option.value === paymentMethod,
                     )?.label
-                  }
+                  ) : (
+                    <span className="sm:text-sm text-muted-foreground">
+                      결제수단을 선택하세요
+                    </span>
+                  )}
                   <SelectContent
                     id="paymentMethod"
                     className="border rounded-md px-2 py-1 dark:text-black block"
