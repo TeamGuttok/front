@@ -2,7 +2,6 @@
 
 import { BASE_URL } from '#constants/url'
 import type { PageRequest, NotificationResponse } from '#types/notification'
-import { useQuery, useMutation } from '@tanstack/react-query'
 
 // 알림 조회 get
 export const getNotis = async (

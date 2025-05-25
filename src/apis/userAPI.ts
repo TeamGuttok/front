@@ -13,6 +13,10 @@ export const getUserInfo = async (): Promise<userInfo> => {
     },
   })
 
+  if (!res.ok && res.status === 401) {
+    throw new Error('로그인 세션이 만료되었습니다. 다시 로그인해주세요.')
+  }
+
   if (!res.ok) {
     throw new Error('유저 정보 불러오기 실패')
   }
@@ -20,6 +24,31 @@ export const getUserInfo = async (): Promise<userInfo> => {
   const json = await res.json()
   return json.data as userInfo
 }
+
+// 세션 체크 get
+// export const checkSession = async (): Promise<void> => {
+//   const response = await fetch(`${BASE_URL}/api/users/check-session`, {
+//     method: 'GET',
+//     credentials: 'include',
+//     headers: {
+//       Accept: '*/*',
+//     },
+//   })
+
+//   if (response.status === 401) {
+//     throw new Error('세션 만료')
+//   }
+
+//   if (!response.ok) {
+//     let errorData: { message?: string } = {}
+//     try {
+//       errorData = await response.json()
+//     } catch {
+//       errorData = { message: '응답 본문 없음' }
+//     }
+//     throw new Error(errorData.message || '세션 확인 실패')
+//   }
+// }
 
 // 닉네임 변경 patch
 export const patchNickname = async (nickName: string) => {

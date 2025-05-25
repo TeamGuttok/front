@@ -1,6 +1,6 @@
 'use client'
 
-import { useMutation, UseQueryOptions } from '@tanstack/react-query'
+import { useMutation, UseQueryOptions, useQuery } from '@tanstack/react-query'
 import {
   getUserInfo,
   patchNickname,
@@ -16,31 +16,53 @@ import { useIsLoggedInQuery } from '#hooks/useIsLoggedInQuery'
 import { useUserId } from '#hooks/useUserId'
 
 // 마이페이지 조회 get
-export const useGetUserInfoClient = (
-  options?: Partial<UseQueryOptions<userInfo>>,
-) => {
+export const useGetUserInfoClient = () => {
   const { setUser } = useAuthStore()
-  const userId = useUserId()
 
-  return useIsLoggedInQuery(
-    ['myProfile', userId],
-    async () => {
-      const data = await getUserInfo()
+  const { mutate, data, isPending, isSuccess, isError, error } = useMutation({
+    mutationFn: getUserInfo,
+    onSuccess: (data: userInfo) => {
       setUser({
         id: data.id,
         email: data.email,
         nickName: data.nickName,
         alarm: data.alarm,
       })
-      return data
     },
-    {
-      staleTime: 1000 * 60 * 5,
-      retry: 1,
-      ...options,
-    },
-  )
+  })
+
+  return {
+    getUserInfoClient: mutate,
+    data,
+    isLoading: isPending,
+    isSuccess,
+    isError,
+    error,
+  }
 }
+
+// 세션 체크 get
+// export const useCheckSessionClient = () => {
+//   const logout = useAuthStore((state) => state.logout)
+//   const router = useRouter()
+
+//   const { mutate, isPending } = useMutation({
+//     mutationFn: checkSession,
+//     onError: (error) => {
+//       if (error instanceof Error && error.message === '세션 만료') {
+//         logout()
+//         router.replace(PATH.main)
+//       } else {
+//         console.error('세션 확인 실패:', error)
+//       }
+//     },
+//   })
+
+//   return {
+//     checkSession: mutate,
+//     isChecking: isPending,
+//   }
+// }
 
 // 닉네임 변경 patch
 export const usePatchNicknameClient = () => {
@@ -66,7 +88,7 @@ export const usePatchPasswordClient = () => {
 }
 
 // 탈퇴 delete
-export const useDeleteUser = () => {
+export const useDeleteUserClient = () => {
   const { logout } = useAuthStore()
   const router = useRouter()
 

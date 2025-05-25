@@ -9,11 +9,54 @@ import { getGreeting } from '#hooks/getGreeting'
 import { useGetUserInfoClient } from '#apis/userClient'
 import { useCurrentMonthPaymentTotal } from '#hooks/useTotalPayment'
 import { Skeleton } from '#components/_common/Skeleton'
+import { useEffect } from 'react'
+import { toast } from '#hooks/useToast'
+import { useRouter } from 'next/navigation'
+import { useAuthStore } from '#stores/auth/useAuthStore'
 
 export default function AuthenficatedPage() {
-  const { data: userInfo, isLoading } = useGetUserInfoClient()
+  const {
+    data: userInfo,
+    getUserInfoClient,
+    isLoading,
+    isError,
+    error,
+  } = useGetUserInfoClient()
+  const logout = useAuthStore((state) => state.logout)
+  const router = useRouter()
+
+  useEffect(() => {
+    getUserInfoClient(undefined, {
+      onError: (error) => {
+        if (
+          error.message.includes('SESSION') ||
+          error.message.includes('401')
+        ) {
+          logout()
+          router.replace(PATH.main)
+          toast({
+            variant: 'destructive',
+            description: '30분 동안 활동이 없어 로그아웃 되었습니다.',
+          })
+        }
+      },
+    })
+  }, [])
   const nickName = userInfo?.nickName
   const monthlyTotal = useCurrentMonthPaymentTotal()
+
+  // useEffect(() => {
+  //   checkSession(undefined, {
+  //     onError: (error) => {
+  //       if (error.message === '세션 만료') {
+  //         toast({
+  //           variant: 'destructive',
+  //           description: '30분 동안 활동이 없어 로그아웃 되었습니다.',
+  //         })
+  //       }
+  //     },
+  //   })
+  // }, [checkSession])
 
   if (isLoading) {
     return (

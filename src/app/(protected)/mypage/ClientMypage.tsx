@@ -9,7 +9,7 @@ import { useState, useEffect } from 'react'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import useTheme from '#contexts/ThemeProvider/hook'
 import { usepatchAlarmClient } from '#apis/notiClient'
-import { useGetUserInfoClient, useDeleteUser } from '#apis/userClient'
+import { useGetUserInfoClient, useDeleteUserClient } from '#apis/userClient'
 import { ConfirmDialog } from '#components/ui/ConfirmDialog'
 import { useHandleLogout } from '#hooks/useHandleLogout'
 import { cn } from '#components/lib/utils'
@@ -23,14 +23,12 @@ export default function ClientMypage() {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
 
   const {
+    getUserInfoClient,
     data: getMypage,
     isError: isProfileError,
-    refetch,
-  } = useGetUserInfoClient({
-    enabled: isLoggedIn,
-  })
+  } = useGetUserInfoClient()
   const { mutate: deleteAccount, isPending: isDeletingAccount } =
-    useDeleteUser()
+    useDeleteUserClient()
   const { mutate: toggleAlarm, isPending: isTogglingAlarm } =
     usepatchAlarmClient()
 
@@ -93,7 +91,7 @@ export default function ClientMypage() {
               onCheckedChange={() =>
                 toggleAlarm(undefined, {
                   onSuccess: async () => {
-                    await refetch()
+                    await getUserInfoClient()
                     const willSubscribe = !getMypage?.alarm
                     toast({
                       description: willSubscribe

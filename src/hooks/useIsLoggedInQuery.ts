@@ -6,6 +6,7 @@ import {
 } from '@tanstack/react-query'
 import { useMemo } from 'react'
 
+// 로그인 상태에서만 useQuery 실행
 export function useIsLoggedInQuery<
   TQueryFnData,
   TError,

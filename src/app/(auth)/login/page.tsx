@@ -52,11 +52,11 @@ export default function Login() {
 
   // TODO
   // [ ] 미들웨어 연결 후 삭제 (for SEO)
-  useEffect(() => {
-    if (isLoggedIn) {
-      router.replace(PATH.main)
-    }
-  }, [isLoggedIn, router])
+  // useEffect(() => {
+  //   if (isLoggedIn) {
+  //     router.replace(PATH.main)
+  //   }
+  // }, [isLoggedIn, router])
 
   return (
     <CardTitle>
