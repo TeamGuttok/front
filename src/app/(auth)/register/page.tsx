@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Input } from '#components/_common/Input'
 import { Button } from '#components/_common/Button'
 import { ErrorMessage } from '#components/_common/ErrorMessage'
-import RegisterInputField from './RegisterInputField'
+import RegisterEmail from '#components/ui/RegisterEmail'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import { registerSchema } from '#schema/userSchema'
 import { useRegisterClient } from '#apis/authClient'
@@ -100,7 +100,7 @@ export default function Register() {
           </SelectGroup>
           <ErrorMessage errors={error?.nickName} className="ml-2" />
 
-          <RegisterInputField
+          <RegisterEmail
             email={user?.email ?? ''}
             onChangeEmail={(e) => setUser({ ...user, email: e.target.value })}
             errorEmail={error?.email}

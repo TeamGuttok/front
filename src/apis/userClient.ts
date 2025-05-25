@@ -1,6 +1,6 @@
 'use client'
 
-import { useMutation, UseQueryOptions } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import {
   getUserInfo,
   patchNickname,
@@ -12,34 +12,33 @@ import { useRouter } from 'next/navigation'
 import { PATH } from '#app/routes'
 import { userInfo } from '#types/user'
 import { toast } from '#hooks/useToast'
-import { useIsLoggedInQuery } from '#hooks/useIsLoggedInQuery'
-import { useUserId } from '#hooks/useUserId'
+// import { useIsLoggedInQuery } from '#hooks/useIsLoggedInQuery'
+// import { useUserId } from '#hooks/useUserId'
 
 // 마이페이지 조회 get
-export const useGetUserInfoClient = (
-  options?: Partial<UseQueryOptions<userInfo>>,
-) => {
+export const useGetUserInfoClient = () => {
   const { setUser } = useAuthStore()
-  const userId = useUserId()
 
-  return useIsLoggedInQuery(
-    ['myProfile', userId],
-    async () => {
-      const data = await getUserInfo()
+  const { mutate, data, isPending, isSuccess, isError, error } = useMutation({
+    mutationFn: getUserInfo,
+    onSuccess: (data: userInfo) => {
       setUser({
         id: data.id,
         email: data.email,
         nickName: data.nickName,
         alarm: data.alarm,
       })
-      return data
     },
-    {
-      staleTime: 1000 * 60 * 5,
-      retry: 1,
-      ...options,
-    },
-  )
+  })
+
+  return {
+    getUserInfoClient: mutate,
+    data,
+    isLoading: isPending,
+    isSuccess,
+    isError,
+    error,
+  }
 }
 
 // 닉네임 변경 patch
@@ -66,7 +65,7 @@ export const usePatchPasswordClient = () => {
 }
 
 // 탈퇴 delete
-export const useDeleteUser = () => {
+export const useDeleteUserClient = () => {
   const { logout } = useAuthStore()
   const router = useRouter()
 

@@ -66,7 +66,7 @@ export async function verifyPasswordOTP({
   email: string
   certificationNumber: string
 }) {
-  const response = await fetch(`${BASE_URL}/api/users/certification-number`, {
+  const res = await fetch(`${BASE_URL}/api/users/certification-number`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -75,10 +75,10 @@ export async function verifyPasswordOTP({
     body: JSON.stringify({ email, certificationNumber }),
   })
 
-  if (!response.ok) {
-    const errorData = await response.json()
+  if (!res.ok) {
+    const errorData = await res.json()
     throw new Error(errorData.message || '비밀번호 찾기 인증 실패')
   }
 
-  return response.json()
+  return res.json()
 }

@@ -9,7 +9,7 @@ import { useState, useEffect } from 'react'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import useTheme from '#contexts/ThemeProvider/hook'
 import { usepatchAlarmClient } from '#apis/notiClient'
-import { useGetUserInfoClient, useDeleteUser } from '#apis/userClient'
+import { useGetUserInfoClient, useDeleteUserClient } from '#apis/userClient'
 import { ConfirmDialog } from '#components/ui/ConfirmDialog'
 import { useHandleLogout } from '#hooks/useHandleLogout'
 import { cn } from '#components/lib/utils'
@@ -20,17 +20,16 @@ import { Switch } from '#components/_common/Switch'
 
 export default function ClientMypage() {
   const router = useRouter()
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
+  const isLoggedIn = useAuthStore()
 
   const {
+    getUserInfoClient,
     data: getMypage,
     isError: isProfileError,
-    refetch,
-  } = useGetUserInfoClient({
-    enabled: isLoggedIn,
-  })
+  } = useGetUserInfoClient()
+
   const { mutate: deleteAccount, isPending: isDeletingAccount } =
-    useDeleteUser()
+    useDeleteUserClient()
   const { mutate: toggleAlarm, isPending: isTogglingAlarm } =
     usepatchAlarmClient()
 
@@ -39,6 +38,19 @@ export default function ClientMypage() {
   const [showLogoutDialog, setShowLogoutDialog] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false)
   const handleLogout = useHandleLogout()
+
+  useEffect(() => {
+    getUserInfoClient(undefined, {
+      onError: (error) => {
+        console.error('유저 정보 불러오기 실패:', error)
+        toast({
+          variant: 'destructive',
+          description: '세션이 만료되었거나 유저 정보를 불러오지 못했습니다.',
+        })
+        router.push(PATH.main)
+      },
+    })
+  }, [getUserInfoClient, router])
 
   // TODO
   // [ ] 미들웨어 연결 후 삭제 (for SEO)
@@ -93,7 +105,7 @@ export default function ClientMypage() {
               onCheckedChange={() =>
                 toggleAlarm(undefined, {
                   onSuccess: async () => {
-                    await refetch()
+                    await getUserInfoClient()
                     const willSubscribe = !getMypage?.alarm
                     toast({
                       description: willSubscribe

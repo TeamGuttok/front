@@ -13,6 +13,10 @@ export const getUserInfo = async (): Promise<userInfo> => {
     },
   })
 
+  if (!res.ok && res.status === 401) {
+    throw new Error('로그인 세션이 만료되었습니다. 다시 로그인해주세요.')
+  }
+
   if (!res.ok) {
     throw new Error('유저 정보 불러오기 실패')
   }

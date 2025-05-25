@@ -9,9 +9,40 @@ import { getGreeting } from '#hooks/getGreeting'
 import { useGetUserInfoClient } from '#apis/userClient'
 import { useCurrentMonthPaymentTotal } from '#hooks/useTotalPayment'
 import { Skeleton } from '#components/_common/Skeleton'
+import { useEffect } from 'react'
+import { toast } from '#hooks/useToast'
+import { useRouter } from 'next/navigation'
+import { useAuthStore } from '#stores/auth/useAuthStore'
 
 export default function AuthenficatedPage() {
-  const { data: userInfo, isLoading } = useGetUserInfoClient()
+  const {
+    data: userInfo,
+    getUserInfoClient,
+    isLoading,
+  } = useGetUserInfoClient()
+  const { login, logout, setUser, isLoggedIn } = useAuthStore()
+  const router = useRouter()
+
+  useEffect(() => {
+    getUserInfoClient(undefined, {
+      onSuccess: (data) => {
+        login(data)
+      },
+      onError: (error) => {
+        if (
+          error.message.includes('SESSION') ||
+          error.message.includes('401')
+        ) {
+          logout()
+          router.replace(PATH.main)
+          toast({
+            variant: 'default',
+            description: '30분 동안 활동이 없어 로그아웃 되었습니다.',
+          })
+        }
+      },
+    })
+  }, [])
   const nickName = userInfo?.nickName
   const monthlyTotal = useCurrentMonthPaymentTotal()
 
