@@ -3,12 +3,12 @@
 import CardTitle from '#components/_common/CardTitle'
 import { useNotisClient } from '#apis/notiClient'
 import { usePutNotisClient, useDeleteNotis } from '#apis/notiClient'
-import { useToast } from '#hooks/useToast'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import { useRouter } from 'next/navigation'
 import { PATH } from '#app/routes'
 import NotiList from '#components/ui/NotiList'
 import { useMemo, useState, useEffect } from 'react'
+import { Button } from '#components/_common/Button'
 
 export default function ClientNotification() {
   const router = useRouter()
@@ -56,6 +56,31 @@ export default function ClientNotification() {
 
       <div className="flex-1 overflow-auto my-6">
         <div className="grid grid-cols-1 gap-3 cursor-pointer">
+          <div className="mb-3 flfex justify-center items-center">
+            <Button
+              className="mr-5"
+              onClick={() => {
+                const unreadIds = notifications
+                  .filter((n) => n.status === 'UNREAD')
+                  .map((n) => n.id)
+                if (unreadIds.length) {
+                  markAsReadAPI(unreadIds)
+                }
+              }}
+            >
+              모두 읽음
+            </Button>
+            <Button
+              onClick={() => {
+                const allIds = notifications.map((n) => n.id)
+                if (allIds.length) {
+                  deleteAPI(allIds)
+                }
+              }}
+            >
+              모두 삭제
+            </Button>
+          </div>
           <NotiList
             notifications={data?.contents ?? []}
             onDelete={(id) => deleteAPI([id])}

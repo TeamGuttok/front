@@ -37,7 +37,9 @@ export default function NotiCard({
     >
       <div className="flex items-center gap-3 relative">
         <div className="flex-col gap-1 pr-10">
-          <h3 className="font-medium leading-snug">{item.message}</h3>
+          <h3 className="font-medium leading-snug sm:mr-3 mr-1">
+            {item.message}
+          </h3>
           <p className="text-xs text-gray-600">
             {new Date(item.registerDate).toLocaleString('ko-KR')}
           </p>
