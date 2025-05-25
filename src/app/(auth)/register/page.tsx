@@ -69,8 +69,6 @@ export default function Register() {
     )
   }
 
-  // TODO
-  // [ ] 모바일 input 간격 맞추기
   return (
     <CardTitle>
       <CardTitle.Heading>회원가입</CardTitle.Heading>
