@@ -19,9 +19,11 @@ import { CardTitle } from '#components/_common/Card'
 export default function ClientDetailView() {
   const router = useRouter()
   const params = useParams<{ id: string }>()
-  // TODO
-  // [ ] 리팩토링
-  if (!params?.id) return <p>잘못된 접근입니다.</p>
+
+  if (!params?.id || isNaN(Number(params.id))) {
+    return <p className="text-center text-gray-500">잘못된 접근입니다.</p>
+  }
+
   const itemId = parseInt(params.id, 10)
   const { isLoading, error } = useGetDetailClient(params.id)
   const { mutate: deleteSubscription } = useDeleteItems()

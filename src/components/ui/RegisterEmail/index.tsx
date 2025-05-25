@@ -89,7 +89,7 @@ export default function RegisterEmail({
       <SelectGroup
         className={cn(
           groupClassName,
-          'flex-wrap sm:flex-nowrap items-start sm:items-center gap-3 mt-2 mb-2',
+          'flex-wrap sm:flex-nowrap items-start sm:items-center gap-3 my-3',
         )}
       >
         <div className="flex grow items-center gap-2">

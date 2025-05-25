@@ -12,8 +12,6 @@ import { useRouter } from 'next/navigation'
 import { PATH } from '#app/routes'
 import { userInfo } from '#types/user'
 import { toast } from '#hooks/useToast'
-// import { useIsLoggedInQuery } from '#hooks/useIsLoggedInQuery'
-// import { useUserId } from '#hooks/useUserId'
 
 // 마이페이지 조회 get
 export const useGetUserInfoClient = () => {

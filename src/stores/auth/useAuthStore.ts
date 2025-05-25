@@ -17,6 +17,8 @@ interface AuthState {
   setUser: (user: Partial<userInfo>) => void
   verifyEmail: () => void
   resetEmailVerification: () => void
+  policyAccepted?: boolean
+  setPolicyAccepted: (value: boolean) => void
 }
 
 const buildUserState = (user?: Partial<userInfo>): userInfo => ({
@@ -34,7 +36,8 @@ export const useAuthStore = create<AuthState>()(
       isEmailVerified: false,
       resetEmailVerification: () => set({ isEmailVerified: false }),
       verifyEmail: () => set({ isEmailVerified: true }),
-
+      policyAccepted: false,
+      setPolicyAccepted: (value) => set({ policyAccepted: value }),
       login: (user) => {
         const userId = String(user.id)
         useSubscriptionStore.getState().getSubscriptionDataForUser(userId)
