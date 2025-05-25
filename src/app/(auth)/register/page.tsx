@@ -14,11 +14,11 @@ import { SelectLabel, SelectGroup } from '#components/_common/Select'
 import { groupClassName, labelClassName, inputClassName } from '#style/style'
 import { cn } from '#components/lib/utils'
 import { CardTitle } from '#components/_common/CardTitle'
-
-//const RegisterSuccess = dynamic(() => import('./success/page'))
+import { PrivacyPolicy } from '#components/ui/PrivacyPolicy'
 
 export default function Register() {
-  const { user, setUser, isEmailVerified } = useAuthStore()
+  const { user, setUser, isEmailVerified, policyAccepted, setPolicyAccepted } =
+    useAuthStore()
   const [password, setPassword] = useState<string>('')
   const [passwordConfirm, setPasswordConfirm] = useState<string>('')
   const [error, setError] = useState<Record<string, string[]>>({})
@@ -34,6 +34,7 @@ export default function Register() {
       passwordConfirm,
       nickName: user?.nickName ?? '',
       alarm: true,
+      consent: policyAccepted,
     }
 
     const parseResult = registerSchema.safeParse(input)
@@ -152,6 +153,12 @@ export default function Register() {
             errors={error?.passwordConfirm || []}
             className="ml-2"
           />
+
+          <PrivacyPolicy
+            onChange={(value) => setPolicyAccepted(value === 'yes')}
+          />
+          <ErrorMessage errors={error?.policyAccepted} className="ml-2" />
+
           <Button
             type="submit"
             className="flex justify-self-center w-full h-10 text-md rounded-lg mb-10 "
