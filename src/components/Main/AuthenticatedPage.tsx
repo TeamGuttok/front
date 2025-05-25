@@ -19,14 +19,15 @@ export default function AuthenficatedPage() {
     data: userInfo,
     getUserInfoClient,
     isLoading,
-    isError,
-    error,
   } = useGetUserInfoClient()
-  const logout = useAuthStore((state) => state.logout)
+  const { login, logout, setUser, isLoggedIn } = useAuthStore()
   const router = useRouter()
 
   useEffect(() => {
     getUserInfoClient(undefined, {
+      onSuccess: (data) => {
+        login(data)
+      },
       onError: (error) => {
         if (
           error.message.includes('SESSION') ||
@@ -35,7 +36,7 @@ export default function AuthenficatedPage() {
           logout()
           router.replace(PATH.main)
           toast({
-            variant: 'destructive',
+            variant: 'default',
             description: '30분 동안 활동이 없어 로그아웃 되었습니다.',
           })
         }
@@ -44,19 +45,6 @@ export default function AuthenficatedPage() {
   }, [])
   const nickName = userInfo?.nickName
   const monthlyTotal = useCurrentMonthPaymentTotal()
-
-  // useEffect(() => {
-  //   checkSession(undefined, {
-  //     onError: (error) => {
-  //       if (error.message === '세션 만료') {
-  //         toast({
-  //           variant: 'destructive',
-  //           description: '30분 동안 활동이 없어 로그아웃 되었습니다.',
-  //         })
-  //       }
-  //     },
-  //   })
-  // }, [checkSession])
 
   if (isLoading) {
     return (

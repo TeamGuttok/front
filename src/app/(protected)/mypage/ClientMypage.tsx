@@ -20,13 +20,14 @@ import { Switch } from '#components/_common/Switch'
 
 export default function ClientMypage() {
   const router = useRouter()
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
+  const isLoggedIn = useAuthStore()
 
   const {
     getUserInfoClient,
     data: getMypage,
     isError: isProfileError,
   } = useGetUserInfoClient()
+
   const { mutate: deleteAccount, isPending: isDeletingAccount } =
     useDeleteUserClient()
   const { mutate: toggleAlarm, isPending: isTogglingAlarm } =
@@ -37,6 +38,19 @@ export default function ClientMypage() {
   const [showLogoutDialog, setShowLogoutDialog] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false)
   const handleLogout = useHandleLogout()
+
+  useEffect(() => {
+    getUserInfoClient(undefined, {
+      onError: (error) => {
+        console.error('유저 정보 불러오기 실패:', error)
+        toast({
+          variant: 'destructive',
+          description: '세션이 만료되었거나 유저 정보를 불러오지 못했습니다.',
+        })
+        router.push(PATH.main)
+      },
+    })
+  }, [getUserInfoClient, router])
 
   // TODO
   // [ ] 미들웨어 연결 후 삭제 (for SEO)

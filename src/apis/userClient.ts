@@ -1,6 +1,6 @@
 'use client'
 
-import { useMutation, UseQueryOptions, useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import {
   getUserInfo,
   patchNickname,
@@ -12,8 +12,8 @@ import { useRouter } from 'next/navigation'
 import { PATH } from '#app/routes'
 import { userInfo } from '#types/user'
 import { toast } from '#hooks/useToast'
-import { useIsLoggedInQuery } from '#hooks/useIsLoggedInQuery'
-import { useUserId } from '#hooks/useUserId'
+// import { useIsLoggedInQuery } from '#hooks/useIsLoggedInQuery'
+// import { useUserId } from '#hooks/useUserId'
 
 // 마이페이지 조회 get
 export const useGetUserInfoClient = () => {
@@ -40,29 +40,6 @@ export const useGetUserInfoClient = () => {
     error,
   }
 }
-
-// 세션 체크 get
-// export const useCheckSessionClient = () => {
-//   const logout = useAuthStore((state) => state.logout)
-//   const router = useRouter()
-
-//   const { mutate, isPending } = useMutation({
-//     mutationFn: checkSession,
-//     onError: (error) => {
-//       if (error instanceof Error && error.message === '세션 만료') {
-//         logout()
-//         router.replace(PATH.main)
-//       } else {
-//         console.error('세션 확인 실패:', error)
-//       }
-//     },
-//   })
-
-//   return {
-//     checkSession: mutate,
-//     isChecking: isPending,
-//   }
-// }
 
 // 닉네임 변경 patch
 export const usePatchNicknameClient = () => {
