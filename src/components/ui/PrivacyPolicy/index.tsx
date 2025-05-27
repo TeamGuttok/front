@@ -23,7 +23,7 @@ export function PrivacyPolicy({
         <p>서비스 제공을 위해 아래와 같이 개인정보를 수집 및 이용합니다.</p>
         <ul className="list-disc list-inside pl-1">
           <li>수집 항목: 이메일 주소</li>
-          <li>수집 목적: 본인 확인, 계정 관리(비밀번호 찾기 등)</li>
+          <li>수집 목적: 본인 확인, 계정 관리(비밀번호 찾기)</li>
           <li>보유 기간: 회원 탈퇴 시까지</li>
         </ul>
         <p>

@@ -17,10 +17,10 @@ import { CardTitle } from '#components/_common/CardTitle'
 import { PrivacyPolicy } from '#components/ui/PrivacyPolicy'
 
 export default function Register() {
-  const { user, setUser, isEmailVerified, policyAccepted, setPolicyAccepted } =
-    useAuthStore()
+  const { user, setUser, isEmailVerified } = useAuthStore()
   const [password, setPassword] = useState<string>('')
   const [passwordConfirm, setPasswordConfirm] = useState<string>('')
+  const [policyAccepted, setPolicyAccepted] = useState<boolean>(false)
   const [error, setError] = useState<Record<string, string[]>>({})
   const { mutate: registerUser, isPending: isRegistering } = useRegisterClient()
   const router = useRouter()
@@ -34,11 +34,10 @@ export default function Register() {
       passwordConfirm,
       nickName: user?.nickName ?? '',
       alarm: true,
-      consent: policyAccepted,
+      policyConsent: policyAccepted,
     }
 
     const parseResult = registerSchema.safeParse(input)
-
     if (!parseResult.success) {
       setError(parseResult.error.flatten().fieldErrors)
       return
@@ -58,6 +57,7 @@ export default function Register() {
         password: input.password,
         nickName: input.nickName,
         alarm: input.alarm,
+        policyConsent: input.policyConsent,
       },
       {
         onSuccess: () => {
@@ -76,13 +76,16 @@ export default function Register() {
       <CardTitle.Divider />
 
       <div className="flex flex-col justify-center items-center my-8">
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-1.5 px-5">
+        <form
+          onSubmit={handleSubmit}
+          className="grid grid-cols-1 sm:gap-5 gap-2 px-5"
+        >
           <SelectGroup className={cn(groupClassName)}>
             <SelectLabel
               aria-labelledby="registerNickname"
               aria-describedby="registerNickname-required"
               aria-required="true"
-              className={cn(labelClassName, 'w-[3.46rem] mr-12')}
+              className={cn(labelClassName, 'w-[3.46rem] mr-12 text-base')}
             >
               닉네임
             </SelectLabel>
@@ -110,7 +113,7 @@ export default function Register() {
               aria-labelledby="registerPassword"
               aria-describedby="registerPassword-required"
               aria-required="true"
-              className={cn(labelClassName, 'w-[3.46rem] mr-12')}
+              className={cn(labelClassName, 'w-[3.46rem] mr-12 text-base')}
             >
               비밀번호
             </SelectLabel>
@@ -128,16 +131,18 @@ export default function Register() {
           </SelectGroup>
           <ErrorMessage errors={error?.password} className="ml-2" />
 
-          <SelectGroup className={cn(groupClassName)}>
+          <SelectGroup
+            className={
+              'sm:mt-0 mt-2 flex items-start sm:items-center justify-between '
+            }
+          >
             <SelectLabel
               aria-labelledby="registerPasswordConfirm"
               aria-describedby="registerPasswordConfirm-required"
               aria-required="true"
-              className={cn(labelClassName, 'w-[3.46rem] mr-12')}
+              className={cn(labelClassName, 'w-[3.46rem] mr-12 text-base')}
             >
-              <span className="leading-5">
-                비밀번호 <br /> 확인
-              </span>
+              <span className="leading-5">비밀번호 확인</span>
             </SelectLabel>
             <Input
               name="passwordConfirm"
@@ -157,11 +162,11 @@ export default function Register() {
           <PrivacyPolicy
             onChange={(value) => setPolicyAccepted(value === 'yes')}
           />
-          <ErrorMessage errors={error?.policyAccepted} className="ml-2" />
+          <ErrorMessage errors={error?.policyConsent} className="ml-2" />
 
           <Button
             type="submit"
-            className="flex justify-self-center w-full h-10 text-md rounded-lg mb-10 "
+            className="flex justify-self-center w-full h-10 text-md rounded-lg my-2"
             disabled={isRegistering}
           >
             회원가입

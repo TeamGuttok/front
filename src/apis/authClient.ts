@@ -15,17 +15,25 @@ export const useRegisterClient = () => {
       password,
       nickName,
       alarm,
+      policyConsent,
     }: {
       email: string
       password: string
       nickName: string
       alarm: boolean
+      policyConsent: boolean
     }) => {
       const res = await fetch(`${BASE_URL}/api/users/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ email, password, nickName, alarm }),
+        body: JSON.stringify({
+          email,
+          password,
+          nickName,
+          alarm,
+          policyConsent,
+        }),
       })
 
       if (!res.ok) {

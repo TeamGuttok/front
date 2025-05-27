@@ -51,8 +51,6 @@ export default function RegisterEmail({
       const errorMessages = result.error.errors.map((err) => err.message)
       setErrors(errorMessages)
     }
-
-    console.log(errors)
   }
 
   const handleSendCertificationCode = () => {
@@ -89,7 +87,7 @@ export default function RegisterEmail({
       <SelectGroup
         className={cn(
           groupClassName,
-          'flex-wrap sm:flex-nowrap items-start sm:items-center gap-3 my-3',
+          'flex-wrap sm:flex-nowrap items-start sm:items-center gap-3',
         )}
       >
         <div className="flex grow items-center gap-2">
@@ -97,7 +95,7 @@ export default function RegisterEmail({
             aria-labelledby="registerNickname"
             aria-describedby="registerNickname-required"
             aria-required="true"
-            className={cn(labelClassName, 'w-[3.46rem] mr-10')}
+            className={cn(labelClassName, 'w-[3.46rem] mr-10 text-base')}
           >
             이메일
           </SelectLabel>

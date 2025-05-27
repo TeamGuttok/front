@@ -35,12 +35,6 @@ export const usepatchAlarmClient = () => {
 
 // 알림 조회 get
 export const useNotisClient = (pageRequest: PageRequest) => {
-  console.log('queryKey', [
-    'notifications',
-    'reminders',
-    pageRequest.lastId,
-    pageRequest.size,
-  ])
   return useQuery({
     queryKey: ['notifications', pageRequest],
     queryFn: () => getNotis(pageRequest),

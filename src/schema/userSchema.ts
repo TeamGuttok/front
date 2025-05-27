@@ -30,7 +30,7 @@ export const registerSchema = z
       .string()
       .nonempty('이메일을 입력해 주세요.')
       .email('유효한 이메일 주소를 입력해 주세요.'),
-    consent: z.literal(true, {
+    policyConsent: z.literal(true, {
       errorMap: () => ({
         message: '개인정보 수집 및 이용에 동의해 주세요.',
       }),
