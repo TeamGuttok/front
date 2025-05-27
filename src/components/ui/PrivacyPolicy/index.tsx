@@ -17,7 +17,7 @@ export function PrivacyPolicy({
   }
 
   return (
-    <div className="space-y-4 border rounded-xl p-4 mb-4">
+    <div className="space-y-4 border rounded-xl p-4 my-2">
       <p className="text-sm font-semibold">[필수] 개인정보 수집 및 이용 동의</p>
       <div className="text-sm text-muted-foreground leading-snug space-y-1">
         <p>서비스 제공을 위해 아래와 같이 개인정보를 수집 및 이용합니다.</p>

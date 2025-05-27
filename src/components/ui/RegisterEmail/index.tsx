@@ -116,7 +116,7 @@ export default function RegisterEmail({
           <Button
             type="button"
             onClick={handleSendCertificationCode}
-            className="rounded-lg grow sm:w-auto mb-2 sm:mb-0"
+            className="rounded-lg grow sm:w-auto mb-2 sm:mb-0 mt-1 sm:mt-0"
             disabled={isPending}
           >
             {isEmailVerified

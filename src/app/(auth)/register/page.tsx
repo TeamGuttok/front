@@ -78,7 +78,7 @@ export default function Register() {
       <div className="flex flex-col justify-center items-center my-8">
         <form
           onSubmit={handleSubmit}
-          className="grid grid-cols-1 sm:gap-5 gap-2 px-5"
+          className="grid grid-cols-1 sm:gap-5 gap-2.5 px-5"
         >
           <SelectGroup className={cn(groupClassName)}>
             <SelectLabel
@@ -166,7 +166,7 @@ export default function Register() {
 
           <Button
             type="submit"
-            className="flex justify-self-center w-full h-10 text-md rounded-lg my-2"
+            className="flex justify-self-center w-full h-10 text-md rounded-lg"
             disabled={isRegistering}
           >
             회원가입
