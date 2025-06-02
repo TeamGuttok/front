@@ -32,7 +32,6 @@ export default function ClientDetailItems() {
     paymentMethodOptions,
     paymentCycleOptions,
     paymentDayOptions,
-    saveSubscriptionDataForUser,
   } = useSubscriptionStore((state: any) => state)
 
   const {

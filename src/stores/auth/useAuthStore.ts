@@ -35,10 +35,6 @@ export const useAuthStore = create<AuthState>()(
       resetEmailVerification: () => set({ isEmailVerified: false }),
       verifyEmail: () => set({ isEmailVerified: true }),
       login: (user) => {
-        const userId = String(user.id)
-        useSubscriptionStore.getState().getSubscriptionDataForUser(userId)
-
-        // useSubscriptionStore.getState().resetSubscriptionData()
         set({
           user: buildUserState(user),
           isLoggedIn: true,
@@ -46,17 +42,9 @@ export const useAuthStore = create<AuthState>()(
       },
 
       logout: () => {
-        const userId = String(useAuthStore.getState().user?.id ?? '')
-        useSubscriptionStore.getState().saveSubscriptionDataForUser(userId)
         useAuthStore.getState().reset()
         useAuthStore.persist.clearStorage()
         useSubscriptionStore.getState().resetSubscriptionData()
-
-        // import('#stores/subscriptions/useSubscriptionStore').then(
-        //   ({ useSubscriptionStore }) => {
-        //     useSubscriptionStore.getState().resetSubscriptionData()
-        //   },
-        // )
       },
 
       setUser: (user) =>
@@ -70,10 +58,10 @@ export const useAuthStore = create<AuthState>()(
         })),
 
       reset: () => {
+        useSubscriptionStore.getState().resetSubscriptionData()
         set({
           user: buildUserState(),
           isLoggedIn: false,
-          isEmailVerified: false,
         })
       },
     })),
