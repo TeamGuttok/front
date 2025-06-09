@@ -1,15 +1,22 @@
+'use server'
+
 // 회원가입 / 비밀번호 변경 / 닉네일 변경 / 알림 상태 변경 / 마이페이지 조회 / 회원 탈퇴
 
 import { BASE_URL } from '#constants/url'
 import type { userInfo } from '#types/user'
+import { cookies } from 'next/headers'
 
 // 마이페이지 조회 get
 export const getUserInfo = async (): Promise<userInfo> => {
+  const cookieStore = cookies()
+  const cookieHeader = cookieStore.toString()
+
   const res = await fetch(`${BASE_URL}/api/users`, {
     method: 'GET',
     credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
+      cookie: cookieHeader,
     },
   })
 
