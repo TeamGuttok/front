@@ -11,7 +11,7 @@ import useTheme from '#contexts/ThemeProvider/hook'
 //import { usepatchAlarmClient } from '#apis/notiClient'
 //import { useDeleteUserClient } from '#apis/userClient'
 //import { ConfirmDialog } from '#components/ui/ConfirmDialog'
-import { useHandleLogout } from '#hooks/useHandleLogout'
+import { useLogoutClient } from '#apis/authClient'
 // import { cn } from '#components/lib/utils'
 // import { getMenuClassName } from '#style/style'
 import { useRouter } from 'next/navigation'
@@ -43,7 +43,11 @@ export default function ClientMypage({ initialData }: ClientMypageProps) {
   const { theme, setTheme } = useTheme()
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
-  const handleLogout = useHandleLogout()
+  const logoutMutation = useLogoutClient()
+
+  const handleLogout = () => {
+    logoutMutation.mutate()
+  }
 
   useEffect(() => {
     setHydrated(true)

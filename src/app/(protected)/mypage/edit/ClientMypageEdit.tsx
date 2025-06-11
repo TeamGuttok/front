@@ -34,7 +34,7 @@ export default function ClientMypageEdit() {
       return
     }
 
-    updateNickName(nickName)
+    updateNickName({ nickName })
   }
 
   const passwordUpdateSubmit = () => {
@@ -45,7 +45,7 @@ export default function ClientMypageEdit() {
       return
     }
 
-    updatePassword(password)
+    updatePassword({ password })
   }
 
   useEffect(() => {

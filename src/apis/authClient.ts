@@ -1,3 +1,5 @@
+// 로그인, 로그아웃, 회원가입 이메일 인증번호 검증, 비밀번호 찾기 인증번호 검증
+
 'use client'
 
 import { useAuthStore } from '#stores/auth/useAuthStore'
@@ -114,7 +116,6 @@ export function useLoginClient() {
 }
 
 // 로그아웃 POST
-// [ ] useHandleLogout 삭제
 export function useLogoutClient() {
   const { logout: clearSession } = useAuthStore()
   const router = useRouter()
