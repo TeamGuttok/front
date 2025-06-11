@@ -4,6 +4,7 @@ export interface userInfo {
   nickName: string
   alarm: boolean
   password?: string
+  policyConsent?: boolean
 }
 
 export interface ApiResponse {

@@ -6,23 +6,17 @@ import { BASE_URL } from '#constants/url'
 import { verifyOTP, verifyPasswordOTP } from '#apis/authAPI'
 import type { userInfo, LoginInput } from '#types/user'
 import { queryClient } from '#contexts/QueryProvider'
+import { useRouter } from 'next/navigation'
+import { toast } from '#hooks/useToast'
+import { PATH } from '#app/routes'
 
-// 회원가입 post
+// 회원가입 POST
 export const useRegisterClient = () => {
-  return useMutation({
-    mutationFn: async ({
-      email,
-      password,
-      nickName,
-      alarm,
-      policyConsent,
-    }: {
-      email: string
-      password: string
-      nickName: string
-      alarm: boolean
-      policyConsent: boolean
-    }) => {
+  const { login, isLoggedIn } = useAuthStore()
+  const router = useRouter()
+
+  return useMutation<userInfo, Error, userInfo>({
+    mutationFn: async ({ email, password, nickName, alarm, policyConsent }) => {
       const res = await fetch(`${BASE_URL}/api/users/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -43,12 +37,38 @@ export const useRegisterClient = () => {
 
       return await res.json()
     },
+    onSuccess: (data) => {
+      queryClient.clear()
+      login({
+        id: data.id,
+        email: data.email,
+        nickName: data.nickName,
+        alarm: data.alarm,
+      })
+      isLoggedIn
+
+      toast({
+        description: '성공적으로 회원가입 되었습니다.',
+        variant: 'default',
+      })
+
+      router.push(PATH.main)
+    },
+
+    onError: (error) => {
+      console.error('회원가입 실패', error)
+      toast({
+        description: error.message || '회원가입 중 오류가 발생했습니다.',
+        variant: 'destructive',
+      })
+    },
   })
 }
 
-// 로그인 post
+// 로그인 POST
 export function useLoginClient() {
   const { login } = useAuthStore()
+  const router = useRouter()
 
   return useMutation<userInfo, Error, LoginInput>({
     mutationFn: async ({ email, password }) => {
@@ -61,16 +81,10 @@ export function useLoginClient() {
 
       if (!res.ok) {
         const errorData = await res.json()
-        throw new Error(errorData.message || '로그인 요청 실패')
+        throw new Error(errorData.message || '로그인 요청에 실패했습니다.')
       }
 
-      const data = await res.json()
-
-      if (data.status !== 'OK') {
-        throw new Error('로그인 실패. 다시 시도해주세요.')
-      }
-
-      return data.data as userInfo
+      return await res.json()
     },
     onSuccess: (data) => {
       queryClient.clear()
@@ -80,12 +94,27 @@ export function useLoginClient() {
         nickName: data.nickName,
         alarm: data.alarm,
       })
+
+      toast({
+        description: '성공적으로 로그인 되었습니다.',
+        variant: 'default',
+      })
+
+      router.push(PATH.main)
+    },
+    onError: (error) => {
+      console.error('로그인 실패:', error)
+      toast({
+        description: error.message || '로그인 중 오류가 발생했습니다.',
+        variant: 'destructive',
+      })
     },
   })
 }
 
 // 로그아웃 post
 export const logout = async (): Promise<void> => {
+  const { logout: clearSession } = useAuthStore()
   const res = await fetch(`${BASE_URL}/api/users/signout`, {
     method: 'POST',
     credentials: 'include',
@@ -109,7 +138,6 @@ export const useLogoutClient = () => {
     mutationFn: logout,
     onSuccess: () => {
       clearSession()
-      useAuthStore.persist.clearStorage()
       queryClient.clear()
     },
     onError: (error) => {

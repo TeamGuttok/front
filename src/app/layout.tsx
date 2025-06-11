@@ -48,7 +48,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://guttok.site',
   },
-
+  metadataBase: new URL('https://guttok.site'),
   openGraph: {
     title: '구똑 | 구독을 똑똑하게',
     description:

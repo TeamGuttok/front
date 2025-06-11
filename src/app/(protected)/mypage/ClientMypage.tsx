@@ -18,7 +18,6 @@ import { useRouter } from 'next/navigation'
 import { toast } from '#hooks/useToast'
 import { Switch } from '#components/_common/Switch'
 import { userInfo } from '#types/user'
-import { deleteUser } from '#actions/userAction'
 import { useTransition } from 'react'
 import {
   AlertDialog,
@@ -31,10 +30,7 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from '#components/_common/AlertDialog'
-import { logoutAction } from '#actions/authAction'
-import { patchAlarm } from '#actions/notiAction'
 import { useQueryClient } from '@tanstack/react-query'
-import { BASE_URL } from '#constants/url'
 
 interface ClientMypageProps {
   initialData: userInfo
@@ -47,6 +43,7 @@ export default function ClientMypage({ initialData }: ClientMypageProps) {
   const { theme, setTheme } = useTheme()
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
+  const handleLogout = useHandleLogout()
 
   useEffect(() => {
     setHydrated(true)
@@ -68,81 +65,19 @@ export default function ClientMypage({ initialData }: ClientMypageProps) {
   //   }
   // }, [isLoggedIn, isProfileError, router])
 
-  const handleDelete = () => {
-    startTransition(async () => {
-      try {
-        const formData = new FormData()
-        await deleteUser(formData)
-        toast({
-          description: '계정이 성공적으로 탈퇴 되었습니다.',
-          variant: 'default',
-        })
-        router.push(PATH.main)
-      } catch (err) {
-        toast({
-          description: '계정 탈퇴 중 오류가 발생했습니다.',
-          variant: 'destructive',
-        })
-      }
-    })
-  }
-
-  const handleLogout = async () => {
-    try {
-      await logoutAction()
-      logout()
-      queryClient.invalidateQueries({ queryKey: ['user'] })
-      router.push(PATH.main)
-      router.refresh()
-    } catch (error) {
-      toast({
-        description: '로그아웃 처리 중 오류 발생',
-        variant: 'destructive',
-      })
-    }
-  }
-
-  // const handleLogout = () => {
+  // const handleDelete = () => {
   //   startTransition(async () => {
   //     try {
+  //       const formData = new FormData()
+  //       await deleteUser(formData)
   //       toast({
   //         description: '계정이 성공적으로 탈퇴 되었습니다.',
   //         variant: 'default',
   //       })
-  //       logout()
-  //       logoutAction()
   //       router.push(PATH.main)
   //     } catch (err) {
   //       toast({
   //         description: '계정 탈퇴 중 오류가 발생했습니다.',
-  //         variant: 'destructive',
-  //       })
-  //     }
-  //   })
-  // }
-
-  // const handleLogout = () => {
-  //   startTransition(async () => {
-  //     try {
-  //       const res = await fetch('http://localhost:8080/api/users/signout', {
-  //         method: 'POST',
-  //         credentials: 'include',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         },
-  //       })
-
-  //       if (!res.ok) {
-  //         const errorData = await res.json()
-  //         throw new Error(errorData.message || '로그아웃 실패')
-  //       }
-
-  //       logout()
-  //       toast({ description: '로그아웃 되었습니다.', variant: 'default' })
-  //       router.push(PATH.main)
-  //     } catch (err) {
-  //       toast({
-  //         description: '로그아웃 중 오류가 발생했습니다.',
   //         variant: 'destructive',
   //       })
   //     }
@@ -252,16 +187,6 @@ export default function ClientMypage({ initialData }: ClientMypageProps) {
         </div>
 
         <div className="flex justify-end mt-3 mb-9">
-          {/* <form
-            action={async () => {
-              // SSR 로그아웃
-              await logoutAction()
-              // 클라이언트 상태 초기화
-              logout()
-              // 리디렉션
-              router.push(PATH.main)
-            }}
-          > */}
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button className="text-white">로그아웃</Button>
@@ -270,17 +195,19 @@ export default function ClientMypage({ initialData }: ClientMypageProps) {
               <AlertDialogHeader>
                 <AlertDialogTitle>로그아웃 하시겠습니까?</AlertDialogTitle>
               </AlertDialogHeader>
+              <AlertDialogDescription>
+                현재 사용 중인 계정에서 로그아웃 됩니다.
+              </AlertDialogDescription>
               <AlertDialogFooter>
                 <AlertDialogCancel>취소</AlertDialogCancel>
                 <AlertDialogAction asChild>
-                  <button onClick={handleLogout} disabled={isPending}>
+                  <button type="submit" onClick={handleLogout}>
                     로그아웃
                   </button>
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
-          {/* </form> */}
 
           <AlertDialog>
             <AlertDialogTrigger asChild>
@@ -298,7 +225,7 @@ export default function ClientMypage({ initialData }: ClientMypageProps) {
               <AlertDialogFooter>
                 <AlertDialogCancel>취소</AlertDialogCancel>
                 <AlertDialogAction asChild>
-                  <button onClick={handleDelete}>탈퇴</button>
+                  <button>탈퇴</button>
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>

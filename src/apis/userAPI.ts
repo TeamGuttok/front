@@ -8,15 +8,17 @@ import { cookies } from 'next/headers'
 
 // 마이페이지 조회 get
 export const getUserInfo = async (): Promise<userInfo> => {
-  const cookieStore = cookies()
-  const cookieHeader = cookieStore.toString()
+  const session = (await cookies()).get('SESSION')
+
+  if (!session) throw new Error('세션 없음')
+  console.log('fetching user info from', `${BASE_URL}/api/users`)
 
   const res = await fetch(`${BASE_URL}/api/users`, {
     method: 'GET',
     credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
-      cookie: cookieHeader,
+      cookie: `SESSION=${session.value}`,
     },
   })
 
