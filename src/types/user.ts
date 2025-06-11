@@ -14,6 +14,11 @@ export interface ApiResponse {
 }
 
 export interface LoginInput {
-  email: string
+  email?: string
   password: string
+}
+
+export interface codeInfo {
+  email: string
+  certificationNumber: string
 }
