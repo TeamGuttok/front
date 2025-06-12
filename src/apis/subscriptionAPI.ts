@@ -1,10 +1,13 @@
-// knownServices 구독 서비스 리스트 / 구독 항목 생성, 삭제, 수정, 조회
+'use server'
+// 구독 목록 조회 / knownServices 구독 서비스 리스트
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { SubscriptionRequest, SubscriptionContents } from '#types/subscription'
 import { BASE_URL } from '#constants/url'
 import { useUserId } from '#hooks/useUserId'
 import { FETCH_ALL } from '#constants/pagination'
+import { Toast } from '#components/_common/Toast'
+import { cookies } from 'next/headers'
 
 // 구독 서비스 리스트 검색
 export async function searchService(name: string) {
@@ -86,26 +89,26 @@ export async function getItems(
 }
 
 // 구독서비스 수정 api (patch)
-export const patchItems = async (
-  id: number,
-  payload: Partial<SubscriptionContents>,
-) => {
-  const res = await fetch(`${BASE_URL}/api/subscriptions/${id}`, {
-    method: 'PATCH',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
-  })
+// export const patchItems = async (
+//   id: number,
+//   payload: Partial<SubscriptionContents>,
+// ) => {
+//   const res = await fetch(`${BASE_URL}/api/subscriptions/${id}`, {
+//     method: 'PATCH',
+//     credentials: 'include',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify(payload),
+//   })
 
-  const result = await res.json()
+//   const result = await res.json()
 
-  if (!res.ok) {
-    throw new Error(result.message || '구독 수정 실패')
-  }
-  return result
-}
+//   if (!res.ok) {
+//     throw new Error(result.message || '구독 수정 실패')
+//   }
+//   return result
+// }
 
 // 구독 서비스 삭제 api (delete)
 export const deleteItems = async (id: number) => {

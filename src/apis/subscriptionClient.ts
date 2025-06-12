@@ -8,6 +8,8 @@ import { useIsLoggedInQuery } from '#hooks/useIsLoggedInQuery'
 import { useUserId } from '#hooks/useUserId'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import { toast } from '#hooks/useToast'
+import { useRouter } from 'next/navigation'
+import type { SubscriptionRequest } from '#types/subscription'
 
 // 전체 서비스 조회 (/)
 export const useGetItemsClient = (
@@ -45,8 +47,49 @@ export function useGetDetailClient(
   )
 }
 
+// 구독 서비스 생성 POST
+export function postItemClient() {
+  const queryClient = useQueryClient()
+  const userId = useUserId()
+
+  return useMutation<SubscriptionRequest, Error, SubscriptionRequest>({
+    mutationFn: async (payload: SubscriptionRequest) => {
+      const res = await fetch(`${BASE_URL}/api/subscriptions`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      })
+
+      const result = await res.json()
+
+      if (!res.ok) {
+        throw new Error(result.message || '구독 생성 실패')
+      }
+
+      return result
+    },
+    onSuccess: () => {
+      toast({
+        description: '구독 서비스가 성공적으로 생성되었습니다.',
+        variant: 'default',
+      })
+    },
+    onError: (error) => {
+      console.error('구독 서비스 생성 실패:', error)
+      toast({
+        description:
+          error.message || '구독 서비스 생성 중 오류가 발생했습니다.',
+        variant: 'destructive',
+      })
+    },
+  })
+}
+
 // 구독 서비스 수정 PATCH
-export const useUpdateItemsClient = () => {
+export function useUpdateItemsClient() {
   const queryClient = useQueryClient()
   const userId = useUserId()
 
