@@ -2,11 +2,12 @@
 
 import { BASE_URL } from '#constants/url'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { getItems, patchItems, deleteItems } from '#apis/subscriptionAPI'
+import { getItems, deleteItems } from '#apis/subscriptionAPI'
 import { paymentStatus, SubscriptionContents } from '#types/subscription'
 import { useIsLoggedInQuery } from '#hooks/useIsLoggedInQuery'
 import { useUserId } from '#hooks/useUserId'
 import { useAuthStore } from '#stores/auth/useAuthStore'
+import { toast } from '#hooks/useToast'
 
 // 전체 서비스 조회 (/)
 export const useGetItemsClient = (
@@ -44,22 +45,53 @@ export function useGetDetailClient(
   )
 }
 
-// 구독 서비스 수정 (patch)
-export const useUpdateItems = () => {
+// 구독 서비스 수정 PATCH
+export const useUpdateItemsClient = () => {
   const queryClient = useQueryClient()
   const userId = useUserId()
 
-  return useMutation({
-    mutationFn: ({
+  return useMutation<
+    SubscriptionContents,
+    Error,
+    { id: number; payload: Partial<SubscriptionContents> }
+  >({
+    mutationFn: async ({
       id,
       payload,
     }: {
       id: number
       payload: Partial<SubscriptionContents>
-    }) => patchItems(id, payload),
+    }) => {
+      const res = await fetch(`${BASE_URL}/api/subscriptions/${id}`, {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      })
+
+      if (!res.ok) {
+        const errorData = await res.json()
+        throw new Error(errorData.message || '수정에 실패했습니다.')
+      }
+      return res.json()
+    },
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['subscriptions', userId] })
+      toast({
+        description: '구독 서비스가 성공적으로 수정되었습니다.',
+        variant: 'default',
+      })
+    },
+    onError: (error) => {
+      console.error('구독 서비스 수정 실패:', error)
+      toast({
+        description:
+          error.message || '구독 서비스 수정 중 오류가 발생했습니다.',
+        variant: 'destructive',
+      })
     },
   })
 }
