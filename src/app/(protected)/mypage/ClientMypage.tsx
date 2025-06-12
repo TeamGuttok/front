@@ -8,7 +8,7 @@ import { Button } from '#components/_common/Button'
 import { useState, useEffect } from 'react'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import useTheme from '#contexts/ThemeProvider/hook'
-//import { usepatchAlarmClient } from '#apis/notiClient'
+import { usePatchAlarmClient } from '#apis/notiClient'
 //import { useDeleteUserClient } from '#apis/userClient'
 //import { ConfirmDialog } from '#components/ui/ConfirmDialog'
 import { useLogoutClient } from '#apis/authClient'
@@ -37,17 +37,18 @@ interface ClientMypageProps {
 }
 
 export default function ClientMypage({ initialData }: ClientMypageProps) {
-  const queryClient = useQueryClient()
   const { user, setUser, logout } = useAuthStore()
   const [hydrated, setHydrated] = useState(false)
   const { theme, setTheme } = useTheme()
-  const [isPending, startTransition] = useTransition()
   const router = useRouter()
   const logoutMutation = useLogoutClient()
 
   const handleLogout = () => {
     logoutMutation.mutate()
   }
+
+  const { mutate: toggleAlarm, isPending: isTogglingAlarm } =
+    usePatchAlarmClient()
 
   useEffect(() => {
     setHydrated(true)
@@ -145,25 +146,12 @@ export default function ClientMypage({ initialData }: ClientMypageProps) {
         <div className="flex justify-between mb-2">
           <p className="text-gray-600">이메일 결제 리마인드</p>
           <div>
-            {/* <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Switch aria-label="이메일 알림 수신 여부 설정 토글" />
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>정말 탈퇴하시겠습니까?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    탈퇴하면 모든 정보가 삭제되며 복구할 수 없습니다.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>취소</AlertDialogCancel>
-                  <AlertDialogAction asChild>
-                    <button onClick={handleLogout}>탈퇴</button>
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog> */}
+            <Switch
+              aria-label="이메일 알림 수신 여부 설정 토글"
+              checked={user?.alarm}
+              onCheckedChange={() => toggleAlarm()}
+              disabled={isTogglingAlarm}
+            />
           </div>
         </div>
       </div>

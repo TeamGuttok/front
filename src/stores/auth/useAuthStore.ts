@@ -10,7 +10,7 @@ interface AuthState {
   login: (user: Partial<userInfo>) => void
   logout: () => void
   reset: () => void // 세션 만료
-  setUser: (user: Partial<userInfo>) => void
+  setUser: (user: Partial<userInfo> | ((prev: userInfo) => userInfo)) => void
   verifyEmail: () => void
   resetEmailVerification: () => void
 }
@@ -41,15 +41,22 @@ export const useAuthStore = create<AuthState>()(
       useSubscriptionStore.getState().resetSubscriptionData()
     },
 
-    setUser: (user) =>
-      set((state) => ({
-        user: {
-          id: user.id ?? state.user?.id ?? 0,
-          email: user.email ?? state.user?.email ?? '',
-          nickName: user.nickName ?? state.user?.nickName ?? '',
-          alarm: user.alarm ?? state.user?.alarm ?? true,
-        },
-      })),
+    setUser: (userOrUpdater) =>
+      set((state) => {
+        const prevUser = state.user ?? buildUserState()
+
+        const nextUser =
+          typeof userOrUpdater === 'function'
+            ? userOrUpdater(prevUser)
+            : {
+                id: userOrUpdater.id ?? prevUser.id,
+                email: userOrUpdater.email ?? prevUser.email,
+                nickName: userOrUpdater.nickName ?? prevUser.nickName,
+                alarm: userOrUpdater.alarm ?? prevUser.alarm,
+              }
+
+        return { user: nextUser }
+      }),
 
     reset: () => {
       useSubscriptionStore.getState().resetSubscriptionData()

@@ -3,31 +3,60 @@
 'use client'
 
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query'
-import { patchAlarm, getNotis, putNotis, deleteNotis } from '#apis/notiAPI'
+import { getNotis, putNotis, deleteNotis } from '#apis/notiAPI'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import type { PageRequest } from '#types/notification'
 import { useIsLoggedInQuery } from '#hooks/useIsLoggedInQuery'
 import { useUserId } from '#hooks/useUserId'
 import { FETCH_ALL } from '#constants/pagination'
+import { BASE_URL } from '#constants/url'
+import { toast } from '#hooks/useToast'
 
-// 알림 상태 변경 patch
-export const usepatchAlarmClient = () => {
+// 알림 상태 변경 PATCH
+export const usePatchAlarmClient = () => {
   const { setUser } = useAuthStore()
 
   return useMutation({
-    mutationFn: patchAlarm,
-    onSuccess: (response) => {
-      const updatedAlarm = response.data.alarm
-      const { user } = useAuthStore.getState()
+    mutationFn: async () => {
+      const res = await fetch(`${BASE_URL}/api/users/alarm`, {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      })
 
-      if (!user) return
+      if (!res.ok) {
+        const errorData = await res.json()
+        throw new Error(errorData.message || '알림 설정 변경을을 실패했습니다.')
+      }
+      const json = await res.json()
+      console.log('서버 응답:', json)
+      return json
+    },
 
-      setUser({ alarm: updatedAlarm })
+    onSuccess: () => {
+      setUser((prev) => {
+        const nextAlarm = !prev.alarm
+        toast({
+          description: nextAlarm
+            ? '이메일 알림 수신을 받습니다.'
+            : '이메일 알림 수신을 받지 않습니다',
+          variant: 'default',
+        })
+        return {
+          ...prev,
+          alarm: nextAlarm,
+        }
+      })
+    },
 
-      useAuthStore.getState().setUser({
-        email: user.email,
-        nickName: user.nickName,
-        alarm: !user.alarm,
+    onError: (error) => {
+      console.error('알림 설정 변경 실패', error)
+      toast({
+        description: error.message || '알림 설정 변경 중 오류가 발생했습니다.',
+        variant: 'destructive',
       })
     },
   })
