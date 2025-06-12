@@ -6,32 +6,56 @@ import { useRouter } from 'next/navigation'
 import { PATH } from '#app/routes'
 import { toast } from '#hooks/useToast'
 import { BASE_URL } from '#constants/url'
+import type { userInfo } from '#types/user'
 
-// // 마이페이지 조회 get
-// export const useGetUserInfoClient = () => {
-//   const { setUser } = useAuthStore()
+// 마이페이지 조회 GET
+export function useGetUserInfoClient() {
+  const { setUser } = useAuthStore()
 
-//   const { mutate, data, isPending, isSuccess, isError, error } = useMutation({
-//     mutationFn: getUserInfo,
-//     onSuccess: (data: userInfo) => {
-//       setUser({
-//         id: data.id,
-//         email: data.email,
-//         nickName: data.nickName,
-//         alarm: data.alarm,
-//       })
-//     },
-//   })
+  const mutation = useMutation({
+    mutationFn: async (): Promise<userInfo> => {
+      const res = await fetch(`${BASE_URL}/api/users`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      if (!res.ok && res.status === 401) {
+        throw new Error('로그인 세션이 만료되었습니다. 다시 로그인해주세요.')
+      }
 
-//   return {
-//     getUserInfoClient: mutate,
-//     data,
-//     isLoading: isPending,
-//     isSuccess,
-//     isError,
-//     error,
-//   }
-// }
+      if (!res.ok) {
+        throw new Error('유저 정보 불러오기 실패')
+      }
+
+      const json = await res.json()
+      return json.data as userInfo
+    },
+    onSuccess: (data) => {
+      setUser({
+        id: data.id,
+        email: data.email,
+        nickName: data.nickName,
+        alarm: data.alarm,
+      })
+    },
+    onError: (error) => {
+      console.error('유저 정보 조회 실패:', error)
+      toast({
+        description: error.message || '유저 정보 조회 중 오류가 발생했습니다.',
+        variant: 'destructive',
+      })
+    },
+  })
+
+  return {
+    getUserInfoClient: mutation.mutate,
+    isLoading: mutation.isPending,
+    isError: mutation.isError,
+    error: mutation.error,
+  }
+}
 
 // 닉네임 변경 PATCH
 export function usePatchNicknameClient() {

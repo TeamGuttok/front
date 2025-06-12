@@ -9,16 +9,11 @@ import { useState, useEffect } from 'react'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import useTheme from '#contexts/ThemeProvider/hook'
 import { usePatchAlarmClient } from '#apis/notiClient'
-//import { useDeleteUserClient } from '#apis/userClient'
-//import { ConfirmDialog } from '#components/ui/ConfirmDialog'
 import { useLogoutClient } from '#apis/authClient'
-// import { cn } from '#components/lib/utils'
-// import { getMenuClassName } from '#style/style'
 import { useRouter } from 'next/navigation'
 import { toast } from '#hooks/useToast'
 import { Switch } from '#components/_common/Switch'
 import { userInfo } from '#types/user'
-import { useTransition } from 'react'
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -30,7 +25,6 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from '#components/_common/AlertDialog'
-import { useQueryClient } from '@tanstack/react-query'
 
 interface ClientMypageProps {
   initialData: userInfo
@@ -54,7 +48,6 @@ export default function ClientMypage({ initialData }: ClientMypageProps) {
     setHydrated(true)
   }, [])
 
-  // 서버에서 받은 데이터를 zustand로 주입 (최초 1회)
   useEffect(() => {
     setUser(initialData)
   }, [initialData, setUser])
@@ -69,41 +62,6 @@ export default function ClientMypage({ initialData }: ClientMypageProps) {
   //     router.push(PATH.login)
   //   }
   // }, [isLoggedIn, isProfileError, router])
-
-  // const handleDelete = () => {
-  //   startTransition(async () => {
-  //     try {
-  //       const formData = new FormData()
-  //       await deleteUser(formData)
-  //       toast({
-  //         description: '계정이 성공적으로 탈퇴 되었습니다.',
-  //         variant: 'default',
-  //       })
-  //       router.push(PATH.main)
-  //     } catch (err) {
-  //       toast({
-  //         description: '계정 탈퇴 중 오류가 발생했습니다.',
-  //         variant: 'destructive',
-  //       })
-  //     }
-  //   })
-  // }
-
-  // const handleToggleAlarm = () => {
-  //   startTransition(async () => {
-  //     try {
-  //       await patchAlarm()
-  //       toast({
-  //         description: '알림 설정이 변경되었습니다.',
-  //         variant: 'default',
-  //       })
-  //     } catch (err) {
-  //       toast({
-  //         description: '알림 설정 변경 중 오류가 발생했습니다.',
-  //         variant: 'destructive',
-  //       })
-  //     }
-  //   })
 
   if (!hydrated) return null
 

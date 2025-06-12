@@ -1,31 +1,41 @@
 'use client'
 
 import { BASE_URL } from '#constants/url'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { getItems, deleteItems } from '#apis/subscriptionAPI'
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query'
 import { paymentStatus, SubscriptionContents } from '#types/subscription'
 import { useIsLoggedInQuery } from '#hooks/useIsLoggedInQuery'
 import { useUserId } from '#hooks/useUserId'
-import { useAuthStore } from '#stores/auth/useAuthStore'
 import { toast } from '#hooks/useToast'
 import { useRouter } from 'next/navigation'
 import type { SubscriptionRequest } from '#types/subscription'
+import { PATH } from '#app/routes'
+import { fetchNotiRequest, PageRequest } from '#types/notification'
 
-// 전체 서비스 조회 (/)
-export const useGetItemsClient = (
-  lastId = Number.MAX_SAFE_INTEGER,
-  size = Number.MAX_SAFE_INTEGER,
-) => {
-  const userId = useUserId()
-  const userEmail = useAuthStore((state) => state.user?.email)
+//메인 페이지(/): 구독 항목 전체 서비스 조회 GET
+export function useGetItemsClient(pageRequest: PageRequest = fetchNotiRequest) {
+  return useQuery({
+    queryKey: ['subscriptions', 'client', pageRequest],
+    queryFn: async (): Promise<{ contents: SubscriptionContents[] }> => {
+      const query = new URLSearchParams({
+        lastId: String(pageRequest.lastId),
+        size: String(pageRequest.size),
+      })
 
-  return useIsLoggedInQuery(
-    ['subscriptions', userId, userEmail],
-    () => getItems({ lastId, size }),
-    {
-      enabled: !!userId && !!userEmail,
+      const res = await fetch(`${BASE_URL}/api/subscriptions/user?${query}`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      if (!res.ok) {
+        throw new Error('구독 항목 불러오기 실패')
+      }
+
+      return res.json()
     },
-  )
+  })
 }
 
 // 구독 서비스 개별 조회 (/detail)
@@ -38,8 +48,8 @@ export function useGetDetailClient(
   return useIsLoggedInQuery(
     ['subscription', userId, id],
     async () => {
-      const data = await getItems()
-      return data.contents.find((i) => String(i.id) === id) ?? null
+      const queryResult = await useGetItemsClient()
+      return queryResult.data?.contents.find((i) => String(i.id) === id) ?? null
     },
     {
       enabled: !!userId && !!id && (options?.enabled ?? true),
@@ -49,9 +59,6 @@ export function useGetDetailClient(
 
 // 구독 서비스 생성 POST
 export function postItemClient() {
-  const queryClient = useQueryClient()
-  const userId = useUserId()
-
   return useMutation<SubscriptionRequest, Error, SubscriptionRequest>({
     mutationFn: async (payload: SubscriptionRequest) => {
       const res = await fetch(`${BASE_URL}/api/subscriptions`, {
@@ -141,20 +148,45 @@ export function useUpdateItemsClient() {
 
 // 결제 서비스 삭제 (delete)
 export function useDeleteItems() {
-  const queryClient = useQueryClient()
-  const userId = useUserId()
-
   return useMutation({
-    mutationFn: ({ id }: { id: number }) => deleteItems(id),
+    mutationFn: async ({ id }: { id: number }) => {
+      const res = await fetch(`${BASE_URL}/api/subscriptions/${id}`, {
+        method: 'DELETE',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id }),
+      })
 
-    onSuccess: (_, { id }) => {
-      queryClient.invalidateQueries({ queryKey: ['subscriptions', userId] })
-      queryClient.invalidateQueries({ queryKey: ['subscriptions', userId, id] })
+      if (!res.ok) {
+        const errorData = await res.json()
+        throw new Error(errorData.message || '구독 삭제 실패')
+      }
+      return await res.json()
+    },
+
+    onSuccess: ({ id }) => {
+      const router = useRouter()
+      toast({
+        description: '구독 서비스가 성공적으로 삭제되었습니다.',
+        variant: 'default',
+      })
+      router.push(PATH.main)
+    },
+
+    onError: (error) => {
+      console.error('구독 서비스 삭제 실패:', error)
+      toast({
+        description:
+          error.message || '구독 서비스 삭제 중 오류가 발생했습니다.',
+        variant: 'destructive',
+      })
     },
   })
 }
 
-// 결제완료/대기 상태 변경 hook (수정 patch)
+// 결제완료/대기 상태 변경 hook (수정 PATCH)
 export function usePatchPaymentStatusClient() {
   const queryClient = useQueryClient()
   const userId = useUserId()

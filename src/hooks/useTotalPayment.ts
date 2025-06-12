@@ -1,11 +1,12 @@
 'use client'
 
 import { useMemo } from 'react'
-import { useGetItemsClient } from '#apis/subscriptionClient'
 import { parseISO } from 'date-fns'
+import { useGetItemsClient } from '#apis/subscriptionClient'
 
 export function useCurrentMonthPaymentTotal() {
   const { data } = useGetItemsClient()
+
   const items = data?.contents ?? []
   const now = new Date()
 
@@ -20,7 +21,7 @@ export function useCurrentMonthPaymentTotal() {
 
         return isMonthly || isYearlyThisMonth
       })
-      .reduce((sum, item) => sum + item.paymentAmount, 0)
+      .reduce((sum, item) => sum + (Number(item.paymentAmount) || 0), 0)
   }, [items])
 
   return total
