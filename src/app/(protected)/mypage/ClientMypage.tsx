@@ -141,11 +141,11 @@ export default function ClientMypage({ initialData }: ClientMypageProps) {
             <AlertDialogTrigger asChild>
               <Button className="text-white">로그아웃</Button>
             </AlertDialogTrigger>
-            <AlertDialogContent>
+            <AlertDialogContent aria-describedby="logout-description">
               <AlertDialogHeader>
                 <AlertDialogTitle>로그아웃 하시겠습니까?</AlertDialogTitle>
               </AlertDialogHeader>
-              <AlertDialogDescription>
+              <AlertDialogDescription id="logout-description">
                 현재 사용 중인 계정에서 로그아웃 됩니다.
               </AlertDialogDescription>
               <AlertDialogFooter>
@@ -165,10 +165,10 @@ export default function ClientMypage({ initialData }: ClientMypageProps) {
                 탈퇴하기
               </Button>
             </AlertDialogTrigger>
-            <AlertDialogContent>
+            <AlertDialogContent aria-describedby="delete-account-description">
               <AlertDialogHeader>
                 <AlertDialogTitle>정말 탈퇴하시겠습니까?</AlertDialogTitle>
-                <AlertDialogDescription>
+                <AlertDialogDescription id="delete-account-description">
                   탈퇴하면 모든 정보가 삭제되며 복구할 수 없습니다.
                 </AlertDialogDescription>
               </AlertDialogHeader>

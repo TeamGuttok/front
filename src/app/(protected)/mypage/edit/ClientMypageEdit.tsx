@@ -110,6 +110,7 @@ export default function ClientMypageEdit() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="수정할 비밀번호를 작성해주세요"
                 className={cn(inputClassName)}
+                autoComplete="current-password"
               />
             </SelectGroup>
             <Button
