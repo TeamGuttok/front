@@ -9,7 +9,7 @@ import { SelectLabel, SelectGroup } from '#components/_common/Select'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import { groupClassName, labelClassName, inputClassName } from '#style/style'
 import {
-  useGetUserInfoClient,
+  // useGetUserInfoClient,
   usePatchNicknameClient,
   usePatchPasswordClient,
 } from '#apis/userClient'
@@ -17,7 +17,7 @@ import { nickNameSchema, passwordSchema } from '#schema/userSchema'
 
 export default function ClientMypageEdit() {
   const { user, setUser } = useAuthStore()
-  const { data: profile } = useGetUserInfoClient()
+  //const { data: profile } = useGetUserInfoClient()
   const [nickName, setNickName] = useState(user?.nickName ?? '')
   const [password, setPassword] = useState('')
 
@@ -34,7 +34,7 @@ export default function ClientMypageEdit() {
       return
     }
 
-    updateNickName(nickName)
+    updateNickName({ nickName })
   }
 
   const passwordUpdateSubmit = () => {
@@ -45,14 +45,14 @@ export default function ClientMypageEdit() {
       return
     }
 
-    updatePassword(password)
+    updatePassword({ password })
   }
 
   useEffect(() => {
-    if (profile?.nickName) {
-      setNickName(profile.nickName)
+    if (user?.nickName) {
+      setNickName(user.nickName)
     }
-  }, [profile])
+  }, [user])
 
   // TODO
   // [ ] input 반응형 스타일 수정

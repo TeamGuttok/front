@@ -8,61 +8,70 @@ import { Plus } from 'lucide-react'
 import { getGreeting } from '#hooks/getGreeting'
 import { useGetUserInfoClient } from '#apis/userClient'
 import { useCurrentMonthPaymentTotal } from '#hooks/useTotalPayment'
-import { Skeleton } from '#components/_common/Skeleton'
+//import { Skeleton } from '#components/_common/Skeleton'
 import { useEffect } from 'react'
-import { toast } from '#hooks/useToast'
-import { useRouter } from 'next/navigation'
-import { useAuthStore } from '#stores/auth/useAuthStore'
+// import { toast } from '#hooks/useToast'
+// import { useRouter } from 'next/navigation'
+// import { useAuthStore } from '#stores/auth/useAuthStore'
 
-export default function AuthenficatedPage() {
-  const {
-    data: userInfo,
-    getUserInfoClient,
-    isLoading,
-  } = useGetUserInfoClient()
-  const { login, logout, setUser, isLoggedIn } = useAuthStore()
-  const router = useRouter()
+export default function AuthenficatedPage({
+  initialItems,
+}: {
+  initialItems: any[]
+}) {
+  // const {
+  //   data: userInfo,
+  //   getUserInfoClient,
+  //   isLoading,
+  // } = useGetUserInfoClient()
+  // const { login, logout, user, setUser, isLoggedIn } = useAuthStore()
+  // const router = useRouter()
+  const { getUserInfoClient, isLoading } = useGetUserInfoClient()
 
-  useEffect(() => {
-    getUserInfoClient(undefined, {
-      onSuccess: (data) => {
-        login(data)
-      },
-      onError: (error) => {
-        if (
-          error.message.includes('SESSION') ||
-          error.message.includes('401')
-        ) {
-          logout()
-          router.replace(PATH.main)
-          toast({
-            variant: 'default',
-            description: '30분 동안 활동이 없어 로그아웃 되었습니다.',
-          })
-        }
-      },
-    })
-  }, [])
-  const nickName = userInfo?.nickName
+  // useEffect(() => {
+  //   getUserInfoClient(undefined, {
+  //     onSuccess: (data) => {
+  //       login(data)
+  //     },
+  //     onError: (error) => {
+  //       if (
+  //         error.message.includes('SESSION') ||
+  //         error.message.includes('401')
+  //       ) {
+  //         logout()
+  //         router.replace(PATH.main)
+  //         toast({
+  //           variant: 'default',
+  //           description: '30분 동안 활동이 없어 로그아웃 되었습니다.',
+  //         })
+  //       }
+  //     },
+  //   })
+  // }, [])
+
   const monthlyTotal = useCurrentMonthPaymentTotal()
 
-  if (isLoading) {
-    return (
-      <main className="p-6 space-y-4">
-        <Skeleton className="h-12 w-3/4" />
-        <Skeleton className="h-6 w-5/6" />
-        <Skeleton className="h-6 w-2/3" />
-        <Skeleton className="h-40 w-full rounded-lg" />
-      </main>
-    )
-  }
+  // if (isLoading) {
+  //   return (
+  //     <main className="p-6 space-y-4">
+  //       <Skeleton className="h-12 w-3/4" />
+  //       <Skeleton className="h-6 w-5/6" />
+  //       <Skeleton className="h-6 w-2/3" />
+  //       <Skeleton className="h-40 w-full rounded-lg" />
+  //     </main>
+  //   )
+  // }
+
+  useEffect(() => {
+    getUserInfoClient()
+  }, [])
 
   return (
     <div className="mx-auto p-4 flex flex-col min-h-[calc(100vh-4.5rem)] pb-[3rem]">
       <div className="flex justify-between mt-3 mb-6">
         <div className="flex flex-col">
           <h1 className="text-xl font-semibold flex flex-row">
-            {getGreeting(nickName, isLoading)}
+            {getGreeting()}
           </h1>
           <h2>
             이번 달 지출은{' '}

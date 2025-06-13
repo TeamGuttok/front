@@ -33,24 +33,24 @@ export const getNotis = async (
 }
 
 // 알림 상태 (사용/미사용) 변경 patch
-export const patchAlarm = async () => {
-  const res = await fetch(`${BASE_URL}/api/users/alarm`, {
-    method: 'PATCH',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-  })
+// export const patchAlarm = async () => {
+//   const res = await fetch(`${BASE_URL}/api/users/alarm`, {
+//     method: 'PATCH',
+//     headers: {
+//       Accept: 'application/json',
+//       'Content-Type': 'application/json',
+//     },
+//     credentials: 'include',
+//   })
 
-  const result = await res.json()
+//   const result = await res.json()
 
-  if (!res.ok) {
-    throw new Error(result.message || '알림 설정 변경 실패')
-  }
+//   if (!res.ok) {
+//     throw new Error(result.message || '알림 설정 변경 실패')
+//   }
 
-  return result
-}
+//   return result
+// }
 
 // 알림 읽음 처리 put
 export const putNotis = async (ids: number[]) => {

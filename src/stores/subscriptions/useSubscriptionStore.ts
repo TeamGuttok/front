@@ -59,9 +59,6 @@ export type SubscriptionState = {
     value: SubscriptionStore[K],
   ) => void
 
-  saveSubscriptionDataForUser: (userId: string) => void
-  getSubscriptionDataForUser: (userId: string) => void
-
   paymentMethodOptions: typeof paymentMethodOptions
   paymentStatusOptions: typeof paymentStatusOptions
   paymentCycleOptions: typeof paymentCycleOptions
@@ -76,28 +73,6 @@ export const useSubscriptionStore = create<SubscriptionState>((set, get) => ({
     set((state) => ({
       subscriptionData: { ...state.subscriptionData, ...data },
     })),
-
-  saveSubscriptionDataForUser: (userId) => {
-    const current = get().subscriptionData
-    sessionStorage.setItem(
-      `subscriptionData-${userId}`,
-      JSON.stringify(current),
-    )
-  },
-
-  getSubscriptionDataForUser: (userId) => {
-    const raw = sessionStorage.getItem(`subscriptionData-${userId}`)
-    if (raw) {
-      try {
-        const parsed = JSON.parse(raw)
-        set({ subscriptionData: parsed })
-      } catch {
-        set({ subscriptionData: { ...initialState } })
-      }
-    } else {
-      set({ subscriptionData: { ...initialState } })
-    }
-  },
 
   updateSubscription: (isCustom, subscriptionId) =>
     set((state) => {

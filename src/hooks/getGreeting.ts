@@ -1,4 +1,7 @@
-export function getGreeting(nickName: string | undefined, isLoading: boolean) {
+import { useAuthStore } from '#stores/auth/useAuthStore'
+
+export function getGreeting() {
+  const nickName = useAuthStore((state) => state.user?.nickName)
   const hour = new Date().getHours()
 
   const base =
@@ -8,7 +11,5 @@ export function getGreeting(nickName: string | undefined, isLoading: boolean) {
         ? '좋은 점심입니다,'
         : '좋은 저녁입니다,'
 
-  const nameText = isLoading ? '...' : `${nickName}님.`
-
-  return `${base} ${nameText}`
+  return `${base} ${nickName || '회원'}님`
 }

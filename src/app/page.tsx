@@ -11,7 +11,11 @@ export default async function Main() {
   return (
     <>
       <main>
-        {isLoggedIn ? <AuthenticatedPage /> : <UnauthenticatedPage />}
+        {isLoggedIn ? (
+          <AuthenticatedPage initialItems={[]} />
+        ) : (
+          <UnauthenticatedPage />
+        )}
       </main>
       <FeedbackButton />
     </>

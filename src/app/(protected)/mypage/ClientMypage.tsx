@@ -8,57 +8,62 @@ import { Button } from '#components/_common/Button'
 import { useState, useEffect } from 'react'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import useTheme from '#contexts/ThemeProvider/hook'
-import { usepatchAlarmClient } from '#apis/notiClient'
-import { useGetUserInfoClient, useDeleteUserClient } from '#apis/userClient'
-import { ConfirmDialog } from '#components/ui/ConfirmDialog'
-import { useHandleLogout } from '#hooks/useHandleLogout'
-import { cn } from '#components/lib/utils'
-import { getMenuClassName } from '#style/style'
+import { usePatchAlarmClient } from '#apis/notiClient'
+import { useLogoutClient } from '#apis/authClient'
 import { useRouter } from 'next/navigation'
 import { toast } from '#hooks/useToast'
 import { Switch } from '#components/_common/Switch'
+import { userInfo } from '#types/user'
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from '#components/_common/AlertDialog'
 
-export default function ClientMypage() {
-  const router = useRouter()
-  const isLoggedIn = useAuthStore()
+interface ClientMypageProps {
+  initialData: userInfo
+}
 
-  const {
-    getUserInfoClient,
-    data: getMypage,
-    isError: isProfileError,
-  } = useGetUserInfoClient()
-
-  const { mutate: deleteAccount, isPending: isDeletingAccount } =
-    useDeleteUserClient()
-  const { mutate: toggleAlarm, isPending: isTogglingAlarm } =
-    usepatchAlarmClient()
-
+export default function ClientMypage({ initialData }: ClientMypageProps) {
+  const { user, setUser, logout } = useAuthStore()
+  const [hydrated, setHydrated] = useState(false)
   const { theme, setTheme } = useTheme()
+  const router = useRouter()
+  const logoutMutation = useLogoutClient()
 
-  const [showLogoutDialog, setShowLogoutDialog] = useState(false)
-  const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false)
-  const handleLogout = useHandleLogout()
+  const handleLogout = () => {
+    logoutMutation.mutate()
+  }
+
+  const { mutate: toggleAlarm, isPending: isTogglingAlarm } =
+    usePatchAlarmClient()
 
   useEffect(() => {
-    getUserInfoClient(undefined, {
-      onError: (error) => {
-        console.error('유저 정보 불러오기 실패:', error)
-        toast({
-          variant: 'destructive',
-          description: '세션이 만료되었거나 유저 정보를 불러오지 못했습니다.',
-        })
-        router.push(PATH.main)
-      },
-    })
-  }, [getUserInfoClient, router])
+    setHydrated(true)
+  }, [])
 
-  // TODO
-  // [ ] 미들웨어 연결 후 삭제 (for SEO)
   useEffect(() => {
-    if (!isLoggedIn || isProfileError) {
-      router.push(PATH.login)
-    }
-  }, [isLoggedIn, isProfileError, router])
+    setUser(initialData)
+  }, [initialData, setUser])
+
+  const afterDelete = () => {
+    logout()
+    router.push(PATH.main)
+  }
+
+  // useEffect(() => {
+  //   if (!isLoggedIn || isProfileError) {
+  //     router.push(PATH.login)
+  //   }
+  // }, [isLoggedIn, isProfileError, router])
+
+  if (!hydrated) return null
 
   return (
     <CardTitle>
@@ -84,11 +89,11 @@ export default function ClientMypage() {
         </div>
         <div className="flex justify-between mb-2">
           <p className="text-gray-600">닉네임</p>
-          <div>{getMypage?.nickName}</div>
+          <div>{user?.nickName}</div>
         </div>
         <div className="flex justify-between mb-2">
           <p className="text-gray-600">이메일</p>
-          <div>{getMypage?.email}</div>
+          <div>{user?.email}</div>
         </div>
       </div>
       <hr />
@@ -101,28 +106,8 @@ export default function ClientMypage() {
           <div>
             <Switch
               aria-label="이메일 알림 수신 여부 설정 토글"
-              checked={getMypage?.alarm}
-              onCheckedChange={() =>
-                toggleAlarm(undefined, {
-                  onSuccess: async () => {
-                    await getUserInfoClient()
-                    const willSubscribe = !getMypage?.alarm
-                    toast({
-                      description: willSubscribe
-                        ? '이메일 알림 수신을 받습니다.'
-                        : '이메일 알림 수신을 받지 않습니다.',
-                      variant: 'default',
-                    })
-                  },
-                  onError: () => {
-                    toast({
-                      description:
-                        '이메일 수신 여부 변경 중 오류가 발생했습니다.',
-                      variant: 'destructive',
-                    })
-                  },
-                })
-              }
+              checked={user?.alarm}
+              onCheckedChange={() => toggleAlarm()}
               disabled={isTogglingAlarm}
             />
           </div>
@@ -152,50 +137,51 @@ export default function ClientMypage() {
         </div>
 
         <div className="flex justify-end mt-3 mb-9">
-          <Button
-            onClick={() => setShowLogoutDialog(true)}
-            className={cn(getMenuClassName())}
-          >
-            <span className="text-white">로그아웃</span>
-          </Button>
-          <ConfirmDialog
-            open={showLogoutDialog}
-            onOpenChange={setShowLogoutDialog}
-            title="로그아웃 하시겠습니까?"
-            onConfirm={handleLogout}
-          />
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button className="text-white">로그아웃</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>로그아웃 하시겠습니까?</AlertDialogTitle>
+              </AlertDialogHeader>
+              <AlertDialogDescription>
+                현재 사용 중인 계정에서 로그아웃 됩니다.
+              </AlertDialogDescription>
+              <AlertDialogFooter>
+                <AlertDialogCancel>취소</AlertDialogCancel>
+                <AlertDialogAction asChild>
+                  <button type="submit" onClick={handleLogout}>
+                    로그아웃
+                  </button>
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
 
-          <Button
-            onClick={() => setShowDeleteDialog(true)}
-            className="bg-red-400 hover:bg-red-500 ml-4"
-            disabled={isDeletingAccount}
-          >
-            <span>탈퇴하기</span>
-          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button className="bg-red-500 ml-4 hover:bg-red-600">
+                탈퇴하기
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>정말 탈퇴하시겠습니까?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  탈퇴하면 모든 정보가 삭제되며 복구할 수 없습니다.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>취소</AlertDialogCancel>
+                <AlertDialogAction asChild>
+                  <button>탈퇴</button>
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </div>
-      <ConfirmDialog
-        open={showDeleteDialog}
-        onOpenChange={setShowDeleteDialog}
-        title="정말 탈퇴하시겠습니까?"
-        description="탈퇴하시면 계정과 기록이 모두 삭제됩니다."
-        onConfirm={() =>
-          deleteAccount(undefined, {
-            onSuccess: () => {
-              toast({
-                description: '계정이 성공적으로 삭제되었습니다.',
-                variant: 'default',
-              })
-            },
-            onError: () => {
-              toast({
-                description: '계정 삭제 중 오류가 발생했습니다.',
-                variant: 'destructive',
-              })
-            },
-          })
-        }
-      />
     </CardTitle>
   )
 }

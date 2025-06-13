@@ -9,14 +9,14 @@ import { useAuthStore } from '#stores/auth/useAuthStore'
 import { getMenuClassName } from '#style/style'
 import { useState } from 'react'
 import { ConfirmDialog } from '#components/ui/ConfirmDialog'
-import { useHandleLogout } from '#hooks/useHandleLogout'
+import { useLogoutClient } from '#apis/authClient'
 import { usePathname } from 'next/navigation'
 
 export default function SideBar() {
   const { theme, setTheme } = useTheme()
   const pathname = usePathname()
   const [showLogoutDialog, setShowLogoutDialog] = useState(false)
-  const handleLogout = useHandleLogout()
+  const handleLogout = useLogoutClient()
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
 
   return (
@@ -92,7 +92,7 @@ export default function SideBar() {
                 <span>로그아웃</span>
               </button>
               <ConfirmDialog
-                onConfirm={handleLogout}
+                onConfirm={() => handleLogout.mutate()}
                 open={showLogoutDialog}
                 onOpenChange={setShowLogoutDialog}
                 title="로그아웃 하시겠습니까?"

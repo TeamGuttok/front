@@ -4,6 +4,7 @@ export interface userInfo {
   nickName: string
   alarm: boolean
   password?: string
+  policyConsent?: boolean
 }
 
 export interface ApiResponse {
@@ -13,6 +14,11 @@ export interface ApiResponse {
 }
 
 export interface LoginInput {
-  email: string
+  email?: string
   password: string
+}
+
+export interface codeInfo {
+  email: string
+  certificationNumber: string
 }

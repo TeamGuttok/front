@@ -14,7 +14,7 @@ import {
 } from '#components/_common/Select'
 import CardTitle from '#components/_common/CardTitle'
 import { useSubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
-import { createItems } from '#apis/subscriptionAPI'
+import { postItemClient } from '#apis/subscriptionClient'
 import { SubscriptionRequest } from '#types/subscription'
 import { KNOWN_SERVICES } from '#constants/knownServices'
 import { groupClassName, labelClassName, inputClassName } from '#style/style'
@@ -23,7 +23,7 @@ import { PATH } from '#app/routes'
 
 export default function ClientDetailItems() {
   const router = useRouter()
-  const mutation = createItems()
+  const mutation = postItemClient()
 
   const {
     subscriptionData,
@@ -32,7 +32,6 @@ export default function ClientDetailItems() {
     paymentMethodOptions,
     paymentCycleOptions,
     paymentDayOptions,
-    saveSubscriptionDataForUser,
   } = useSubscriptionStore((state: any) => state)
 
   const {
