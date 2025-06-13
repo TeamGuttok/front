@@ -17,7 +17,6 @@ import { nickNameSchema, passwordSchema } from '#schema/userSchema'
 
 export default function ClientMypageEdit() {
   const { user, setUser } = useAuthStore()
-  //const { data: profile } = useGetUserInfoClient()
   const [nickName, setNickName] = useState(user?.nickName ?? '')
   const [password, setPassword] = useState('')
 
@@ -85,6 +84,7 @@ export default function ClientMypageEdit() {
               />
             </SelectGroup>
             <Button
+              aria-label="닉네임 수정 버튼"
               type="button"
               onClick={nickNameUpdateSubmit}
               disabled={isNickNameUpdating}
@@ -113,6 +113,7 @@ export default function ClientMypageEdit() {
               />
             </SelectGroup>
             <Button
+              aria-label="비밀번호 수정 버튼"
               type="button"
               onClick={passwordUpdateSubmit}
               disabled={isPasswordUpdating}

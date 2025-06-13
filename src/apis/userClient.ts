@@ -67,23 +67,24 @@ export function usePatchNicknameClient() {
         method: 'PATCH',
         credentials: 'include',
         headers: {
-          Accept: 'application/json',
           'Content-Type': 'application/json',
+          Accept: 'application/json',
         },
         body: JSON.stringify({ nickName }),
       })
 
-      if (!res.ok) {
-        const errorData = await res.json()
-        throw new Error(errorData.message || '닉네임 변경에 실패했습니다.')
-      }
+      const json = await res.json()
 
-      return await res.json()
+      if (!res.ok) {
+        throw new Error(json.message || '닉네임 변경에 실패했습니다.')
+      }
+      console.log('닉네임 변경 응답:', json)
+      return { nickName }
     },
 
-    onSuccess: (response, variables) => {
-      const updatedNickName = response?.data?.nickName ?? variables.nickName
-      setUser({ nickName: updatedNickName })
+    onSuccess: (response) => {
+      //const updatedNickName = response?.data?.nickName ?? variables.nickName
+      setUser({ nickName: response.nickName })
 
       toast({
         description: '성공적으로 닉네임이 변경되었습니다.',
