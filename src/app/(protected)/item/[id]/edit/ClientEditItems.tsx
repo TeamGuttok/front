@@ -25,7 +25,10 @@ import {
 } from '#types/subscription'
 import { groupClassName, inputClassName, labelClassName } from '#style/style'
 import { useEffect } from 'react'
-import { useUpdateItems, useGetDetailClient } from '#apis/subscriptionClient'
+import {
+  useUpdateItemsClient,
+  useGetDetailClient,
+} from '#apis/subscriptionClient'
 import { Textarea } from '#components/_common/TextArea'
 
 export default function Page() {
@@ -38,7 +41,7 @@ export default function Page() {
     error,
   } = useGetDetailClient(String(subscriptionId))
 
-  const patchMutation = useUpdateItems()
+  const patchMutation = useUpdateItemsClient()
   const { selectedService } = useServiceStore()
   const { subscriptionData } = useSubscriptionStore()
 
