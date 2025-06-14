@@ -73,11 +73,11 @@ export function usePatchNicknameClient() {
         body: JSON.stringify({ nickName }),
       })
 
-      const json = await res.json()
-
       if (!res.ok) {
-        throw new Error(json.message || '닉네임 변경에 실패했습니다.')
+        const errorData = await res.json()
+        throw new Error(errorData.message || '닉네임 변경에 실패했습니다.')
       }
+      const json = await res.json()
       console.log('닉네임 변경 응답:', json)
       return { nickName }
     },
