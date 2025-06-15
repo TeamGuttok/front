@@ -5,12 +5,15 @@ import { PATH } from '#app/routes'
 import { cookies, headers } from 'next/headers'
 
 export default async function MyPagePage() {
-  let userData: Awaited<ReturnType<typeof getUserInfo>> | null = null
+  // let userData: Awaited<ReturnType<typeof getUserInfo>>
   try {
-    userData = await getUserInfo()
+    const userData = await getUserInfo()
+    return <ClientMyPage initialData={userData} />
+    // if (!userData) {
+    //   redirect(PATH.login)
+    // }
   } catch (err) {
+    console.error('SSR 유저 정보 로드 실패:', err)
     redirect(PATH.login)
   }
-
-  return <ClientMyPage initialData={userData} />
 }
