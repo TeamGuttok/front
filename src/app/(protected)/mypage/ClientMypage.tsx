@@ -48,14 +48,12 @@ export default function ClientMypage({ initialData }: ClientMypageProps) {
 
   useEffect(() => {
     setUser(initialData)
-    console.log('ClientMypage 렌더링', { initialData, user })
   }, [initialData, setUser])
 
   return (
     <CardTitle>
       <CardTitle.Heading>마이페이지</CardTitle.Heading>
       <CardTitle.Divider />
-      {JSON.stringify({ initialData, user }, null, 2)}
       <div className="w-full p-5">
         <div className="flex justify-between items-center mb-4">
           <p className="text-lg font-semibold">프로필 정보</p>
