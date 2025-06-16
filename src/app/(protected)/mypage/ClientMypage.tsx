@@ -5,13 +5,12 @@ import { PATH } from '#app/routes'
 import { Settings } from 'lucide-react'
 import CardTitle from '#components/_common/CardTitle'
 import { Button } from '#components/_common/Button'
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import useTheme from '#contexts/ThemeProvider/hook'
 import { usePatchAlarmClient } from '#apis/notiClient'
 import { useLogoutClient } from '#apis/authClient'
 import { useDeleteUserClient } from '#apis/userClient'
-import { useRouter } from 'next/navigation'
 import { toast } from '#hooks/useToast'
 import { Switch } from '#components/_common/Switch'
 import { userInfo } from '#types/user'
@@ -32,10 +31,8 @@ interface ClientMypageProps {
 }
 
 export default function ClientMypage({ initialData }: ClientMypageProps) {
-  const { user, setUser, logout } = useAuthStore()
-  //const [hydrated, setHydrated] = useState(false)
+  const { user, setUser } = useAuthStore()
   const { theme, setTheme } = useTheme()
-  const router = useRouter()
   const logoutMutation = useLogoutClient()
   const useDeleteMutation = useDeleteUserClient()
 
@@ -49,32 +46,16 @@ export default function ClientMypage({ initialData }: ClientMypageProps) {
   const { mutate: toggleAlarm, isPending: isTogglingAlarm } =
     usePatchAlarmClient()
 
-  // useEffect(() => {
-  //   setHydrated(true)
-  // }, [])
-
   useEffect(() => {
     setUser(initialData)
+    console.log('ClientMypage 렌더링', { initialData, user })
   }, [initialData, setUser])
-
-  //  const afterDelete = () => {
-  //   logout()
-  //   router.push(PATH.main)
-  // }
-
-  // useEffect(() => {
-  //   if (!isLoggedIn || isProfileError) {
-  //     router.push(PATH.login)
-  //   }
-  // }, [isLoggedIn, isProfileError, router])
-
-  //if (!hydrated) return null
 
   return (
     <CardTitle>
       <CardTitle.Heading>마이페이지</CardTitle.Heading>
       <CardTitle.Divider />
-
+      {JSON.stringify({ initialData, user }, null, 2)}
       <div className="w-full p-5">
         <div className="flex justify-between items-center mb-4">
           <p className="text-lg font-semibold">프로필 정보</p>
