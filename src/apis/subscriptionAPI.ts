@@ -6,9 +6,6 @@ import type {
   SubscriptionContents,
 } from '#types/subscription'
 import { BASE_URL } from '#constants/url'
-import { useUserId } from '#hooks/useUserId'
-import { FETCH_ALL } from '#constants/pagination'
-import { Toast } from '#components/_common/Toast'
 import { cookies } from 'next/headers'
 import { PageRequest, fetchNotiRequest } from '#types/notification'
 
@@ -33,37 +30,7 @@ export async function searchService(name: string) {
   return res.json()
 }
 
-// 구독 서비스 생성 (post)
-// export const createItems = () => {
-//   const queryClient = useQueryClient()
-//   const userId = useUserId()
-
-//   return useMutation({
-//     mutationFn: async (payload: SubscriptionRequest) => {
-//       const res = await fetch(`${BASE_URL}/api/subscriptions`, {
-//         method: 'POST',
-//         credentials: 'include',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify(payload),
-//       })
-
-//       const result = await res.json()
-
-//       if (!res.ok) {
-//         throw new Error(result.message || '구독 생성 실패')
-//       }
-
-//       return result
-//     },
-//     onSuccess: () => {
-//       queryClient.invalidateQueries({ queryKey: ['subscriptions', userId] })
-//     },
-//   })
-// }
-
-// 구독서비스 조회 api (get)
+// 구독서비스 조회 GET (/)
 export async function getItems(pageRequest: PageRequest = fetchNotiRequest) {
   const query = new URLSearchParams({
     lastId: String(pageRequest.lastId),
@@ -72,16 +39,14 @@ export async function getItems(pageRequest: PageRequest = fetchNotiRequest) {
 
   const session = (await cookies()).get('SESSION')
 
-  if (!session)
-    throw new Error('세션이 존재하지 않습니다. 로그인 후 다시 시도해주세요.')
-  console.log(session.value)
+  if (!session) throw new Error('세션 없음')
+  console.log(session.value, 'fetching user info from')
 
   const res = await fetch(
     `${BASE_URL}/api/subscriptions/user?${query.toString()}`,
     {
       cache: 'no-cache',
       method: 'GET',
-      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
         cookie: `SESSION=${session.value}`,
@@ -100,43 +65,45 @@ export async function getItems(pageRequest: PageRequest = fetchNotiRequest) {
   return res.json()
 }
 
-// 구독서비스 수정 api (patch)
-// export const patchItems = async (
-//   id: number,
-//   payload: Partial<SubscriptionContents>,
-// ) => {
-//   const res = await fetch(`${BASE_URL}/api/subscriptions/${id}`, {
-//     method: 'PATCH',
-//     credentials: 'include',
-//     headers: {
-//       'Content-Type': 'application/json',
-//     },
-//     body: JSON.stringify(payload),
-//   })
+// 구독 서비스 개별 조회 GET (/detail)
+export async function getItemById(id: string): Promise<SubscriptionContents> {
+  const cookieStore = await cookies()
+  const session = cookieStore.get('SESSION')
 
-//   const result = await res.json()
+  if (!session) throw new Error('세션 없음')
 
-//   if (!res.ok) {
-//     throw new Error(result.message || '구독 수정 실패')
-//   }
-//   return result
-// }
+  const query = new URLSearchParams({
+    lastId: String(Number.MAX_SAFE_INTEGER),
+    size: String(Number.MAX_SAFE_INTEGER),
+  })
 
-// 구독 서비스 삭제 api (delete)
-// export const deleteItems = async (id: number) => {
-//   const res = await fetch(`${BASE_URL}/api/subscriptions/${id}`, {
-//     method: 'DELETE',
-//     credentials: 'include',
-//     headers: {
-//       'Content-Type': 'application/json',
-//     },
-//     body: JSON.stringify({ id }),
-//   })
+  const res = await fetch(
+    `${BASE_URL}/api/subscription/user?${query.toString()}`,
+    {
+      method: 'GET',
+      cache: 'no-cache',
+      headers: {
+        'Content-Type': 'application/json',
+        Cookie: `SESSION=${session.value}`,
+      },
+    },
+  )
 
-//   const result = await res.json()
+  if (!res.ok && res.status === 401) {
+    throw new Error('로그인 세션이 만료되었습니다. 다시 로그인해주세요.')
+  }
 
-//   if (!res.ok) {
-//     throw new Error(result.message || '구독 삭제 실패')
-//   }
-//   return result
-// }
+  if (!res.ok) {
+    const errorText = await res.text()
+    console.error('구독 항목 fetch 실패 내용:', errorText)
+    throw new Error('구독 항목 불러오기 실패')
+  }
+
+  const json = await res.json()
+
+  const matched = json.contents.find((item: any) => String(item.id) === id)
+  if (!matched)
+    throw new Error(`ID ${id}에 해당하는 구독 항목을 찾을 수 없습니다.`)
+
+  return matched
+}

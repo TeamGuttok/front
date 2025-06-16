@@ -128,10 +128,10 @@ export default function ClientMypage({ initialData }: ClientMypageProps) {
             <AlertDialogContent aria-describedby="logout-description">
               <AlertDialogHeader>
                 <AlertDialogTitle>로그아웃 하시겠습니까?</AlertDialogTitle>
+                <AlertDialogDescription id="logout-description">
+                  현재 사용 중인 계정에서 로그아웃 됩니다.
+                </AlertDialogDescription>
               </AlertDialogHeader>
-              <AlertDialogDescription id="logout-description">
-                현재 사용 중인 계정에서 로그아웃 됩니다.
-              </AlertDialogDescription>
               <AlertDialogFooter>
                 <AlertDialogCancel>취소</AlertDialogCancel>
                 <AlertDialogAction asChild>

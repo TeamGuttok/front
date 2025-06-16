@@ -4,9 +4,9 @@
 
 import { BASE_URL } from '#constants/url'
 import type { userInfo } from '#types/user'
-import { cookies, headers } from 'next/headers'
+import { cookies } from 'next/headers'
 
-// 마이페이지 조회 get
+// 마이페이지 조회 GET
 export const getUserInfo = async (): Promise<userInfo> => {
   const session = (await cookies()).get('SESSION')
 
@@ -15,7 +15,6 @@ export const getUserInfo = async (): Promise<userInfo> => {
 
   const res = await fetch(`${BASE_URL}/api/users`, {
     method: 'GET',
-    // credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
       Cookie: `SESSION=${session.value}`,
