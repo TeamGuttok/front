@@ -10,6 +10,7 @@ import { useAuthStore } from '#stores/auth/useAuthStore'
 import useTheme from '#contexts/ThemeProvider/hook'
 import { usePatchAlarmClient } from '#apis/notiClient'
 import { useLogoutClient } from '#apis/authClient'
+import { useDeleteUserClient } from '#apis/userClient'
 import { useRouter } from 'next/navigation'
 import { toast } from '#hooks/useToast'
 import { Switch } from '#components/_common/Switch'
@@ -32,30 +33,34 @@ interface ClientMypageProps {
 
 export default function ClientMypage({ initialData }: ClientMypageProps) {
   const { user, setUser, logout } = useAuthStore()
-  const [hydrated, setHydrated] = useState(false)
+  //const [hydrated, setHydrated] = useState(false)
   const { theme, setTheme } = useTheme()
   const router = useRouter()
   const logoutMutation = useLogoutClient()
+  const useDeleteMutation = useDeleteUserClient()
 
   const handleLogout = () => {
     logoutMutation.mutate()
+  }
+  const handleDeletUser = () => {
+    useDeleteMutation.mutate()
   }
 
   const { mutate: toggleAlarm, isPending: isTogglingAlarm } =
     usePatchAlarmClient()
 
-  useEffect(() => {
-    setHydrated(true)
-  }, [])
+  // useEffect(() => {
+  //   setHydrated(true)
+  // }, [])
 
   useEffect(() => {
     setUser(initialData)
   }, [initialData, setUser])
 
-  const afterDelete = () => {
-    logout()
-    router.push(PATH.main)
-  }
+  //  const afterDelete = () => {
+  //   logout()
+  //   router.push(PATH.main)
+  // }
 
   // useEffect(() => {
   //   if (!isLoggedIn || isProfileError) {
@@ -63,7 +68,7 @@ export default function ClientMypage({ initialData }: ClientMypageProps) {
   //   }
   // }, [isLoggedIn, isProfileError, router])
 
-  if (!hydrated) return null
+  //if (!hydrated) return null
 
   return (
     <CardTitle>
@@ -175,7 +180,9 @@ export default function ClientMypage({ initialData }: ClientMypageProps) {
               <AlertDialogFooter>
                 <AlertDialogCancel>취소</AlertDialogCancel>
                 <AlertDialogAction asChild>
-                  <button>탈퇴</button>
+                  <button type="submit" onClick={handleDeletUser}>
+                    탈퇴
+                  </button>
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>

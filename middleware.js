@@ -2,17 +2,7 @@ import { NextResponse } from 'next/server'
 // import type { NextRequest } from 'next/server'
 
 export const config = {
-  matcher: [
-    '/mypage',
-    '/mypage/edit',
-    '/notification',
-    '/item/add',
-    '/item/add/detail',
-    '/item/:id/detail',
-    '/item/:id/edit',
-    '/mypage/:path*',
-    '/item/:path*',
-  ],
+  matcher: ['/mypage/:path*', '/notification', '/item/:path*'],
 }
 export function middleware(request) {
   const session = request.cookies.get('SESSION')
