@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import ClientMyPage from './ClientMypage'
 import { getUserInfo } from '#apis/userAPI'
 
