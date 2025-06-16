@@ -78,7 +78,7 @@ export async function getItemById(id: string): Promise<SubscriptionContents> {
   })
 
   const res = await fetch(
-    `${BASE_URL}/api/subscription/user?${query.toString()}`,
+    `${BASE_URL}/api/subscriptions/user?${query.toString()}`,
     {
       method: 'GET',
       cache: 'no-cache',
