@@ -1,27 +1,34 @@
 'use server'
 // 구독 목록 조회 / knownServices 구독 서비스 리스트
 
-import type {
-  SubscriptionRequest,
-  SubscriptionContents,
-} from '#types/subscription'
+import type { SubscriptionContents } from '#types/subscription'
 import { BASE_URL } from '#constants/url'
 import { cookies } from 'next/headers'
 import { PageRequest, fetchNotiRequest } from '#types/notification'
 
-// 구독 서비스 리스트 검색
+// 구독 서비스 리스트 검색 GET (/add)
 export async function searchService(name: string) {
   const params = new URLSearchParams({ name })
-  const url = `${BASE_URL}/api/subscriptions?${params.toString()}`
 
-  const res = await fetch(url, {
-    method: 'GET',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
+  const session = (await cookies()).get('SESSION')
+  if (!session) throw new Error('세션 없음')
+
+  const res = await fetch(
+    `${BASE_URL}/api/subscriptions?${params.toString()}`,
+    {
+      cache: 'no-cache',
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        Cookie: `SESSION=${session.value}`,
+      },
     },
-  })
+  )
+
+  if (!res.ok && res.status === 401) {
+    throw new Error('세션이 만료되었습니다. 다시 로그인해주세요.')
+  }
 
   if (!res.ok) {
     throw new Error('검색 요청 실패')
@@ -49,7 +56,7 @@ export async function getItems(pageRequest: PageRequest = fetchNotiRequest) {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        cookie: `SESSION=${session.value}`,
+        Cookie: `SESSION=${session.value}`,
       },
     },
   )
