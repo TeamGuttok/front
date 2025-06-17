@@ -2,9 +2,10 @@ export const dynamic = 'force-dynamic'
 
 import ClientEditItems from './ClientEditItems'
 
-export default async function EditItems(props: { params: { id: string } }) {
+export default async function EditItems(props: {
+  params: Promise<{ id: string }>
+}) {
   const params = await props.params
-  console.log('edit/page.tsx params', params, params.id)
 
   try {
     return <ClientEditItems params={{ id: params.id }} />
