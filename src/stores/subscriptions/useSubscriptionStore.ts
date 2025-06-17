@@ -8,6 +8,7 @@ import {
   PaymentDay,
   PaymentCycle,
   paymentStatus,
+  ServiceId,
 } from '#types/subscription'
 import { KNOWN_SERVICES } from '#constants/knownServices'
 
@@ -58,7 +59,7 @@ export type SubscriptionState = {
     key: K,
     value: SubscriptionStore[K],
   ) => void
-
+  getDisplayTitle: () => string
   paymentMethodOptions: typeof paymentMethodOptions
   paymentStatusOptions: typeof paymentStatusOptions
   paymentCycleOptions: typeof paymentCycleOptions
@@ -98,6 +99,12 @@ export const useSubscriptionStore = create<SubscriptionState>((set, get) => ({
     set((state) => ({
       subscriptionData: { ...state.subscriptionData, [key]: value },
     })),
+  getDisplayTitle: () => {
+    const { subscription, title } = get().subscriptionData
+    return subscription === 'CUSTOM_INPUT'
+      ? title
+      : serviceNameLabels[subscription as ServiceId] || ''
+  },
 
   paymentMethodOptions,
   paymentStatusOptions,

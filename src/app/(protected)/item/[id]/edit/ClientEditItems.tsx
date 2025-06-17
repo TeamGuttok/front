@@ -1,7 +1,7 @@
 'use client'
 
 import { PATH } from '#app/routes'
-import { useRouter, useParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { Input } from '#components/_common/Input'
 import { Button } from '#components/_common/Button'
 import { cn } from '#components/lib/utils'
@@ -21,10 +21,10 @@ import {
   PaymentMethod,
   PaymentCycle,
   paymentStatus,
-  serviceNameLabels,
+  SubscriptionContents,
 } from '#types/subscription'
 import { groupClassName, inputClassName, labelClassName } from '#style/style'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import {
   useUpdateItemsClient,
   useGetDetailClient,
@@ -46,16 +46,18 @@ export default function ClientEditItems({
 
   const patchMutation = useUpdateItemsClient()
   const { selectedService } = useServiceStore()
-  const { subscriptionData } = useSubscriptionStore()
-
   const {
+    subscriptionData,
     setSubscriptionData,
     updateField,
     paymentMethodOptions,
     paymentCycleOptions,
     paymentDayOptions,
     resetSubscriptionData,
+    getDisplayTitle,
   } = useSubscriptionStore()
+
+  const displayTitle = getDisplayTitle()
 
   const { paymentAmount, paymentCycle, paymentDay, paymentMethod, memo } =
     subscriptionData
@@ -68,28 +70,52 @@ export default function ClientEditItems({
         paymentAmount: item.paymentAmount,
         paymentMethod: item.paymentMethod,
         paymentCycle: item.paymentCycle,
-        paymentDay: item.paymentDay,
+        paymentDay: String(item.paymentDay),
         memo: item.memo ?? '',
         paymentStatus: item.paymentStatus,
       })
     }
   }, [item])
 
-  const computedTitle =
-    subscriptionData.subscription === 'CUSTOM_INPUT'
-      ? subscriptionData.title
-      : serviceNameLabels[subscriptionData.subscription] || ''
+  const buildPayload = (): SubscriptionContents => {
+    return {
+      ...subscriptionData,
+      subscription: selectedService?.id as ServiceId,
+      id: subscriptionId,
+      paymentMethod: subscriptionData.paymentMethod as PaymentMethod,
+      paymentCycle: subscriptionData.paymentCycle as PaymentCycle,
+      paymentStatus: subscriptionData.paymentStatus as paymentStatus,
+    }
+  }
 
-  const handleSubmit = (): boolean => {
+  const isFormValid = useMemo(() => {
     const { title, subscription, paymentAmount, paymentCycle, paymentDay } =
       subscriptionData
     const isCustom = subscription === 'CUSTOM_INPUT'
-
     return !!(
       (isCustom ? title : true) &&
       paymentAmount &&
       paymentCycle &&
       paymentDay
+    )
+  }, [subscriptionData])
+
+  const handleUpdate = (e: React.FormEvent) => {
+    e.preventDefault()
+    patchMutation.mutate(
+      {
+        id: subscriptionId,
+        payload: buildPayload(),
+      },
+      {
+        onSuccess: () => {
+          resetSubscriptionData()
+          router.push(PATH.itemDetail(subscriptionId))
+        },
+        onError: (err) => {
+          console.error('Error updating subscription:', err)
+        },
+      },
     )
   }
 
@@ -114,7 +140,7 @@ export default function ClientEditItems({
       <CardTitle.Heading>구독 서비스 수정</CardTitle.Heading>
       <CardTitle.Divider />
       <div className="flex flex-col justify-center items-center my-8 font-medium">
-        <form className="grid grid-cols-1 gap-4">
+        <form className="grid grid-cols-1 gap-4" onSubmit={handleUpdate}>
           <div className="grid grid-cols-1 flex-col gap-2 sm:gap-4">
             <SelectGroup className={cn(groupClassName)}>
               <SelectLabel
@@ -135,7 +161,7 @@ export default function ClientEditItems({
                 type="text"
                 aria-labelledby="subscriptionTitle"
                 aria-describedby="subscriptionTitle-required"
-                value={computedTitle}
+                value={displayTitle}
                 onChange={(e) => {
                   if (subscriptionData.subscription === 'CUSTOM_INPUT') {
                     updateField('title', e.target.value)
@@ -145,7 +171,7 @@ export default function ClientEditItems({
                 placeholder={
                   subscriptionData.subscription === 'CUSTOM_INPUT'
                     ? '구독명을 입력하세요'
-                    : computedTitle
+                    : displayTitle
                 }
                 className={cn(inputClassName)}
               />
@@ -328,37 +354,9 @@ export default function ClientEditItems({
             </SelectGroup>
             <Button
               type="submit"
-              onClick={(e) => {
-                e.preventDefault()
-                patchMutation.mutate(
-                  {
-                    id: subscriptionId,
-                    payload: {
-                      ...subscriptionData,
-                      subscription: selectedService?.id as ServiceId,
-                      id: subscriptionId,
-                      paymentMethod:
-                        subscriptionData.paymentMethod as PaymentMethod,
-                      paymentCycle:
-                        subscriptionData.paymentCycle as PaymentCycle,
-                      paymentStatus:
-                        subscriptionData.paymentStatus as paymentStatus,
-                    },
-                  },
-                  {
-                    onSuccess: () => {
-                      resetSubscriptionData()
-                      router.push(PATH.itemDetail(subscriptionId))
-                    },
-                    onError: (err) => {
-                      console.error('Error updating subscription:', err)
-                    },
-                  },
-                )
-              }}
-              disabled={!handleSubmit()}
+              disabled={!isFormValid}
               className={`w-full py-2 mt-4 text-base text-white shadow ${
-                !handleSubmit() ? 'bg-gray-400 cursor-not-allowed' : 'primary'
+                !isFormValid ? 'bg-gray-400 cursor-not-allowed' : 'primary'
               }`}
             >
               저장하기

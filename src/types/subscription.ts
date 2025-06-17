@@ -96,8 +96,8 @@ export interface SubscriptionContents extends SubscriptionRequest {
   id: number
   paymentStatus: paymentStatus
   memo?: string
-  registerDate: string
-  updateDate: string
+  registerDate?: string
+  updateDate?: string
 }
 
 export interface viewProps {
