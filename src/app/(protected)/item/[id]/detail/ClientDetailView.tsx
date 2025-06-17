@@ -160,7 +160,7 @@ export default function ClientDetailView({
                     <AlertDialogCancel>취소</AlertDialogCancel>
                     <AlertDialogAction asChild>
                       <button type="submit" onClick={handleDelete}>
-                        로그아웃
+                        삭제
                       </button>
                     </AlertDialogAction>
                   </AlertDialogFooter>
