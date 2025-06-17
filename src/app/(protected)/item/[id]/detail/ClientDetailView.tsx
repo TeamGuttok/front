@@ -9,7 +9,8 @@ import {
   paymentMethodLabels,
   serviceNameLabels,
 } from '#types/subscription'
-import { useRouter, useParams } from 'next/navigation'
+import { viewProps } from '#types/subscription'
+import { useRouter } from 'next/navigation'
 import { useDeleteItems } from '#apis/subscriptionClient'
 import { groupClassName, labelClassName } from '#style/style'
 import { CardTitle } from '#components/_common/Card'
@@ -25,15 +26,7 @@ import {
   AlertDialogAction,
 } from '#components/_common/AlertDialog'
 
-interface ClientDetailViewProps {
-  params: { id: string }
-  initialData?: any
-}
-
-export default function ClientDetailView({
-  params,
-  initialData,
-}: ClientDetailViewProps) {
+export default function ClientDetailView({ params, initialData }: viewProps) {
   const router = useRouter()
   //const { id } = params
   //const params = useParams<{ id: string }>()
@@ -50,6 +43,8 @@ export default function ClientDetailView({
   //   enabled: !!itemId && typeof window !== 'undefined',
   // })
 
+  //  const { mutate: updateSubscription } = useUpdateItemsClient()
+
   if (!item) {
     return (
       <p className="text-center text-gray-500">
@@ -57,6 +52,17 @@ export default function ClientDetailView({
       </p>
     )
   }
+
+  // const handleUpdate = (updatedData: SubscriptionRequest) => {
+  //   updateSubscription(
+  //     { id: itemId, payload: updatedData },
+  //     {
+  //       onSuccess: () => {
+  //         router.push(PATH.itemDetail(itemId))
+  //       },
+  //     },
+  //   )
+  // }
 
   const handleDelete = () => {
     deleteSubscription(
@@ -68,23 +74,6 @@ export default function ClientDetailView({
       },
     )
   }
-
-  // if (isLoading) {
-  //   return <p className="text-center text-gray-500">로딩 중..</p>
-  // } else if (error) {
-  //   console.error(error)
-  //   return (
-  //     <p className="text-center text-gray-500">
-  //       구독 데이터를 불러오지 못했습니다. {String(error)}
-  //     </p>
-  //   )
-  // } else if (!item) {
-  //   return (
-  //     <p className="text-center text-gray-500">
-  //       구독 서비스가 존재하지 않습니다.
-  //     </p>
-  //   )
-  // }
 
   return (
     <CardTitle className="mx-auto lg:m-8 p-5 flex flex-col min-h-[calc(100vh-4.5rem)] pb-[3rem] mt-10">

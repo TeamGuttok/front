@@ -31,8 +31,11 @@ import {
 } from '#apis/subscriptionClient'
 import { Textarea } from '#components/_common/TextArea'
 
-export default function Page() {
-  const params = useParams()
+export default function ClientEditItems({
+  params,
+}: {
+  params: { id: string }
+}) {
   const subscriptionId = Number(params?.id ?? NaN)
   const router = useRouter()
   const {
