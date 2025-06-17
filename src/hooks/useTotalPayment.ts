@@ -13,6 +13,7 @@ export function useCurrentMonthPaymentTotal() {
   const total = useMemo(() => {
     return items
       .filter((item) => {
+        if (!item.registerDate) return false
         const regDate = parseISO(item.registerDate)
         const isMonthly = item.paymentCycle === 'MONTHLY'
         const isYearlyThisMonth =

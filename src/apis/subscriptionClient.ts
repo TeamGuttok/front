@@ -6,9 +6,7 @@ import { paymentStatus, SubscriptionContents } from '#types/subscription'
 import { useIsLoggedInQuery } from '#hooks/useIsLoggedInQuery'
 import { useUserId } from '#hooks/useUserId'
 import { toast } from '#hooks/useToast'
-import { useRouter } from 'next/navigation'
 import type { SubscriptionRequest } from '#types/subscription'
-import { PATH } from '#app/routes'
 import { fetchNotiRequest, PageRequest } from '#types/notification'
 
 //메인 페이지(/): 구독 항목 전체 서비스 조회 GET
