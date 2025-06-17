@@ -2,12 +2,11 @@ export const dynamic = 'force-dynamic'
 
 import ClientDetailView from './ClientDetailView'
 import { getItemById } from '#apis/subscriptionAPI'
+import type { PageProps } from '#types/subscription'
 
-type ItemDetailPageProps = {
-  params: { id: string }
-}
-
-export default async function ItemDetailView({ params }: ItemDetailPageProps) {
+export default async function ItemDetailView({
+  params,
+}: PageProps<{ id: string }>) {
   const { id } = params
 
   if (!id || isNaN(Number(id))) {
