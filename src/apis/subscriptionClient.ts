@@ -167,13 +167,11 @@ export function useDeleteItems() {
       return await res.json()
     },
 
-    onSuccess: ({ id }) => {
-      const router = useRouter()
+    onSuccess: () => {
       toast({
         description: '구독 서비스가 성공적으로 삭제되었습니다.',
         variant: 'default',
       })
-      router.push(PATH.main)
     },
 
     onError: (error) => {

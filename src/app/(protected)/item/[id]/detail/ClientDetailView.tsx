@@ -28,22 +28,9 @@ import {
 
 export default function ClientDetailView({ params, initialData }: viewProps) {
   const router = useRouter()
-  //const { id } = params
-  //const params = useParams<{ id: string }>()
-
-  // if (!params?.id || isNaN(Number(params.id))) {
-  //   return <p className="text-center text-gray-500">잘못된 접근입니다.</p>
-  // }
-
   const itemId = Number(params.id)
-  const item = initialData // useGetDetailClient(itemId, { initialData: initialData })
-  // const { isLoading, error } = useGetDetailClient(params.id)
+  const item = initialData
   const { mutate: deleteSubscription } = useDeleteItems()
-  // const { data: item } = useGetDetailClient(String(itemId), {
-  //   enabled: !!itemId && typeof window !== 'undefined',
-  // })
-
-  //  const { mutate: updateSubscription } = useUpdateItemsClient()
 
   if (!item) {
     return (
@@ -52,17 +39,6 @@ export default function ClientDetailView({ params, initialData }: viewProps) {
       </p>
     )
   }
-
-  // const handleUpdate = (updatedData: SubscriptionRequest) => {
-  //   updateSubscription(
-  //     { id: itemId, payload: updatedData },
-  //     {
-  //       onSuccess: () => {
-  //         router.push(PATH.itemDetail(itemId))
-  //       },
-  //     },
-  //   )
-  // }
 
   const handleDelete = () => {
     deleteSubscription(
