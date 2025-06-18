@@ -32,7 +32,6 @@ export const usePatchAlarmClient = () => {
         throw new Error(errorData.message || '알림 설정 변경을을 실패했습니다.')
       }
       const json = await res.json()
-      console.log('서버 응답:', json)
       return json
     },
 

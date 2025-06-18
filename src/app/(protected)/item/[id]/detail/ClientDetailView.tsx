@@ -9,29 +9,36 @@ import {
   paymentMethodLabels,
   serviceNameLabels,
 } from '#types/subscription'
-import { useRouter, useParams } from 'next/navigation'
-import { useGetDetailClient, useDeleteItems } from '#apis/subscriptionClient'
+import { viewProps } from '#types/subscription'
+import { useRouter } from 'next/navigation'
+import { useDeleteItems } from '#apis/subscriptionClient'
 import { groupClassName, labelClassName } from '#style/style'
-import { ConfirmDialog } from '#components/ui/ConfirmDialog'
-import { useState } from 'react'
 import { CardTitle } from '#components/_common/Card'
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from '#components/_common/AlertDialog'
 
-export default function ClientDetailView() {
+export default function ClientDetailView({ params, initialData }: viewProps) {
   const router = useRouter()
-  const params = useParams<{ id: string }>()
-
-  if (!params?.id || isNaN(Number(params.id))) {
-    return <p className="text-center text-gray-500">잘못된 접근입니다.</p>
-  }
-
-  const itemId = parseInt(params.id, 10)
-  const { isLoading, error } = useGetDetailClient(params.id)
+  const itemId = Number(params.id)
+  const item = initialData
   const { mutate: deleteSubscription } = useDeleteItems()
-  const { data: item } = useGetDetailClient(String(itemId), {
-    enabled: !!itemId && typeof window !== 'undefined',
-  })
 
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  if (!item) {
+    return (
+      <p className="text-center text-gray-500">
+        구독 데이터를 불러오지 못했습니다.
+      </p>
+    )
+  }
 
   const handleDelete = () => {
     deleteSubscription(
@@ -41,23 +48,6 @@ export default function ClientDetailView() {
           router.push(PATH.main)
         },
       },
-    )
-  }
-
-  if (isLoading) {
-    return <p className="text-center text-gray-500">로딩 중..</p>
-  } else if (error) {
-    console.error(error)
-    return (
-      <p className="text-center text-gray-500">
-        구독 데이터를 불러오지 못했습니다. {String(error)}
-      </p>
-    )
-  } else if (!item) {
-    return (
-      <p className="text-center text-gray-500">
-        구독 서비스가 존재하지 않습니다.
-      </p>
     )
   }
 
@@ -109,24 +99,41 @@ export default function ClientDetailView() {
               </div>
             </div>
             <div className="flex justify-end pb-1">
-              <button
-                type="button"
-                onClick={() => setShowDeleteDialog(true)}
-                className="p-3 hover:bg-red-500 rounded-full"
-              >
-                <Trash2
-                  className="w-6 h-6 text-gray-500 "
-                  aria-label="삭제 아이콘"
-                />
-              </button>
-              <ConfirmDialog
-                open={showDeleteDialog}
-                onOpenChange={setShowDeleteDialog}
-                title="해당 항목을 삭제하시겠습니까?"
-                onConfirm={handleDelete}
-              />
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <button
+                    type="button"
+                    className="p-3 hover:bg-red-500 rounded-full"
+                  >
+                    <Trash2
+                      className="w-6 h-6 text-gray-500 "
+                      aria-label="삭제 아이콘"
+                    />
+                  </button>
+                </AlertDialogTrigger>
+                <AlertDialogContent aria-describedby="delete-description">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      해당 항목을 삭제하시겠습니까?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription id="delete-description">
+                      해당 구독 서비스 및 고정 지출에 대한 모든 정보가
+                      삭제됩니다.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>취소</AlertDialogCancel>
+                    <AlertDialogAction asChild>
+                      <button type="submit" onClick={handleDelete}>
+                        삭제
+                      </button>
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+
               <Link
-                href={PATH.itemEdit(item.id)}
+                href={PATH.itemEdit(itemId)}
                 aria-label="수정 페이지로 이동"
                 className="p-3 flex items-center justify-center rounded-full hover:bg-gray-200"
               >

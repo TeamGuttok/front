@@ -29,6 +29,26 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  async rewrites() {
+    if (process.env.NODE_ENV === 'development') {
+      return [
+        {
+          source: '/api/:path*',
+          destination: 'http://localhost:8080/api/:path*',
+        },
+      ]
+    }
+    if (process.env.API_BASE_URL) {
+      return [
+        {
+          source: '/api/:path*',
+          destination: `${process.env.API_BASE_URL}/api/:path*`,
+        },
+      ]
+    }
+
+    return []
+  },
 }
 
 export default nextConfig

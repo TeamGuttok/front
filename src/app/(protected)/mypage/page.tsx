@@ -1,16 +1,13 @@
+export const dynamic = 'force-dynamic'
+
 import ClientMyPage from './ClientMypage'
 import { getUserInfo } from '#apis/userAPI'
-import { redirect } from 'next/navigation'
-import { PATH } from '#app/routes'
-import { cookies, headers } from 'next/headers'
 
 export default async function MyPagePage() {
-  let userData: Awaited<ReturnType<typeof getUserInfo>> | null = null
   try {
-    userData = await getUserInfo()
+    const userData = await getUserInfo()
+    return <ClientMyPage initialData={userData} />
   } catch (err) {
-    redirect(PATH.login)
+    console.error('SSR 유저 정보 로드 실패:', err)
   }
-
-  return <ClientMyPage initialData={userData} />
 }

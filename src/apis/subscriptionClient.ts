@@ -6,15 +6,13 @@ import { paymentStatus, SubscriptionContents } from '#types/subscription'
 import { useIsLoggedInQuery } from '#hooks/useIsLoggedInQuery'
 import { useUserId } from '#hooks/useUserId'
 import { toast } from '#hooks/useToast'
-import { useRouter } from 'next/navigation'
 import type { SubscriptionRequest } from '#types/subscription'
-import { PATH } from '#app/routes'
 import { fetchNotiRequest, PageRequest } from '#types/notification'
 
 //메인 페이지(/): 구독 항목 전체 서비스 조회 GET
 export function useGetItemsClient(pageRequest: PageRequest = fetchNotiRequest) {
   return useQuery({
-    queryKey: ['subscriptions', 'client', pageRequest],
+    queryKey: ['subscriptions', 'client'],
     queryFn: async (): Promise<{ contents: SubscriptionContents[] }> => {
       const query = new URLSearchParams({
         lastId: String(pageRequest.lastId),
@@ -39,22 +37,23 @@ export function useGetItemsClient(pageRequest: PageRequest = fetchNotiRequest) {
 }
 
 // 구독 서비스 개별 조회 (/detail)
-export function useGetDetailClient(
-  id: string,
-  options?: { enabled?: boolean },
-) {
-  const userId = useUserId()
+export function useGetDetailClient(id: string) {
+  return useQuery({
+    queryKey: ['subscription', id],
+    queryFn: async (): Promise<SubscriptionContents | null> => {
+      const res = await fetch(`${BASE_URL}/api/subscriptions/user?size=${id}`, {
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      const json = await res.json()
 
-  return useIsLoggedInQuery(
-    ['subscription', userId, id],
-    async () => {
-      const queryResult = await useGetItemsClient()
-      return queryResult.data?.contents.find((i) => String(i.id) === id) ?? null
+      const contents = json.contents ?? json.data?.contents ?? []
+      return contents.find((i: any) => String(i.id) === id) ?? null
     },
-    {
-      enabled: !!userId && !!id && (options?.enabled ?? true),
-    },
-  )
+    enabled: !!id,
+  })
 }
 
 // 구독 서비스 생성 POST
@@ -166,13 +165,11 @@ export function useDeleteItems() {
       return await res.json()
     },
 
-    onSuccess: ({ id }) => {
-      const router = useRouter()
+    onSuccess: () => {
       toast({
         description: '구독 서비스가 성공적으로 삭제되었습니다.',
         variant: 'default',
       })
-      router.push(PATH.main)
     },
 
     onError: (error) => {

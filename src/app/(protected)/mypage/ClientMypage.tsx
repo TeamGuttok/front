@@ -5,12 +5,12 @@ import { PATH } from '#app/routes'
 import { Settings } from 'lucide-react'
 import CardTitle from '#components/_common/CardTitle'
 import { Button } from '#components/_common/Button'
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import useTheme from '#contexts/ThemeProvider/hook'
 import { usePatchAlarmClient } from '#apis/notiClient'
 import { useLogoutClient } from '#apis/authClient'
-import { useRouter } from 'next/navigation'
+import { useDeleteUserClient } from '#apis/userClient'
 import { toast } from '#hooks/useToast'
 import { Switch } from '#components/_common/Switch'
 import { userInfo } from '#types/user'
@@ -31,45 +31,29 @@ interface ClientMypageProps {
 }
 
 export default function ClientMypage({ initialData }: ClientMypageProps) {
-  const { user, setUser, logout } = useAuthStore()
-  const [hydrated, setHydrated] = useState(false)
+  const { user, setUser } = useAuthStore()
   const { theme, setTheme } = useTheme()
-  const router = useRouter()
   const logoutMutation = useLogoutClient()
+  const useDeleteMutation = useDeleteUserClient()
 
   const handleLogout = () => {
     logoutMutation.mutate()
+  }
+  const handleDeletUser = () => {
+    useDeleteMutation.mutate()
   }
 
   const { mutate: toggleAlarm, isPending: isTogglingAlarm } =
     usePatchAlarmClient()
 
   useEffect(() => {
-    setHydrated(true)
-  }, [])
-
-  useEffect(() => {
     setUser(initialData)
   }, [initialData, setUser])
-
-  const afterDelete = () => {
-    logout()
-    router.push(PATH.main)
-  }
-
-  // useEffect(() => {
-  //   if (!isLoggedIn || isProfileError) {
-  //     router.push(PATH.login)
-  //   }
-  // }, [isLoggedIn, isProfileError, router])
-
-  if (!hydrated) return null
 
   return (
     <CardTitle>
       <CardTitle.Heading>마이페이지</CardTitle.Heading>
       <CardTitle.Divider />
-
       <div className="w-full p-5">
         <div className="flex justify-between items-center mb-4">
           <p className="text-lg font-semibold">프로필 정보</p>
@@ -141,13 +125,13 @@ export default function ClientMypage({ initialData }: ClientMypageProps) {
             <AlertDialogTrigger asChild>
               <Button className="text-white">로그아웃</Button>
             </AlertDialogTrigger>
-            <AlertDialogContent>
+            <AlertDialogContent aria-describedby="logout-description">
               <AlertDialogHeader>
                 <AlertDialogTitle>로그아웃 하시겠습니까?</AlertDialogTitle>
+                <AlertDialogDescription id="logout-description">
+                  현재 사용 중인 계정에서 로그아웃 됩니다.
+                </AlertDialogDescription>
               </AlertDialogHeader>
-              <AlertDialogDescription>
-                현재 사용 중인 계정에서 로그아웃 됩니다.
-              </AlertDialogDescription>
               <AlertDialogFooter>
                 <AlertDialogCancel>취소</AlertDialogCancel>
                 <AlertDialogAction asChild>
@@ -165,17 +149,19 @@ export default function ClientMypage({ initialData }: ClientMypageProps) {
                 탈퇴하기
               </Button>
             </AlertDialogTrigger>
-            <AlertDialogContent>
+            <AlertDialogContent aria-describedby="delete-account-description">
               <AlertDialogHeader>
                 <AlertDialogTitle>정말 탈퇴하시겠습니까?</AlertDialogTitle>
-                <AlertDialogDescription>
+                <AlertDialogDescription id="delete-account-description">
                   탈퇴하면 모든 정보가 삭제되며 복구할 수 없습니다.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>취소</AlertDialogCancel>
                 <AlertDialogAction asChild>
-                  <button>탈퇴</button>
+                  <button type="submit" onClick={handleDeletUser}>
+                    탈퇴
+                  </button>
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>

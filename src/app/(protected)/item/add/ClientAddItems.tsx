@@ -7,6 +7,7 @@ import { Button } from '#components/_common/Button'
 import { Plus, Search } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import clsx from 'clsx'
+import { useEffect } from 'react'
 import { useSearchStore } from '#stores/subscriptions/useSearchStore'
 import SearchResults from './searchResults'
 import { useMutation } from '@tanstack/react-query'
@@ -15,7 +16,13 @@ import { useServiceStore } from '#stores/subscriptions/useServiceStore'
 import { ServiceItem, allServices } from '#types/subscription'
 import { useSubscriptionStore } from '#stores/subscriptions/useSubscriptionStore'
 
-export default function ClientAddItems() {
+export default function ClientAddItems({
+  initialResults,
+  keyword,
+}: {
+  initialResults: ServiceItem[]
+  keyword: string
+}) {
   const { setSelectedService } = useServiceStore()
   const { searchQuery, setSearchQuery, setSearchResults, setIsSearching } =
     useSearchStore()
@@ -53,6 +60,12 @@ export default function ClientAddItems() {
 
     router.push(PATH.addDetail)
   }
+
+  useEffect(() => {
+    setSearchQuery(keyword)
+    setSearchResults(initialResults)
+  }, [initialResults, keyword])
+
   return (
     <div className="flex flex-col m-4 ">
       <div className="flex flex-col items-center justify-center py-5 ">

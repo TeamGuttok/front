@@ -30,14 +30,17 @@ export default function ResetPasswordPage() {
 
     setErrors([])
 
-    patchPassword(password, {
-      onSuccess: () => {
-        setSuccessMessage('비밀번호가 성공적으로 변경되었습니다.')
+    patchPassword(
+      { password },
+      {
+        onSuccess: () => {
+          setSuccessMessage('비밀번호가 성공적으로 변경되었습니다.')
+        },
+        onError: (err: any) => {
+          setErrors([err.message || '비밀번호 변경 실패'])
+        },
       },
-      onError: (err: any) => {
-        setErrors([err.message || '비밀번호 변경 실패'])
-      },
-    })
+    )
   }
 
   return (

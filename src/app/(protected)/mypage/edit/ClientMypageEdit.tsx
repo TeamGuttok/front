@@ -9,15 +9,13 @@ import { SelectLabel, SelectGroup } from '#components/_common/Select'
 import { useAuthStore } from '#stores/auth/useAuthStore'
 import { groupClassName, labelClassName, inputClassName } from '#style/style'
 import {
-  // useGetUserInfoClient,
   usePatchNicknameClient,
   usePatchPasswordClient,
 } from '#apis/userClient'
 import { nickNameSchema, passwordSchema } from '#schema/userSchema'
 
 export default function ClientMypageEdit() {
-  const { user, setUser } = useAuthStore()
-  //const { data: profile } = useGetUserInfoClient()
+  const { user } = useAuthStore()
   const [nickName, setNickName] = useState(user?.nickName ?? '')
   const [password, setPassword] = useState('')
 
@@ -54,9 +52,6 @@ export default function ClientMypageEdit() {
     }
   }, [user])
 
-  // TODO
-  // [ ] input 반응형 스타일 수정
-
   return (
     <CardTitle>
       <CardTitle.Heading>마이페이지 수정</CardTitle.Heading>
@@ -82,9 +77,11 @@ export default function ClientMypageEdit() {
                 onChange={(e) => setNickName(e.target.value)}
                 placeholder="수정할 닉네임을 작성해주세요"
                 className={cn(inputClassName)}
+                autoComplete="current-nickname"
               />
             </SelectGroup>
             <Button
+              aria-label="닉네임 수정 버튼"
               type="button"
               onClick={nickNameUpdateSubmit}
               disabled={isNickNameUpdating}
@@ -110,9 +107,11 @@ export default function ClientMypageEdit() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="수정할 비밀번호를 작성해주세요"
                 className={cn(inputClassName)}
+                autoComplete="current-password"
               />
             </SelectGroup>
             <Button
+              aria-label="비밀번호 수정 버튼"
               type="button"
               onClick={passwordUpdateSubmit}
               disabled={isPasswordUpdating}
