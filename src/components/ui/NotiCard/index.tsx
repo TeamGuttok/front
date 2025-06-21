@@ -1,7 +1,6 @@
 'use client'
 
 import { Card } from '#components/_common/Card'
-import { Trash2 } from 'lucide-react'
 import StatusBadge from '#components/ui/StatusBadge'
 import { cn } from '#components/lib/utils'
 import type { Notification } from '#types/notification'
@@ -12,20 +11,11 @@ interface NotiCardProps {
   onMarkAsRead: (id: number) => void
 }
 
-export default function NotiCard({
-  item,
-  onDelete,
-  onMarkAsRead,
-}: NotiCardProps) {
+export default function NotiCard({ item, onMarkAsRead }: NotiCardProps) {
   const handleClick = () => {
     if (item.status === 'UNREAD') {
       onMarkAsRead(item.id)
     }
-  }
-
-  const handleDelete = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    onDelete(item.id)
   }
 
   return (
@@ -48,12 +38,6 @@ export default function NotiCard({
           <StatusBadge variant="notification" status={item.status} />
         )}
       </div>
-      <button
-        onClick={handleDelete}
-        className="text-red rounded-full p-2 lg:p-3 hover:bg-red-500"
-      >
-        <Trash2 size={20} />
-      </button>
     </Card>
   )
 }

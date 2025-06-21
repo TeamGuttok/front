@@ -17,10 +17,10 @@ export default function ClientNotification() {
 
   // TODO
   // [ ] 미들웨어 연결 후 삭제 (for SEO)
-  // if (typeof window !== 'undefined' && !isLoggedIn) {
-  //   router.push(PATH.login)
-  //   return null
-  // }
+  if (typeof window !== 'undefined' && !isLoggedIn) {
+    router.push(PATH.login)
+    return null
+  }
 
   const lastId = useMemo(() => {
     if (notifications.length === 0) return Number.MAX_SAFE_INTEGER

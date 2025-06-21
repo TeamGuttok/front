@@ -79,7 +79,6 @@ export function usePatchNicknameClient() {
         throw new Error(json.message || '닉네임 변경에 실패했습니다.')
       }
 
-      console.log('닉네임 변경 응답:', json)
       return { nickName }
     },
 
