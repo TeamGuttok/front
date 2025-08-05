@@ -1,4 +1,4 @@
-# 구똑: 구독을 똑똑하게 | https://www.guttok.site
+# 구똑: 구독을 똑똑하게
 
 <br>
 
@@ -12,21 +12,9 @@
 
 # 테스트
 
-- [테스트 영상](https://youtu.be/a84maY1SPt4)
-- 테스트용 계정
-  - 메일: testguttok@gmail.com
-  - 비밀번호: guttok012345!
+- [테스트 영상](https://youtu.be/AM1yf19X0M4)
 
-> 테스트 계정은 매일 자정(00:00) 기준으로 자동 초기화됩니다. (탈퇴 여부와 관계없이 계정이 복원되며, 구독 내역이 초기화됩니다.)
-
-> 테스트 계정에서는 이메일 인증 기능이 제한됩니다. 이메일 인증이 필요한 기능을 테스트하려면 직접 회원가입이 필요합니다.
-
-# 기획 및 디자인
-
-- [기획](https://www.relume.io/app/project/P1385173_IIXxQacXXzIBf0mRbbfWDikpCaVTBQb-PvtLL61wn5U#mode=sitemap)
-- [PC 디자인](https://creatie.ai/file/147084540353878?page_id=M&shareId=147084540353878) | [Mobile 디자인](https://creatie.ai/file/146925248165840?fileOpenFrom=home&fileTileSwitch=false&page_id=M)
-
-<br>
+2025년 6월~8월 동안 배포를 마치고 동작 테스트 영상을 남겨두었습니다.
 
 # 팀원 구성
 
@@ -83,6 +71,13 @@
 - **CI/CD 자동화**
   - Vercel을 사용해서 배포해서 CI/CD 자동화 및 배포 시간 50% 단축
   - AWS Amplify를 사용하다가 마이그레이션
+
+<br>
+
+# 기획 및 디자인
+
+- [기획](https://www.relume.io/app/project/P1385173_IIXxQacXXzIBf0mRbbfWDikpCaVTBQb-PvtLL61wn5U#mode=sitemap)
+- [PC 디자인](https://creatie.ai/file/147084540353878?page_id=M&shareId=147084540353878) | [Mobile 디자인](https://creatie.ai/file/146925248165840?fileOpenFrom=home&fileTileSwitch=false&page_id=M)
 
 <br>
 

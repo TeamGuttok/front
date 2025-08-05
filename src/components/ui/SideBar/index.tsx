@@ -22,7 +22,7 @@ export default function SideBar() {
   return (
     <aside className="flex flex-col w-56 h-screen p-5 bg-secondary shadow-sm">
       <span className="px-2 mb-5 text-[1.5rem] font-bold">
-        <Link href="/">구똑</Link>
+        <Link href={PATH.main}>구똑</Link>
       </span>
 
       <nav className="grow">
